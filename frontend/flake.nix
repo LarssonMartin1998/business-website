@@ -29,7 +29,7 @@
           version = "0.1.0";
           src = ./.;
 
-          npmDepsHash = "sha256-WH5uqQorfY1rxVc/NepPn+73n5H+FnzMLubbj3Kkj20=";
+          npmDepsHash = "sha256-FOYZ0kTXu3XOSPVu0RCFxeEUfsf8YfPyk7nmOKJk834=";
 
           npmInstallFlags = [
             "--frozen-lockfile"
