@@ -1,1 +1,23 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@theme {
+  --color-fog-grey: #f4f3f1;
+  --color-fog-grey-hover: #eeece8;
+  --color-pine-ink: #2c2e28;
+  --color-pine-ink-hover: #1f211c;
+  --color-birch-white: #fefdf9;
+  --color-birch-white-hover: #faf8f3;
+  --color-fir-green: #4a5d41;
+  --color-fir-green-hover: #3d4f35;
+  --color-rust-orange: #a55e3b;
+  --color-rust-orange-hover: #924f2f;
+  --color-cloud-haze: #fef9f4;
+  --color-cloud-haze-hover: #faf4ed;
+  --color-granite-grey: #d3d1cd;
+  --color-granite-grey-hover: #c5c2bb;
+  --color-moss-teal: #5e7f71;
+  --color-moss-teal-hover: #4d6b5d;
+  --color-pearl-mist: #f8f6f2;
+  --color-pearl-mist-hover: #f2efea;
+  --color-deep-forest-blue: #1a2f26;
+}
