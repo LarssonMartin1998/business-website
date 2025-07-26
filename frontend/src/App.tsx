@@ -1,14 +1,19 @@
 import Hero from './components/Hero'
+import { base } from './designSystem/colors';
+import { twMerge } from 'tailwind-merge';
 
 function App() {
   return (
-    <div>
-      <Hero
-        headline="Senior Consultant for Game-, Web-, and Systemdevelopment"
-        subheadline="I help teams build cool shit in C++, C, Zig, Rust and other wack languages."
-      />
-      <div>asdf</div>
-    </div>
+    <>
+      <Header />
+      <main>
+        <Hero
+          headline='Martin Larsson &nbsp;'
+          subheadline='|&nbsp; Senior Consultant'
+          paragraph='I help teams build cool shit in C++, C, Zig, Rust and other wack languages.'
+        />
+      </main>
+    </>
   )
 }
 
