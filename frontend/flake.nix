@@ -17,7 +17,7 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
-        node = pkgs.nodejs_latest;
+        node = pkgs.nodejs;
         tooling = with pkgs; [
           node
           typescript
