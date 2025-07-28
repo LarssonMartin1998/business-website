@@ -9,7 +9,7 @@ interface ButtonColor {
 
 interface SealedButtonProps {
   children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   type?: 'button' | 'submit' | 'reset';
@@ -29,6 +29,7 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, ...pro
     sm: 'px-3 py-1.5 text-sm w-24 h-12',
     md: 'px-4 py-2 text-base w-36 h-14',
     lg: 'px-6 py-3 text-lg w-48 h-14',
+    xl: 'px-6 py-3 text-lg w-64 h-16',
   };
 
   const borderProps = border != undefined ? twMerge(border.default, border.hover, 'border-2') : undefined;
