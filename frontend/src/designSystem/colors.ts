@@ -55,10 +55,12 @@ const base = {
     default: 'text-pine-ink',
     accent: 'text-birch-white',
     alert: 'text-cloud-haze',
+    accentText: 'text-fir-green',
   },
   border: {
     default: 'border-granite-grey',
     accent: 'border-moss-teal',
+    alert: 'border-ember-bark',
   },
 } as const;
 
@@ -78,6 +80,7 @@ const hover = {
   border: {
     default: 'hover:border-granite-grey-hover',
     accent: 'hover:border-moss-teal-hover',
+    alert: 'hover:border-ember-bark-hover',
   },
 }
 
