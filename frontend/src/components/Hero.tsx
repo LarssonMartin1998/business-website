@@ -23,6 +23,7 @@ function Hero({ headline, subheadline, paragraph }: HeroProps) {
           <AlertButton size='lg'>View Services</AlertButton>
         </div>
       </div>
+      <div className='absolute -bottom-6 left-0 w-full h-16 -skew-y-1 bg-fir-green z-20 pointer-events-none border-b-2 border-b-granite-grey' />
     </section >
   );
 }
