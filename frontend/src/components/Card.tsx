@@ -30,7 +30,7 @@ function CardAccent(props: CardProps) {
 }
 
 function Card(border: TwColor, bg: TwColor, { children, className }: CardProps) {
-  return (<div className={twMerge(border, bg, 'border-2', 'flex', 'flex-col', 'text-center', 'justify-center', 'items-center', 'rounded-2xl', 'p-2.5', className)}>
+  return (<div className={twMerge(border, bg, 'border-2', 'flex', 'flex-col', 'text-center', 'justify-center', 'items-center', 'rounded-2xl', 'p-2.5', 'shadow-xl/10', className)}>
     {children}
   </div>);
 }

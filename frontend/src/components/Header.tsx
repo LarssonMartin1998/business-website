@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { logotype } from "../assets/Logotype";
-import { base } from './../designSystem/colors';
+import { base, hover } from './../designSystem/colors';
 
 interface HeaderListItemProps {
   name: string;
@@ -9,13 +9,13 @@ interface HeaderListItemProps {
 function HeaderLogo() {
   return (
     <a className='flex items-center h-full'>
-      <img className='h-full w-auto' src={logotype} alt="" />
+      <img className='h-full w-auto drop-shadow-xl hover:drop-shadow-rust-orange/50' src={logotype} alt="" />
     </a>
   );
 }
 
 function HeaderListItem({ name }: HeaderListItemProps) {
-  return (<li className={twMerge('justify-center', base.fg.default, 'font-bold', 'text-xl')}>
+  return (<li className={twMerge(base.fg.default, 'justify-center uppercase text-shadow-lg font-bold text-xl hover:text-rust-orange')}>
     {name}
   </li>);
 }
