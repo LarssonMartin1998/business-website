@@ -3,7 +3,7 @@ import Hero from './components/Hero'
 import { CardDefault, ListCardDefault } from './components/Card';
 import { base, hover } from './designSystem/colors';
 import { twMerge } from 'tailwind-merge';
-import { CustomButton, DefaultButton } from './components/Button';
+import { CustomButton } from './components/Button';
 import { CogWheels, Layers, Lightbulb, LinkedinLogo, GithubLogo, MastodonLogo } from './components/generated/index';
 
 function App() {
@@ -86,9 +86,27 @@ function App() {
             <h2 className={twMerge(base.fg.accent, 'font-bold text-center text-5xl text-shadow-sm')}>Socials</h2>
             <CardDefault className=' w-auto h-auto p-12'>
               <div className='flex gap-x-20'>
-                <LinkedinLogo className={twMerge(base.fg.default, 'w-32 h-32')} />
-                <GithubLogo className={twMerge(base.fg.default, 'w-32 h-32')} />
-                <MastodonLogo className={twMerge(base.fg.default, 'w-32 h-32')} />
+                <LinkedinLogo
+                  className={twMerge(
+                    base.fg.default,
+                    'w-32 h-32 transition-transform duration-200',
+                    'hover:scale-102 hover:-translate-y-1 hover:drop-shadow-lg'
+                  )}
+                />
+                <GithubLogo
+                  className={twMerge(
+                    base.fg.default,
+                    'w-32 h-32 transition-transform duration-200',
+                    'hover:scale-102 hover:-translate-y-1 hover:drop-shadow-lg'
+                  )}
+                />
+                <MastodonLogo
+                  className={twMerge(
+                    base.fg.default,
+                    'w-32 h-32 transition-transform duration-200',
+                    'hover:scale-102 hover:-translate-y-1 hover:drop-shadow-lg'
+                  )}
+                />
               </div>
             </CardDefault>
           </div>
