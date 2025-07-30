@@ -1,10 +1,10 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import { base, hover, type TwColor } from './../designSystem/colors.ts';
+import { bg, text, border, hover, type TwColor, type TwStateColor, splitTwColor, Intent } from 'design-system/colors';
 
 interface ButtonColor {
   default: TwColor;
-  hover?: TwColor;
+  hover?: TwStateColor;
 }
 
 interface SealedButtonProps {
@@ -16,9 +16,9 @@ interface SealedButtonProps {
 }
 
 interface CustomButtonProps {
-  border?: ButtonColor,
-  bg: ButtonColor,
-  fg: ButtonColor,
+  border?: ButtonColor;
+  bg: ButtonColor;
+  fg: ButtonColor;
 }
 
 function CustomButton({ children, size = 'md', border, bg, fg, className, ...props }: CustomButtonProps & SealedButtonProps) {
@@ -52,40 +52,69 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, ...pro
     </button>)
 }
 
-function DefaultButton(props: SealedButtonProps) {
+function ButtonIntentVariant({ intent, useBorder, ...props }: SealedButtonProps & { useBorder: boolean, intent: Intent }) {
+  const bgCol = bg(intent);
+  const textCol = text(intent);
+  const borderObj = useBorder ? {
+    default: border(intent),
+    hover: hover(border(intent))
+  } : undefined;
+
   return (
     <CustomButton
       bg={{
-        default: base.bg.accent,
-        hover: hover.bg.accent
+        default: bgCol,
+        hover: hover(bgCol)
       }}
       fg={{
-        default: base.fg.accent,
-        hover: hover.fg.accent
+        default: textCol,
+        hover: hover(textCol)
       }}
+      border={borderObj}
       {...props}
     />
   );
 }
 
-function AlertButton(props: SealedButtonProps) {
+function ButtonInvisIntentVariant({ intent, ...props }: SealedButtonProps & { intent: Intent }) {
+  const bgCol = bg(intent);
+  const textCol = text(intent);
+
+  const [, bgColRaw] = splitTwColor(bgCol);
+  const [, textColRaw] = splitTwColor(textCol);
+
   return (
     <CustomButton
+      bg={{
+        default: bgCol,
+        hover: hover(bg(textColRaw))
+      }}
+      fg={{
+        default: textCol,
+        hover: hover(text(bgColRaw))
+      }}
       border={{
-        default: base.border.alert,
-        hover: hover.border.alert
-      }}
-      bg={{
-        default: base.bg.alert,
-        hover: hover.bg.alert
-      }}
-      fg={{
-        default: base.fg.alert,
-        hover: hover.fg.alert
+        default: border(textColRaw)
       }}
       {...props}
     />
   );
 }
 
-export { CustomButton, DefaultButton, AlertButton };
+function ButtonAccent(props: SealedButtonProps) {
+  return (<ButtonIntentVariant intent='accent' useBorder={false} {...props} />);
+}
+
+function ButtonAccentInvis(props: SealedButtonProps) {
+  return (<ButtonInvisIntentVariant intent='accent' {...props} />);
+}
+
+function ButtonAlert(props: SealedButtonProps) {
+  return (<ButtonIntentVariant intent='alert' useBorder={true} {...props} />);
+}
+
+function ButtonAlertInvis(props: SealedButtonProps) {
+  return (<ButtonInvisIntentVariant intent='alert' {...props} />);
+}
+
+export { ButtonAccent, ButtonAccentInvis, ButtonAlert, ButtonAlertInvis, };

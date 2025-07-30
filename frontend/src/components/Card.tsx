@@ -1,6 +1,6 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import { base, TwColor } from '../designSystem/colors';
+import { bg, border, TwColor } from 'design-system/colors';
 
 interface CardProps {
   children: React.ReactNode;
@@ -22,11 +22,11 @@ function ListCardAccent(props: CardProps) {
 }
 
 function CardDefault(props: CardProps) {
-  return Card(base.border.default, base.bg.defaultCard, props);
+  return Card(border('defaultCard'), bg('defaultCard'), props);
 }
 
 function CardAccent(props: CardProps) {
-  return Card(base.border.accent, base.bg.accentCard, props);
+  return Card(border('accentCard'), bg('accentCard'), props);
 }
 
 function Card(border: TwColor, bg: TwColor, { children, className }: CardProps) {
