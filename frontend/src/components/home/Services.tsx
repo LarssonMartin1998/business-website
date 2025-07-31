@@ -5,6 +5,7 @@ import { CogWheels, Layers, Lightbulb } from 'components/generated/index';
 import { ListCardDefault } from 'components/Card';
 import { bg, RawColor, splitTwColor, text } from 'design-system/colors';
 import { ButtonAccent, ButtonAccentInvis } from 'components/Button';
+import { hrefs } from 'design-system/pages';
 
 interface ServiceProps {
   Icon: React.ComponentType<{ className?: string }>;
@@ -88,8 +89,8 @@ function Services({ scrollToServicesRef }: ServicesProps) {
         <ServicesGroup bgColRaw={bgColRaw} {...servicesGroupProps} />
 
         <div className='flex gap-x-4 mt-4 p-8'>
-          <ButtonAccent>View Portfolio</ButtonAccent>
-          <ButtonAccentInvis buttonLink='/contact'>Get in touch</ButtonAccentInvis>
+          <ButtonAccent buttonLink={hrefs.github}>See My Work</ButtonAccent>
+          <ButtonAccentInvis buttonLink='/contact'>Get in Touch</ButtonAccentInvis>
         </div>
       </div>
     </div>
