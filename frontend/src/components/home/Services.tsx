@@ -1,9 +1,9 @@
-import { twMerge } from "tailwind-merge";
+import { twMerge } from 'tailwind-merge';
 
-import { CogWheels, Layers, Lightbulb } from "components/generated/index";
-import { ListCardDefault } from "components/Card";
-import { bg, RawColor, splitTwColor, text } from "design-system/colors";
-import { ButtonAccent, ButtonAccentInvis } from "components/Button";
+import { CogWheels, Layers, Lightbulb } from 'components/generated/index';
+import { ListCardDefault } from 'components/Card';
+import { bg, RawColor, splitTwColor, text } from 'design-system/colors';
+import { ButtonAccent, ButtonAccentInvis } from 'components/Button';
 
 interface ServiceProps {
   Icon: React.ComponentType<{ className?: string }>;
@@ -83,8 +83,8 @@ function Services() {
         <ServicesGroup bgColRaw={bgColRaw} {...servicesGroupProps} />
 
         <div className='flex gap-x-4 mt-4 p-8'>
-          <ButtonAccent>Get in touch</ButtonAccent>
-          <ButtonAccentInvis>Book</ButtonAccentInvis>
+          <ButtonAccent>View Portfolio</ButtonAccent>
+          <ButtonAccentInvis buttonLink='/contact'>Get in touch</ButtonAccentInvis>
         </div>
       </div>
     </div>

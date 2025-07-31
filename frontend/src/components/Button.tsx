@@ -1,5 +1,7 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
+
+import { Page, PageLink } from 'design-system/pages';
 import { bg, text, border, hover, type TwColor, type TwStateColor, splitTwColor, Intent } from 'design-system/colors';
 
 interface ButtonColor {
@@ -13,6 +15,7 @@ interface SealedButtonProps {
   className?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   type?: 'button' | 'submit' | 'reset';
+  buttonLink?: Page;
 }
 
 interface CustomButtonProps {
@@ -21,7 +24,7 @@ interface CustomButtonProps {
   fg: ButtonColor;
 }
 
-function CustomButton({ children, size = 'md', border, bg, fg, className, ...props }: CustomButtonProps & SealedButtonProps) {
+function CustomButton({ children, size = 'md', border, bg, fg, className, buttonLink, ...props }: CustomButtonProps & SealedButtonProps) {
   const base = 'inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none';
   const focus = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-deep-forest-blue';
 
@@ -46,10 +49,15 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, ...pro
     className
   );
 
-  return (
+  const finalButton = (
     <button className={buttonClassName} {...props}>
       {children}
-    </button>)
+    </button>
+  );
+
+  return buttonLink
+    ? <PageLink page={buttonLink}>{finalButton}</PageLink>
+    : finalButton;
 }
 
 function ButtonIntentVariant({ intent, useBorder, ...props }: SealedButtonProps & { useBorder: boolean, intent: Intent }) {

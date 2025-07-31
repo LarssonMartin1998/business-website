@@ -1,29 +1,34 @@
+import { Link, Outlet } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+
 import { logotype } from 'assets/Logotype';
 import { hoverRaw, raw, text } from 'design-system/colors';
 
 interface HeaderListItemProps {
   name: string;
+  routerPath: string;
 }
 
 function HeaderLogo() {
   return (
-    <img className='drop-shadow-xl hover:drop-shadow-rust-orange/50' src={logotype} alt='' />
+    <Link to='/' className='h-full flex'>
+      <img className='drop-shadow-xl hover:drop-shadow-rust-orange/50' src={logotype} alt='' />
+    </Link>
   );
 }
 
-function HeaderListItem({ name }: HeaderListItemProps) {
+function HeaderListItem({ name, routerPath }: HeaderListItemProps) {
   const colors = twMerge(text('default'), hoverRaw(text(raw.rustOrange)));
   const font = 'uppercase font-bold text-xl';
 
   return (
     <li className={twMerge(colors, font, 'text-shadow-lg ')}>
-      {name}
+      <Link to={routerPath}>{name}</Link>
     </li>
   );
 }
 
-function Header() {
+function HeroHeader() {
   const flex = 'flex gap-x-8';
 
   return (
@@ -31,12 +36,14 @@ function Header() {
       <nav className={twMerge(flex, 'justify-center', 'h-full')}>
         <HeaderLogo />
         <ul className={twMerge(flex, 'items-center')}>
-          <HeaderListItem name='Contact' />
-          <HeaderListItem name='Blog' />
+          <HeaderListItem routerPath='/contact' name='Contact' />
+          <HeaderListItem routerPath='/blog' name='Blog' />
         </ul>
       </nav>
+
+      <Outlet />
     </header>
   );
 }
 
-export default Header;
+export default HeroHeader;

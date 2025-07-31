@@ -1,31 +1,27 @@
-import Header from 'components/home/Header';
-import Hero from 'components/home/Hero'
-import Clients from 'components/home/Clients';
-import Services from 'components/home/Services';
-import Posts from 'components/home/Posts';
-import Resume from 'components/home/Resume';
-import Socials from 'components/home/Socials';
+import { BrowserRouter, Routes, } from 'react-router-dom';
+
+import { CreateTypedRoute, } from 'design-system/pages';
+import Home from 'pages/Home';
+import Contact from 'pages/Contact';
+import Blog from 'pages/Blog';
+import ErrNotFound from 'pages/ErrNotFound';
 
 function App() {
   return (
-    <>
-      <Header />
-
-      <main>
-        <Hero />
-
-        <Clients />
-
-        <Services />
-
-        <Posts />
-
-        <Resume />
-
-        <Socials />
-      </main >
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        {CreateTypedRoute({
+          path: '/',
+          children: [
+            CreateTypedRoute({ index: true, element: <Home /> }),
+            CreateTypedRoute({ path: 'contact', element: <Contact /> }),
+            CreateTypedRoute({ path: 'blog', element: <Blog /> }),
+            CreateTypedRoute({ path: '*', element: <ErrNotFound /> }),
+          ],
+        })}
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
