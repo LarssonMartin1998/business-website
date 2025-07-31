@@ -3,20 +3,23 @@ import { twMerge } from "tailwind-merge";
 import { GithubLogo, LinkedinLogo, MastodonLogo } from "components/generated/index";
 import { CardDefault } from "components/Card";
 import { bg, text, } from "design-system/colors";
+import { Href, AnchorLink, hrefs } from "design-system/pages";
 
 interface LogoProps {
   LogoType: React.ComponentType<{ className?: string }>;
+  href: Href;
 }
 
 interface SkewProps {
   className?: string;
 }
 
-function Logo({ LogoType }: LogoProps) {
+function Logo({ LogoType, href }: LogoProps) {
   const animation = 'transition-transform duration-200 hover:scale-102 hover:-translate-y-1 hover:drop-shadow-lg';
   return (
-    <LogoType className={twMerge(text('defaultCard'), animation, 'w-32 h-32 ')}
-    />
+    <AnchorLink href={href}>
+      <LogoType className={twMerge(text('defaultCard'), animation, 'w-32 h-32 ')} />
+    </AnchorLink>
   );
 }
 
@@ -50,9 +53,9 @@ function Socials() {
         <h2 className={twMerge(text('accent'), 'font-bold text-center text-5xl text-shadow-sm')}>Socials</h2>
         <CardDefault className=' w-auto h-auto p-12'>
           <div className='flex gap-x-20'>
-            <Logo LogoType={LinkedinLogo} />
-            <Logo LogoType={GithubLogo} />
-            <Logo LogoType={MastodonLogo} />
+            <Logo LogoType={LinkedinLogo} href={hrefs.linkedIn} />
+            <Logo LogoType={GithubLogo} href={hrefs.github} />
+            <Logo LogoType={MastodonLogo} href={hrefs.mastodon} />
           </div>
         </CardDefault>
       </div>
