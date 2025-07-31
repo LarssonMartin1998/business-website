@@ -1,11 +1,22 @@
 import { Route, Link } from 'react-router-dom';
 
-type Page = '/' | '/contact' | '/blog' | '/blog/post';
+const hrefs = {
+  github: 'https://www.github.com/LarssonMartin1998',
+} as const;
+type Href = typeof hrefs[keyof typeof hrefs];
+
+const pages = [
+  '/',
+  '/contact',
+  '/blog',
+  '/blog/post',
+] as const;
+type Page = typeof pages[number];
 
 type SplitIntoSegments<S extends string, D extends string> =
   S extends '' ?
   [] :
-  S extends `${infer T}${D}${infer U}` ? [T, ...SplitIntoSegments<U, D>] : [S];
+  S extends `${infer T}${D}${infer U} ` ? [T, ...SplitIntoSegments<U, D>] : [S];
 type AllSegments = Page extends infer P ?
   SplitIntoSegments<P & string, '/'>[number] :
   never;
@@ -27,9 +38,20 @@ type RouteTypedProps =
   // Index route (element, no path, no children)
   | { index: true; element: React.ReactNode; path?: never; children?: never };
 
+interface AnchorLinkProps {
+  children: React.ReactNode;
+  href: Href;
+}
+
 function PageLink({ children, page }: PageLinkProps) {
   return (
     <Link to={page}>{children}</Link>
+  );
+}
+
+function AnchorLink({ children, href }: AnchorLinkProps) {
+  return (
+    <a href={href}>{children}</a>
   );
 }
 
@@ -58,5 +80,5 @@ function CreateTypedRoute(props: RouteTypedProps) {
   return <Route path={props.path} element={props.element} />;
 }
 
-export { PageLink, CreateTypedRoute };
-export type { Page };
+export { PageLink, AnchorLink, CreateTypedRoute, pages, hrefs, };
+export type { Page, Href, };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { Page, PageLink } from 'design-system/pages';
+import { Href, Page, PageLink, AnchorLink, pages } from 'design-system/pages';
 import { bg, text, border, hover, type TwColor, type TwStateColor, splitTwColor, Intent } from 'design-system/colors';
 
 interface ButtonColor {
@@ -15,7 +15,7 @@ interface SealedButtonProps {
   className?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   type?: 'button' | 'submit' | 'reset';
-  buttonLink?: Page;
+  buttonLink?: Page | Href;
 }
 
 interface CustomButtonProps {
@@ -56,7 +56,9 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, button
   );
 
   return buttonLink
-    ? <PageLink page={buttonLink}>{finalButton}</PageLink>
+    ? (pages as readonly string[]).includes(buttonLink)
+      ? <PageLink page={buttonLink as Page}>{finalButton}</PageLink>
+      : <AnchorLink href={buttonLink as Href}>{finalButton}</AnchorLink>
     : finalButton;
 }
 
