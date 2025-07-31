@@ -1,4 +1,6 @@
+import { RefObject } from 'react';
 import { twMerge } from 'tailwind-merge';
+
 import HeroBackground from './HeroBackground';
 import { ButtonAccent, ButtonAlert } from 'components/Button';
 import { bg, raw, text } from 'design-system/colors';
@@ -9,14 +11,20 @@ function SkewSeparator() {
   );
 }
 
-function Hero() {
+interface HeroProps {
+  scrollToServicesRef: RefObject<HTMLDivElement | null>,
+}
+
+function Hero({ scrollToServicesRef }: HeroProps) {
   const headline = 'Marsson\u00A0\u00A0';
   const subheadline = '|\u00A0\u00A0Senior Consultant';
-  const paragraph = 'I help teams build cool shit in C++, C, Zig, Rust and other wack languages.'
+  const paragraph = 'I help teams build cool shit in C++, C, Zig, Rust and other wack languages.';
 
   const orangeText = text(raw.rustOrange);
   const whiteText = text(raw.cloudHaze);
   const headerSize = 'text-8xl sm:text-6xl';
+
+  const onClickViewServices = () => scrollToServicesRef.current?.scrollIntoView({ behavior: 'smooth' });
 
   return (
     <section className='flex min-h-screen pr-48 pb-32'>
@@ -28,8 +36,8 @@ function Hero() {
         </div>
         <p className={twMerge(whiteText, 'text-shadow-md font-bold sm:text-l mt-2 ml-2')}>{paragraph}</p>
         <div className='flex gap-x-4 mt-8 p-4 pl-2'>
-          <ButtonAccent className='shadow-xl' size='lg'>Book a Free Call</ButtonAccent>
-          <ButtonAlert className='shadow-xl' size='lg'>View Services</ButtonAlert>
+          <ButtonAccent className='shadow-xl' size='lg' buttonLink='/blog'>Read My Blog</ButtonAccent>
+          <ButtonAlert className='shadow-xl' size='lg' onClick={onClickViewServices}>View Services</ButtonAlert>
         </div>
       </div>
       <SkewSeparator />

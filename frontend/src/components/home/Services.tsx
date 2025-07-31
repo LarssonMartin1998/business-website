@@ -1,3 +1,4 @@
+import { RefObject } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { CogWheels, Layers, Lightbulb } from 'components/generated/index';
@@ -35,6 +36,10 @@ interface ServicesGroupProps {
   bgColRaw: RawColor,
 }
 
+interface ServicesProps {
+  scrollToServicesRef: RefObject<HTMLDivElement | null>,
+}
+
 function ServicesGroup({ services, bgColRaw }: ServicesGroupProps) {
   return (
     <ul className='flex mt-10 gap-x-14'>
@@ -45,7 +50,7 @@ function ServicesGroup({ services, bgColRaw }: ServicesGroupProps) {
   );
 }
 
-function Services() {
+function Services({ scrollToServicesRef }: ServicesProps) {
   const header = 'Services';
   const paragraph = 'Lorem, ipsum dolor sit amet, consectetur adipiscing elit. Praesent tempus vitae ante sed lobortis. Sed posuere hendrerit purus, eu cursus purus facilisis eget. Quisque sodales vitae lacus pretium blandit. Maecenas at sem euismod, interdum elit eget, mattis tortor. Etiam sed molestie arcu, nec euismod sem. Maecenas tincidunt venenatis leo eu.';
 
@@ -75,7 +80,7 @@ function Services() {
   const [, bgColRaw] = splitTwColor(bgCol);
 
   return (
-    <div className={twMerge(bgCol, 'p-8')}>
+    <div ref={scrollToServicesRef} className={twMerge(bgCol, 'p-8')}>
       <div className='flex flex-col items-center'>
         <h2 className={twMerge(textCol, 'font-bold text-5xl text-shadow-sm')}>{header}</h2>
         <p className={twMerge(textCol, 'text-center w-1/2 mt-4')}>{paragraph}</p>
