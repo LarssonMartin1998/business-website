@@ -41,6 +41,7 @@
             go
             delve
             gotools
+            air
           ];
 
           shellHook = ''

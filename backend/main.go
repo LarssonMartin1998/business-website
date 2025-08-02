@@ -1,21 +1,63 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
+	"errors"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"backend/blog"
+	"backend/router"
 )
 
 func main() {
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
+	r := router.New()
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!"))
+	r.SetupRoutes(&router.RoutingContext{
+		Providers: []router.RouteProvider{
+			blog.NewModule(),
+		},
 	})
 
-	log.Println("Server starting on :8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	port, err := getServerPort()
+	if err != nil {
+		log.Fatal(err)
+	}
+	port = ":" + port
+
+	var buf bytes.Buffer
+	writer := bufio.NewWriter(&buf)
+	fmt.Fprintf(writer, "✅Starting HTTP server on port %s\n", port)
+	r.WriteRoutes(writer)
+
+	r.ClearRouteTree()
+
+	writer.Flush()
+	fmt.Println(buf.String())
+	log.Fatal(http.ListenAndServe(port, r.GetHTTPHandler()))
+}
+
+func getServerPort() (port string, err error) {
+	args := os.Args[1:]
+
+	if len(args) != 1 {
+		err = errors.New("a single flag which sets the server environment must be passed: [--dev, -d] | [--qa, -q] | [--prod, -p]")
+		return
+	}
+
+	switch args[0] {
+	case "--dev", "-d":
+		port = "3000"
+	case "--qa", "-q":
+		port = "8081"
+	case "--prod", "-p":
+		port = "8080"
+	default:
+		err = fmt.Errorf("Unknown flag passed: %s", args[0])
+	}
+
+	return
 }
