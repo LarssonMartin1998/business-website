@@ -30,8 +30,7 @@ type DatabaseConfig struct {
 }
 
 type APIConfig struct {
-	Key      string
-	AdminKey string
+	Key string
 }
 
 type ServerConfig struct {
@@ -54,8 +53,7 @@ func Load() (*Config, error) {
 			MaxIdleConns: getIntEnv("DB_MAX_IDLE_CONNS", 2),
 		},
 		API: APIConfig{
-			Key:      mustGetEnv("API_KEY"),
-			AdminKey: mustGetEnv("ADMIN_API_KEY"),
+			Key: mustGetEnv("API_KEY"),
 		},
 		Server: ServerConfig{
 			AllowedOrigins: getSliceEnv("ALLOWED_ORIGINS", []string{}),
@@ -77,8 +75,6 @@ func (c *Config) validate() error {
 	}
 
 	if c.API.Key == "" {
-	if c.API.AdminKey == "" {
-		log.Fatal("ADMIN_API_KEY is required")
 		return fmt.Errorf("missing required config entry: API_KEY")
 	}
 
@@ -89,7 +85,6 @@ func (c *Config) validate() error {
 	return nil
 }
 
-// Helper functions
 func getEnv(key, defaultValue string) string {
 	if value := os.Getenv(key); value != "" {
 		return value
@@ -129,7 +124,6 @@ func getIntEnv(key string, defaultValue int) int {
 
 func getSliceEnv(key string, defaultValue []string) []string {
 	if value := os.Getenv(key); value != "" {
-		// Split by comma and trim whitespace
 		parts := strings.Split(value, ",")
 		result := make([]string, len(parts))
 		for i, part := range parts {
