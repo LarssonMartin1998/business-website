@@ -14,7 +14,7 @@ type blogStore struct {
 	mutex  sync.RWMutex
 }
 
-func NewBlogStore() blogStore {
+func newBlogStore() blogStore {
 	return blogStore{
 		posts:  make(map[int]*blogPost),
 		nextID: 1,

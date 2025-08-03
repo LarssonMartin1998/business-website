@@ -55,6 +55,7 @@ type routerWrapped struct {
 }
 
 type RouteProvider interface {
+	Init()
 	RegisterRoutes(r *RouteNode)
 }
 
@@ -88,13 +89,16 @@ func (r *routerWrapped) GetHTTPHandler() *chi.Mux {
 }
 
 func (r *routerWrapped) SetupRoutes(context *RoutingContext) {
+	for _, providers := range context.Providers {
+		providers.Init()
+	}
+
 	const version = "v1"
 	const apiRoot = "/api" + "/" + version
-
 	root := (*r.routeTree)[0]
 	root.Route(apiRoot, func(n *RouteNode) {
-		for _, v := range context.Providers {
-			v.RegisterRoutes(n)
+		for _, providers := range context.Providers {
+			providers.RegisterRoutes(n)
 		}
 	})
 

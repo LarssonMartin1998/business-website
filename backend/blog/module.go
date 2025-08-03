@@ -10,8 +10,12 @@ type Module struct {
 
 func NewModule() *Module {
 	return &Module{
-		store: NewBlogStore(),
+		store: newBlogStore(),
 	}
+}
+
+func (m *Module) Init() {
+	// Load database store
 }
 
 func (m *Module) RegisterRoutes(n *router.RouteNode) {
