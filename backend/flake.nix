@@ -16,6 +16,7 @@
       system:
       let
         pkgs = import nixpkgs { inherit system; };
+        CGO = "1";
         go = pkgs.go;
       in
       {
@@ -27,7 +28,7 @@
           vendorHash = "sha256-0DmVUIaSSibyNy819LIEaExI4F9VA4CRNkrFx++q1HU=";
 
           env = {
-            CGO_ENABLED = "0";
+            CGO_ENABLED = CGO;
           };
 
           doCheck = true;
@@ -44,8 +45,13 @@
             air
           ];
 
+          env = {
+            CGO_ENABLED = CGO;
+          };
+
           shellHook = ''
             echo "🦫 $(${go}/bin/go version) ready!"
+            echo "CGO_ENABLED: $CGO_ENABLED"
           '';
         };
       }

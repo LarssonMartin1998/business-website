@@ -9,6 +9,7 @@ import (
 
 	"backend/blog"
 	"backend/config"
+	"backend/database"
 	"backend/router"
 	"backend/utils"
 )
@@ -23,6 +24,7 @@ func main() {
 	})
 
 	cfg := utils.Must(config.Load())
+	utils.Must(database.NewSQLiteDB(cfg))
 
 	port := ":" + cfg.Port
 	var buf bytes.Buffer
