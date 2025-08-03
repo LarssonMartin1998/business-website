@@ -4,6 +4,7 @@ Package config ...
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -37,10 +38,9 @@ type ServerConfig struct {
 	RateLimit      int
 }
 
-func MustLoad() *Config {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+func Load() (*Config, error) {
+	if err := godotenv.Load(); err != nil {
+		return nil, fmt.Errorf("error loading .env file: %e", err)
 	}
 
 	config := &Config{
@@ -61,15 +61,17 @@ func MustLoad() *Config {
 		},
 	}
 
-	config.validate()
-	return config
+	if err := config.validate(); err != nil {
+		return nil, err
+	}
+
+	return config, nil
 }
 
-func (c *Config) validate() {
-	// Ensure database directory exists
+func (c *Config) validate() error {
 	dir := filepath.Dir(c.Database.Path)
 	if err := os.MkdirAll(dir, 0755); err != nil {
-		log.Fatalf("Failed to create database directory %s: %v", dir, err)
+		return fmt.Errorf("failed to create database directory %s: %v", dir, err)
 	}
 
 	// Ensure backup directory exists (if specified)
@@ -79,16 +81,17 @@ func (c *Config) validate() {
 		}
 	}
 
-	// Validate required fields
 	if c.API.Key == "" {
-		log.Fatal("API_KEY is required")
-	}
 	if c.API.AdminKey == "" {
 		log.Fatal("ADMIN_API_KEY is required")
+		return fmt.Errorf("missing required config entry: API_KEY")
 	}
+
 	if len(c.Server.AllowedOrigins) == 0 {
-		log.Fatal("ALLOWED_ORIGINS is required")
+		return fmt.Errorf("missing required config entry: ALLOWED_ORIGINS")
 	}
+
+	return nil
 }
 
 // Helper functions

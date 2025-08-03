@@ -10,6 +10,7 @@ import (
 	"backend/blog"
 	"backend/config"
 	"backend/router"
+	"backend/utils"
 )
 
 func main() {
@@ -21,9 +22,9 @@ func main() {
 		},
 	})
 
-	conf := config.MustLoad()
-	port := ":" + conf.Port
+	cfg := utils.Must(config.Load())
 
+	port := ":" + cfg.Port
 	var buf bytes.Buffer
 	writer := bufio.NewWriter(&buf)
 	fmt.Fprintf(writer, "✅Starting HTTP server on port %s\n", port)
