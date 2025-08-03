@@ -25,7 +25,6 @@ type DatabaseConfig struct {
 	Path       string
 	WALMode    bool
 	Timeout    int
-	BackupPath string
 }
 
 type APIConfig struct {
@@ -49,7 +48,6 @@ func Load() (*Config, error) {
 			Path:       mustGetEnv("DB_PATH"),
 			WALMode:    getBoolEnv("DB_WAL_MODE", true),
 			Timeout:    getIntEnv("DB_TIMEOUT", 30),
-			BackupPath: getEnv("BACKUP_PATH", ""),
 		},
 		API: APIConfig{
 			Key:      mustGetEnv("API_KEY"),
@@ -72,13 +70,6 @@ func (c *Config) validate() error {
 	dir := filepath.Dir(c.Database.Path)
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		return fmt.Errorf("failed to create database directory %s: %v", dir, err)
-	}
-
-	// Ensure backup directory exists (if specified)
-	if c.Database.BackupPath != "" {
-		if err := os.MkdirAll(c.Database.BackupPath, 0755); err != nil {
-			log.Fatalf("Failed to create backup directory %s: %v", c.Database.BackupPath, err)
-		}
 	}
 
 	if c.API.Key == "" {
