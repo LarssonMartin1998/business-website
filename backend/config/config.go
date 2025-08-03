@@ -24,7 +24,7 @@ type Config struct {
 type DatabaseConfig struct {
 	Path       string
 	WALMode    bool
-	Timeout    int
+	TimeoutSecs  int
 }
 
 type APIConfig struct {
@@ -47,7 +47,7 @@ func Load() (*Config, error) {
 		Database: DatabaseConfig{
 			Path:       mustGetEnv("DB_PATH"),
 			WALMode:    getBoolEnv("DB_WAL_MODE", true),
-			Timeout:    getIntEnv("DB_TIMEOUT", 30),
+			TimeoutSecs:  getIntEnv("DB_TIMEOUT", 30),
 		},
 		API: APIConfig{
 			Key:      mustGetEnv("API_KEY"),
