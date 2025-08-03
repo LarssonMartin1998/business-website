@@ -22,9 +22,11 @@ type Config struct {
 }
 
 type DatabaseConfig struct {
-	Path       string
-	WALMode    bool
+	Path         string
+	WALMode      bool
 	TimeoutSecs  int
+	MaxOpenConns int
+	MaxIdleConns int
 }
 
 type APIConfig struct {
@@ -45,9 +47,11 @@ func Load() (*Config, error) {
 	config := &Config{
 		Port: getEnv("PORT", "8080"),
 		Database: DatabaseConfig{
-			Path:       mustGetEnv("DB_PATH"),
-			WALMode:    getBoolEnv("DB_WAL_MODE", true),
+			Path:         mustGetEnv("DB_PATH"),
+			WALMode:      getBoolEnv("DB_WAL_MODE", true),
 			TimeoutSecs:  getIntEnv("DB_TIMEOUT", 30),
+			MaxOpenConns: getIntEnv("DB_MAX_OPEN_CONNS", 5),
+			MaxIdleConns: getIntEnv("DB_MAX_IDLE_CONNS", 2),
 		},
 		API: APIConfig{
 			Key:      mustGetEnv("API_KEY"),
