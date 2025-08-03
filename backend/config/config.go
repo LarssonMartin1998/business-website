@@ -4,6 +4,7 @@ Package config ...
 package config
 
 import (
+	"backend/utils"
 	"fmt"
 	"log"
 	"os"
@@ -46,17 +47,17 @@ func Load() (*Config, error) {
 	config := &Config{
 		Port: getEnv("PORT", "8080"),
 		Database: DatabaseConfig{
-			Path:         mustGetEnv("DB_PATH"),
+			Path:         utils.Must(getEnvWithoutDefault("DB_PATH")),
 			WALMode:      getBoolEnv("DB_WAL_MODE", true),
 			TimeoutSecs:  getIntEnv("DB_TIMEOUT", 30),
 			MaxOpenConns: getIntEnv("DB_MAX_OPEN_CONNS", 5),
 			MaxIdleConns: getIntEnv("DB_MAX_IDLE_CONNS", 2),
 		},
 		API: APIConfig{
-			Key: mustGetEnv("API_KEY"),
+			Key: utils.Must(getEnvWithoutDefault("API_KEY")),
 		},
 		Server: ServerConfig{
-			AllowedOrigins: getSliceEnv("ALLOWED_ORIGINS", []string{}),
+			AllowedOrigins: utils.Must(getSliceEnvWithoutDefault("ALLOWED_ORIGINS")),
 			RateLimit:      getIntEnv("RATE_LIMIT", 60),
 		},
 	}
@@ -69,16 +70,15 @@ func Load() (*Config, error) {
 }
 
 func (c *Config) validate() error {
-	dir := filepath.Dir(c.Database.Path)
-	if err := os.MkdirAll(dir, 0755); err != nil {
-		return fmt.Errorf("failed to create database directory %s: %v", dir, err)
+	if c.Database.Path == "" {
+		return fmt.Errorf("missing required config entry: DB_PATH")
 	}
 
 	if c.API.Key == "" {
 		return fmt.Errorf("missing required config entry: API_KEY")
 	}
 
-	if len(c.Server.AllowedOrigins) == 0 {
+	if c.Server.AllowedOrigins == nil || len(c.Server.AllowedOrigins) == 0 {
 		return fmt.Errorf("missing required config entry: ALLOWED_ORIGINS")
 	}
 
@@ -92,12 +92,12 @@ func getEnv(key, defaultValue string) string {
 	return defaultValue
 }
 
-func mustGetEnv(key string) string {
+func getEnvWithoutDefault(key string) (string, error) {
 	value := os.Getenv(key)
 	if value == "" {
-		log.Fatalf("Required environment variable %s is not set", key)
+		return "", fmt.Errorf("Required environment variable %s is not set", key)
 	}
-	return value
+	return value, nil
 }
 
 func getBoolEnv(key string, defaultValue bool) bool {
@@ -122,14 +122,17 @@ func getIntEnv(key string, defaultValue int) int {
 	return defaultValue
 }
 
-func getSliceEnv(key string, defaultValue []string) []string {
-	if value := os.Getenv(key); value != "" {
-		parts := strings.Split(value, ",")
-		result := make([]string, len(parts))
-		for i, part := range parts {
-			result[i] = strings.TrimSpace(part)
-		}
-		return result
+func getSliceEnvWithoutDefault(key string) ([]string, error) {
+	value, err := getEnvWithoutDefault(key)
+	if err != nil {
+		return nil, err
 	}
-	return defaultValue
+
+	parts := strings.Split(value, ",")
+	result := make([]string, len(parts))
+	for i, part := range parts {
+		result[i] = strings.TrimSpace(part)
+	}
+
+	return result, nil
 }
