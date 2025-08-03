@@ -3,13 +3,12 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"backend/blog"
+	"backend/config"
 	"backend/router"
 )
 
@@ -22,11 +21,8 @@ func main() {
 		},
 	})
 
-	port, err := getServerPort()
-	if err != nil {
-		log.Fatal(err)
-	}
-	port = ":" + port
+	conf := config.MustLoad()
+	port := ":" + conf.Port
 
 	var buf bytes.Buffer
 	writer := bufio.NewWriter(&buf)
@@ -38,26 +34,4 @@ func main() {
 	writer.Flush()
 	fmt.Println(buf.String())
 	log.Fatal(http.ListenAndServe(port, r.GetHTTPHandler()))
-}
-
-func getServerPort() (port string, err error) {
-	args := os.Args[1:]
-
-	if len(args) != 1 {
-		err = errors.New("a single flag which sets the server environment must be passed: [--dev, -d] | [--qa, -q] | [--prod, -p]")
-		return
-	}
-
-	switch args[0] {
-	case "--dev", "-d":
-		port = "3000"
-	case "--qa", "-q":
-		port = "8081"
-	case "--prod", "-p":
-		port = "8080"
-	default:
-		err = fmt.Errorf("Unknown flag passed: %s", args[0])
-	}
-
-	return
 }
