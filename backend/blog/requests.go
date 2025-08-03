@@ -10,12 +10,10 @@ import (
 )
 
 type createPostRequest struct {
-	Title   string `json:"title"`
 	Content string `json:"content"`
 }
 
 type updatePostRequest struct {
-	Title   string `json:"title"`
 	Content string `json:"content"`
 }
 
@@ -26,8 +24,8 @@ func (m *Module) createPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.Title == "" || req.Content == "" {
-		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Title and content are required")
+	if req.Content == "" {
+		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Content is required")
 		return
 	}
 

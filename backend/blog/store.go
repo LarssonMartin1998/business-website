@@ -27,7 +27,6 @@ func (bs *blogStore) create(req *createPostRequest) *blogPost {
 
 	post := &blogPost{
 		ID:          bs.nextID,
-		Title:       req.Title,
 		Content:     req.Content,
 		PublishedAt: time.Now(),
 		UpdatedAt:   time.Now(),
@@ -62,7 +61,6 @@ func (bs *blogStore) update(id int, req *updatePostRequest) *blogPost {
 	defer bs.mutex.Unlock()
 
 	if post, exists := bs.posts[id]; exists {
-		post.Title = req.Title
 		post.Content = req.Content
 		post.UpdatedAt = time.Now()
 		return post
