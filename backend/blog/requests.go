@@ -4,9 +4,10 @@ import (
 	"backend/utils"
 	"database/sql"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -19,6 +20,25 @@ type updatePostRequest struct {
 	Content string `json:"content"`
 }
 
+func (m *Module) verifyPostContent(content string) error {
+	trimmed := strings.TrimSpace(content)
+	if trimmed == "" {
+		return errors.New("empty ")
+	}
+
+	const unreasonablySmallLen = 50
+	if len(trimmed) < unreasonablySmallLen {
+		return errors.New("too short content submitted in blog post")
+	}
+
+	const unreasonableBlogLen = 7500
+	if len(content) > unreasonableBlogLen {
+		return errors.New("too long content submitted in blog post")
+	}
+
+	return nil
+}
+
 func (m *Module) createPost(w http.ResponseWriter, r *http.Request) {
 	var req createPostRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -26,14 +46,14 @@ func (m *Module) createPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.Content == "" {
-		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Content is required")
+	if m.verifyPostContent(req.Content) != nil {
+		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid post content")
 		return
 	}
 
 	post, err := m.store.create(&req)
 	if err != nil {
-		utils.RespondWithJSON(w, http.StatusInternalServerError, false, post, fmt.Sprintf("Error creating Blog Post: %v", err))
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, post, "Error creating Blog Post")
 		return
 	}
 
@@ -43,7 +63,7 @@ func (m *Module) createPost(w http.ResponseWriter, r *http.Request) {
 func (m *Module) getPosts(w http.ResponseWriter, r *http.Request) {
 	posts, err := m.store.getAll()
 	if err != nil {
-		utils.RespondWithJSON(w, http.StatusInternalServerError, false, posts, fmt.Sprintf("Error reading Blog Posts: %v", err))
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, posts, "Error reading Blog Posts")
 		return
 	}
 
@@ -60,7 +80,7 @@ func (m *Module) getPost(w http.ResponseWriter, r *http.Request) {
 
 	post, err := m.store.getByID(id)
 	if err != nil {
-		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, fmt.Sprintf("Error reading Blog Post: %v", err))
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, "Error reading Blog Post")
 		return
 	}
 	if post == nil {
@@ -85,9 +105,14 @@ func (m *Module) updatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if m.verifyPostContent(req.Content) != nil {
+		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid post content")
+		return
+	}
+
 	post, err := m.store.update(id, &req)
 	if err != nil {
-		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, fmt.Sprintf("Error updating Blog Post: %v", err))
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, "Error updating Blog Post")
 		return
 	}
 	if post == nil {
@@ -113,7 +138,7 @@ func (m *Module) deletePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, fmt.Sprintf("Error deleting Blog Post: %v", err))
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, "Error deleting Blog Post")
 		return
 	}
 
