@@ -3,9 +3,13 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"backend/blog"
 	"backend/config"
@@ -44,5 +48,23 @@ func main() {
 		IdleTimeout:    cfg.Server.IdleTimeout,
 		MaxHeaderBytes: 1 << 20, // 1 MB
 	}
-	log.Fatal(server.ListenAndServe())
+
+	go func() {
+		log.Printf("✅Starting HTTP server on port %s", port)
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatal(err)
+		}
+	}()
+
+	// Wait for interrupt signal
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	log.Println("Shutting down server...")
+	ctx, cancel := context.WithTimeout(context.Background(), max(cfg.Server.ReadTimeout, cfg.Server.WriteTimeout))
+	defer cancel()
+
+	server.Shutdown(ctx)
+	db.Close()
 }
