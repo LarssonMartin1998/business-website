@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -41,7 +40,7 @@ type ServerConfig struct {
 
 func Load() (*Config, error) {
 	if err := godotenv.Load(); err != nil {
-		return nil, fmt.Errorf("error loading .env file: %e", err)
+		return nil, fmt.Errorf("error loading .env file: %w", err)
 	}
 
 	config := &Config{

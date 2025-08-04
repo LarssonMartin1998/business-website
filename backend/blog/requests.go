@@ -2,7 +2,9 @@ package blog
 
 import (
 	"backend/utils"
+	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -29,24 +31,38 @@ func (m *Module) createPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	post := m.store.create(&req)
+	post, err := m.store.create(&req)
+	if err != nil {
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, post, fmt.Sprintf("Error creating Blog Post: %v", err))
+		return
+	}
+
 	utils.RespondWithJSON(w, http.StatusCreated, true, post, "")
 }
 
 func (m *Module) getPosts(w http.ResponseWriter, r *http.Request) {
-	posts := m.store.getAll()
+	posts, err := m.store.getAll()
+	if err != nil {
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, posts, fmt.Sprintf("Error reading Blog Posts: %v", err))
+		return
+	}
+
 	utils.RespondWithJSON(w, http.StatusOK, true, posts, "")
 }
 
 func (m *Module) getPost(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
-	id, err := strconv.Atoi(idStr)
+	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
 		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid post ID")
 		return
 	}
 
-	post := m.store.getByID(id)
+	post, err := m.store.getByID(id)
+	if err != nil {
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, fmt.Sprintf("Error reading Blog Post: %v", err))
+		return
+	}
 	if post == nil {
 		utils.RespondWithJSON(w, http.StatusNotFound, false, nil, "Post not found")
 		return
@@ -57,7 +73,7 @@ func (m *Module) getPost(w http.ResponseWriter, r *http.Request) {
 
 func (m *Module) updatePost(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
-	id, err := strconv.Atoi(idStr)
+	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
 		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid post ID")
 		return
@@ -69,7 +85,11 @@ func (m *Module) updatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	post := m.store.update(id, &req)
+	post, err := m.store.update(id, &req)
+	if err != nil {
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, fmt.Sprintf("Error updating Blog Post: %v", err))
+		return
+	}
 	if post == nil {
 		utils.RespondWithJSON(w, http.StatusNotFound, false, nil, "Post not found")
 		return
@@ -80,14 +100,20 @@ func (m *Module) updatePost(w http.ResponseWriter, r *http.Request) {
 
 func (m *Module) deletePost(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
-	id, err := strconv.Atoi(idStr)
+	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
 		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid post ID")
 		return
 	}
 
-	if !m.store.delete(id) {
+	err = m.store.delete(id)
+	if err == sql.ErrNoRows {
 		utils.RespondWithJSON(w, http.StatusNotFound, false, nil, "Post not found")
+		return
+	}
+
+	if err != nil {
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, fmt.Sprintf("Error deleting Blog Post: %v", err))
 		return
 	}
 

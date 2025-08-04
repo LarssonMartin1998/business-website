@@ -5,7 +5,9 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -20,7 +22,8 @@ type SQLiteDB struct {
 func NewSQLiteDB(cfg *config.Config) (*SQLiteDB, error) {
 	db, err := sql.Open("sqlite3", cfg.Database.Path)
 	if err != nil {
-		return nil, fmt.Errorf("failed to open database: %w", err)
+		log.Printf("Database connection failed: %v", err)
+		return nil, errors.New("Database connection failed.")
 	}
 
 	pragmas := []string{
@@ -39,7 +42,8 @@ func NewSQLiteDB(cfg *config.Config) (*SQLiteDB, error) {
 
 	for _, pragma := range pragmas {
 		if _, err := db.Exec(pragma); err != nil {
-			return nil, fmt.Errorf("failed to execute %s: %w", pragma, err)
+			log.Printf("Failed to set PRAGMA settings in SQLite: %s\nFull error: %w", pragma, err)
+			return nil, errors.New("failed to set SQLite PRAGMA settings")
 		}
 	}
 
@@ -48,12 +52,13 @@ func NewSQLiteDB(cfg *config.Config) (*SQLiteDB, error) {
 	db.SetMaxIdleConns(cfg.Database.MaxIdleConns)
 
 	if err := db.Ping(); err != nil {
-		return nil, fmt.Errorf("failed to ping database: %w", err)
+		log.Printf("Failed to ping database: %w", err)
+		return nil, errors.New("failed to ping database.")
 	}
 
 	sqlite := &SQLiteDB{db: db}
 	if err := sqlite.initSchema(); err != nil {
-		return nil, fmt.Errorf("failed to initialize schema: %w", err)
+		return nil, err
 	}
 
 	return sqlite, nil
@@ -63,7 +68,6 @@ func (s *SQLiteDB) initSchema() error {
 	schema := `
 	CREATE TABLE IF NOT EXISTS blog_posts (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		title TEXT NOT NULL,
 		content TEXT NOT NULL,
 		published_at DATETIME NOT NULL,
 		updated_at DATETIME NOT NULL
@@ -73,7 +77,12 @@ func (s *SQLiteDB) initSchema() error {
 	`
 
 	_, err := s.db.Exec(schema)
-	return err
+	if err != nil {
+		log.Printf("Failed to initialize database with schema: %s\nFull error: %v", schema, err)
+		return errors.New("failed to initialize schema")
+	}
+
+	return nil
 }
 
 func (s *SQLiteDB) Close() error {

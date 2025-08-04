@@ -11,6 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
+	"backend/config"
 	"backend/utils"
 )
 
@@ -30,9 +31,10 @@ type requestInfo struct {
 }
 
 type RouteNode struct {
-	children []*RouteNode
-	info     requestInfo
-	handler  func(w http.ResponseWriter, r *http.Request)
+	children    []*RouteNode
+	info        requestInfo
+	middlewares []func(http.Handler) http.Handler
+	handler     func(w http.ResponseWriter, r *http.Request)
 }
 
 func (n *RouteNode) newRouteNode(method HTTPMethod, pattern string, handler func(w http.ResponseWriter, r *http.Request)) *RouteNode {
@@ -49,14 +51,17 @@ func (n *RouteNode) newRouteNode(method HTTPMethod, pattern string, handler func
 	return &newNode
 }
 
+func (n *RouteNode) hasMiddleware() bool {
+	return len(n.middlewares) > 0
+}
+
 type routerWrapped struct {
 	internal  *chi.Mux
 	routeTree *[]*RouteNode
 }
 
 type RouteProvider interface {
-	Init()
-	RegisterRoutes(r *RouteNode)
+	RegisterRoutes(*RouteNode, *config.Config)
 }
 
 type RoutingContext struct {
@@ -65,10 +70,13 @@ type RoutingContext struct {
 
 func New() *routerWrapped {
 	chiRouter := chi.NewRouter()
-	chiRouter.Use(middleware.Logger)
-	chiRouter.Use(middleware.Recoverer)
-	chiRouter.Use(middleware.RequestID)
-	chiRouter.Use(middleware.RealIP)
+	chiRouter.Use(
+		middleware.Logger,
+		middleware.Recoverer,
+		middleware.RequestID,
+		middleware.RealIP,
+		middleware.SetHeader("X-Content-Type-Options", "nosniff"),
+		middleware.SetHeader("X-Frame-Options", "DENY"))
 
 	routeTree := make([]*RouteNode, 1, 10)
 	routeTree[0] = &RouteNode{
@@ -88,17 +96,13 @@ func (r *routerWrapped) GetHTTPHandler() *chi.Mux {
 	return r.internal
 }
 
-func (r *routerWrapped) SetupRoutes(context *RoutingContext) {
-	for _, providers := range context.Providers {
-		providers.Init()
-	}
-
+func (r *routerWrapped) SetupRoutes(context *RoutingContext, cfg *config.Config) {
 	const version = "v1"
 	const apiRoot = "/api" + "/" + version
 	root := (*r.routeTree)[0]
 	root.Route(apiRoot, func(n *RouteNode) {
 		for _, providers := range context.Providers {
-			providers.RegisterRoutes(n)
+			providers.RegisterRoutes(n, cfg)
 		}
 	})
 
@@ -150,13 +154,13 @@ func (r *routerWrapped) registerWithChi(node *RouteNode, basePath string) {
 	if node.handler != nil {
 		switch node.info.method {
 		case GET:
-			r.internal.Get(currentPath, node.handler)
+			r.registerMethodWithMiddleware(node, chi.Router.Get, currentPath)
 		case POST:
-			r.internal.Post(currentPath, node.handler)
+			r.registerMethodWithMiddleware(node, chi.Router.Post, currentPath)
 		case PUT:
-			r.internal.Put(currentPath, node.handler)
+			r.registerMethodWithMiddleware(node, chi.Router.Put, currentPath)
 		case DELETE:
-			r.internal.Delete(currentPath, node.handler)
+			r.registerMethodWithMiddleware(node, chi.Router.Delete, currentPath)
 		}
 		return
 	}
@@ -167,22 +171,36 @@ func (r *routerWrapped) registerWithChi(node *RouteNode, basePath string) {
 	}
 }
 
+func (r *routerWrapped) registerMethodWithMiddleware(node *RouteNode, methodFunc func(chi.Router, string, http.HandlerFunc), path string) {
+	var router chi.Router = r.internal
+	if node.hasMiddleware() {
+		router = router.With(node.middlewares...)
+	}
+
+	methodFunc(router, path, node.handler)
+}
+
 func (n *RouteNode) Route(pattern string, f func(*RouteNode)) {
 	f(n.newRouteNode(Undefined, pattern, nil))
 }
 
-func (n *RouteNode) Get(pattern string, f func(w http.ResponseWriter, r *http.Request)) {
-	n.newRouteNode(GET, pattern, f)
+func (n *RouteNode) With(middlewares ...func(http.Handler) http.Handler) *RouteNode {
+	n.middlewares = append(n.middlewares, middlewares...)
+	return n
 }
 
-func (n *RouteNode) Post(pattern string, f func(w http.ResponseWriter, r *http.Request)) {
-	n.newRouteNode(POST, pattern, f)
+func (n *RouteNode) Get(pattern string, f func(w http.ResponseWriter, r *http.Request)) *RouteNode {
+	return n.newRouteNode(GET, pattern, f)
 }
 
-func (n *RouteNode) Put(pattern string, f func(w http.ResponseWriter, r *http.Request)) {
-	n.newRouteNode(PUT, pattern, f)
+func (n *RouteNode) Post(pattern string, f func(w http.ResponseWriter, r *http.Request)) *RouteNode {
+	return n.newRouteNode(POST, pattern, f)
 }
 
-func (n *RouteNode) Delete(pattern string, f func(w http.ResponseWriter, r *http.Request)) {
-	n.newRouteNode(DELETE, pattern, f)
+func (n *RouteNode) Put(pattern string, f func(w http.ResponseWriter, r *http.Request)) *RouteNode {
+	return n.newRouteNode(PUT, pattern, f)
+}
+
+func (n *RouteNode) Delete(pattern string, f func(w http.ResponseWriter, r *http.Request)) *RouteNode {
+	return n.newRouteNode(DELETE, pattern, f)
 }

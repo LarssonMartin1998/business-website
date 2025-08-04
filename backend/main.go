@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"backend/blog"
 	"backend/config"
@@ -15,16 +16,15 @@ import (
 )
 
 func main() {
+	cfg := utils.Must(config.Load())
+	db := utils.Must(database.NewSQLiteDB(cfg))
 	r := router.New()
 
 	r.SetupRoutes(&router.RoutingContext{
 		Providers: []router.RouteProvider{
-			blog.NewModule(),
+			blog.NewModule(db),
 		},
-	})
-
-	cfg := utils.Must(config.Load())
-	utils.Must(database.NewSQLiteDB(cfg))
+	}, cfg)
 
 	port := ":" + cfg.Port
 	var buf bytes.Buffer
@@ -36,5 +36,14 @@ func main() {
 
 	writer.Flush()
 	fmt.Println(buf.String())
-	log.Fatal(http.ListenAndServe(port, r.GetHTTPHandler()))
+
+	server := &http.Server{
+		Addr:           port,
+		Handler:        r.GetHTTPHandler(),
+		ReadTimeout:    15 * time.Second,
+		WriteTimeout:   15 * time.Second,
+		IdleTimeout:    60 * time.Second,
+		MaxHeaderBytes: 1 << 20, // 1 MB
+	}
+	log.Fatal(server.ListenAndServe())
 }
