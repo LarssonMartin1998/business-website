@@ -11,6 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"github.com/go-chi/httprate"
 
 	"backend/config"
 	"backend/utils"
@@ -73,8 +74,9 @@ func New(cfg *config.Config) *routerWrapped {
 		middleware.RequestID,
 		middleware.RealIP,
 		middleware.RequestSize(cfg.Server.RequestSizeLimit),
-		middleware.Throttle(cfg.Server.ConnectionsLimit),
 		middleware.Timeout(cfg.Server.HandlerTimeout),
+		middleware.Throttle(cfg.Server.ConnectionsLimit),
+		httprate.LimitByRealIP(cfg.Server.RateLimit.PerIPLimit, cfg.Server.RateLimit.ClearInterval),
 		cors.Handler(cors.Options{
 			AllowedOrigins:   cfg.Server.AllowedOrigins,
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
