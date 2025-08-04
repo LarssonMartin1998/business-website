@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type APIResponse struct {
@@ -31,13 +32,21 @@ func RespondWithJSON(w http.ResponseWriter, status int, success bool, data any, 
 func MiddlewareAPIAuth(configAPIKey string) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			headerAPIKey := r.Header.Get("X-API-Key")
-			if headerAPIKey == "" {
+			authHeader := r.Header.Get("Authorization")
+			if authHeader == "" {
 				RespondWithJSON(w, http.StatusUnauthorized, false, nil, "Missing API Key")
 				log.Printf("Attempt to send request with a missing API Key from: %s", r.RemoteAddr)
 				return
 			}
 
+			apiKeyPrefix := "Bearer "
+			if !strings.HasPrefix(authHeader, apiKeyPrefix) {
+				log.Printf("Attempt to send request with invalid Authorization format from: %s", r.RemoteAddr)
+				RespondWithJSON(w, http.StatusUnauthorized, false, nil, "Invalid Authorization format.")
+				return
+			}
+
+			headerAPIKey := strings.TrimPrefix(authHeader, apiKeyPrefix)
 			if subtle.ConstantTimeCompare([]byte(headerAPIKey), []byte(configAPIKey)) != 1 {
 				RespondWithJSON(w, http.StatusUnauthorized, false, nil, "Invalid API Key")
 				log.Printf("Attempt to send request with an invalid API Key from: %s", r.RemoteAddr)

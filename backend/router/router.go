@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 
 	"backend/config"
 	"backend/utils"
@@ -73,6 +74,13 @@ func New(cfg *config.Config) *routerWrapped {
 		middleware.RealIP,
 		middleware.Throttle(cfg.Server.ConnectionsLimit),
 		middleware.Timeout(cfg.Server.HandlerTimeout),
+		cors.Handler(cors.Options{
+			AllowedOrigins:   cfg.Server.AllowedOrigins,
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+			AllowedHeaders:   []string{"Content-Type", "Authorization"},
+			AllowCredentials: false,
+			MaxAge:           300,
+		}),
 		middleware.SetHeader("X-Content-Type-Options", "nosniff"),
 		middleware.SetHeader("X-Frame-Options", "DENY"))
 
