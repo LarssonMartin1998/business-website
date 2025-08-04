@@ -34,9 +34,15 @@ type APIConfig struct {
 	Key string
 }
 
+type RateLimit struct {
+	PerIPLimit    int
+	ClearInterval time.Duration
+}
+
 type ServerConfig struct {
 	AllowedOrigins   []string
 	ConnectionsLimit int
+	RateLimit        RateLimit
 	RequestSizeLimit int64
 	ReadTimeout      time.Duration
 	WriteTimeout     time.Duration
@@ -64,6 +70,10 @@ func Load() (*Config, error) {
 		Server: ServerConfig{
 			AllowedOrigins:   utils.Must(getSliceEnvWithoutDefault("ALLOWED_ORIGINS")),
 			ConnectionsLimit: getIntEnv("CONNECTIONS_LIMIT", 100),
+			RateLimit: RateLimit{
+				PerIPLimit:    getIntEnv("RATE_LIMIT", 10),
+				ClearInterval: time.Duration(getIntEnv("RATE_LIMIT_CLEAR_INTERVAL_SECS", 60)) * time.Second,
+			},
 			RequestSizeLimit: 1024 * 10, // 10 KB
 			ReadTimeout:      10 * time.Second,
 			WriteTimeout:     20 * time.Second,
