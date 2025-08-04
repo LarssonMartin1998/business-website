@@ -32,13 +32,12 @@ func main() {
 	port := ":" + cfg.Port
 	var buf bytes.Buffer
 	writer := bufio.NewWriter(&buf)
-	fmt.Fprintf(writer, "✅Starting HTTP server on port %s\n", port)
+	fmt.Fprintf(writer, "✅ Starting HTTP server on port %s\n", port)
 	r.WriteRoutes(writer)
 
 	r.ClearRouteTree()
 
 	writer.Flush()
-	fmt.Println(buf.String())
 
 	server := &http.Server{
 		Addr:           port,
@@ -50,7 +49,7 @@ func main() {
 	}
 
 	go func() {
-		log.Printf("✅Starting HTTP server on port %s", port)
+		log.Println(buf.String())
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatal(err)
 		}
@@ -61,7 +60,7 @@ func main() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 
-	log.Println("Shutting down server...")
+	log.Println("🛑 Shutting down server...")
 	ctx, cancel := context.WithTimeout(context.Background(), max(cfg.Server.ReadTimeout, cfg.Server.WriteTimeout))
 	defer cancel()
 
