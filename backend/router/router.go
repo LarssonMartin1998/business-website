@@ -64,13 +64,15 @@ type RoutingContext struct {
 	Providers []RouteProvider
 }
 
-func New() *routerWrapped {
+func New(cfg *config.Config) *routerWrapped {
 	chiRouter := chi.NewRouter()
 	chiRouter.Use(
 		middleware.Logger,
 		middleware.Recoverer,
 		middleware.RequestID,
 		middleware.RealIP,
+		middleware.Throttle(cfg.Server.ConnectionsLimit),
+		middleware.Timeout(cfg.Server.HandlerTimeout),
 		middleware.SetHeader("X-Content-Type-Options", "nosniff"),
 		middleware.SetHeader("X-Frame-Options", "DENY"))
 

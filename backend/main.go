@@ -17,7 +17,7 @@ import (
 func main() {
 	cfg := utils.Must(config.Load())
 	db := utils.Must(database.NewSQLiteDB(cfg))
-	r := router.New()
+	r := router.New(cfg)
 
 	r.SetupRoutes(&router.RoutingContext{
 		Providers: []router.RouteProvider{
