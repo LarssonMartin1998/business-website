@@ -37,6 +37,7 @@ type APIConfig struct {
 type ServerConfig struct {
 	AllowedOrigins   []string
 	ConnectionsLimit int
+	RequestSizeLimit int64
 	ReadTimeout      time.Duration
 	WriteTimeout     time.Duration
 	IdleTimeout      time.Duration
@@ -63,6 +64,7 @@ func Load() (*Config, error) {
 		Server: ServerConfig{
 			AllowedOrigins:   utils.Must(getSliceEnvWithoutDefault("ALLOWED_ORIGINS")),
 			ConnectionsLimit: getIntEnv("CONNECTIONS_LIMIT", 100),
+			RequestSizeLimit: 1024 * 10, // 10 KB
 			ReadTimeout:      10 * time.Second,
 			WriteTimeout:     20 * time.Second,
 			IdleTimeout:      60 * time.Second,

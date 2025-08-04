@@ -72,6 +72,7 @@ func New(cfg *config.Config) *routerWrapped {
 		middleware.Recoverer,
 		middleware.RequestID,
 		middleware.RealIP,
+		middleware.RequestSize(cfg.Server.RequestSizeLimit),
 		middleware.Throttle(cfg.Server.ConnectionsLimit),
 		middleware.Timeout(cfg.Server.HandlerTimeout),
 		cors.Handler(cors.Options{
