@@ -32,13 +32,13 @@ func (bs *blogStore) create(req *createPostRequest) (*blogPost, error) {
 	now := time.Now()
 	result, err := bs.db.Exec(query, req.Content, now, now)
 	if err != nil {
-		log.Printf("Failed to create Blog Post with query: '%s'\nFull error: %w", query, err)
+		log.Printf("Failed to create Blog Post with query: '%s'\nFull error: %v", query, err)
 		return nil, createError
 	}
 
 	ID, err := result.LastInsertId()
 	if err != nil {
-		log.Printf("Failed to read LastInsertId: %w", err)
+		log.Printf("Failed to read LastInsertId: %v", err)
 		return nil, createError
 	}
 
@@ -53,7 +53,7 @@ func (bs *blogStore) getAll() ([]*blogPost, error) {
 
 	rows, err := bs.db.Query(query)
 	if err != nil {
-		log.Printf("Failed to getAll with query: %s\nFull error: %w", query, err)
+		log.Printf("Failed to getAll with query: %s\nFull error: %v", query, err)
 		return nil, getAllErr
 	}
 	defer rows.Close()
@@ -69,7 +69,7 @@ func (bs *blogStore) getAll() ([]*blogPost, error) {
 	}
 
 	if err = rows.Err(); err != nil {
-		log.Printf("Failed to iterate rows in getAll: %w", err)
+		log.Printf("Failed to iterate rows in getAll: %v", err)
 		return nil, getAllErr
 	}
 
@@ -93,17 +93,17 @@ func (bs *blogStore) getByID(id int64) (*blogPost, error) {
 
 func (bs *blogStore) update(id int64, req *updatePostRequest) (*blogPost, error) {
 	query := `UPDATE blog_posts SET content = ?, updated_at = ? WHERE id = ?`
-	updateError := errors.New("Failed to update Blog Post")
+	updateError := errors.New("failed to update Blog Post")
 
 	result, err := bs.db.Exec(query, req.Content, time.Now(), id)
 	if err != nil {
-		log.Printf("Failed to update Blog Post with: '%s'\nFull error: %w", query, err)
+		log.Printf("Failed to update Blog Post with: '%s'\nFull error: %v", query, err)
 		return nil, updateError
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		log.Printf("Failed to read RowsAffected in update: %w", err)
+		log.Printf("Failed to read RowsAffected in update: %v", err)
 		return nil, updateError
 	}
 	if rowsAffected != 1 {
@@ -120,13 +120,13 @@ func (bs *blogStore) delete(id int64) error {
 
 	deleteError := errors.New("failed to delete Blog Post")
 	if err != nil {
-		log.Printf("Failed to delete Blog Post with query: %s\nFull error: %w", query, err)
+		log.Printf("Failed to delete Blog Post with query: %s\nFull error: %v", query, err)
 		return deleteError
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		log.Printf("Failed to read RowsAffected in delete: %w", err)
+		log.Printf("Failed to read RowsAffected in delete: %v", err)
 		return deleteError
 	}
 	if rowsAffected != 1 {
@@ -141,7 +141,7 @@ func scanBlogPost(scanner Scanner) (*blogPost, error) {
 	post := blogPost{}
 	err := scanner.Scan(&post.ID, &post.Content, &post.PublishedAt, &post.UpdatedAt)
 	if err != nil {
-		log.Printf("Failed to scan Blog Post: %w", err)
+		log.Printf("Failed to scan Blog Post: %v", err)
 		return nil, errors.New("failed to scan Blog Post")
 	}
 
