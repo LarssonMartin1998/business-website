@@ -111,6 +111,10 @@ func (m *Module) updatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	post, err := m.store.update(id, &req)
+	if err == sql.ErrNoRows {
+		utils.RespondWithJSON(w, http.StatusNotFound, false, nil, "Post not found")
+		return
+	}
 	if err != nil {
 		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, "Error updating Blog Post")
 		return

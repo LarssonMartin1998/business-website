@@ -108,7 +108,7 @@ func (bs *blogStore) update(id int64, req *updatePostRequest) (*blogPost, error)
 	}
 	if rowsAffected != 1 {
 		log.Printf("rowsAffected should equal 1 after running update, not %v", rowsAffected)
-		return nil, updateError
+		return nil, sql.ErrNoRows
 	}
 
 	return bs.getByID(id)
@@ -131,7 +131,7 @@ func (bs *blogStore) delete(id int64) error {
 	}
 	if rowsAffected != 1 {
 		log.Printf("rowsAffected should equal 1 after running delete, not %v", rowsAffected)
-		return deleteError
+		return sql.ErrNoRows
 	}
 
 	return nil
