@@ -51,10 +51,6 @@ func (n *RouteNode) newRouteNode(method HTTPMethod, pattern string, handler func
 	return &newNode
 }
 
-func (n *RouteNode) hasMiddleware() bool {
-	return len(n.middlewares) > 0
-}
-
 type routerWrapped struct {
 	internal  *chi.Mux
 	routeTree *[]*RouteNode
@@ -173,7 +169,7 @@ func (r *routerWrapped) registerWithChi(node *RouteNode, basePath string) {
 
 func (r *routerWrapped) registerMethodWithMiddleware(node *RouteNode, methodFunc func(chi.Router, string, http.HandlerFunc), path string) {
 	var router chi.Router = r.internal
-	if node.hasMiddleware() {
+	if len(node.middlewares) > 0 {
 		router = router.With(node.middlewares...)
 	}
 
