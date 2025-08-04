@@ -10,6 +10,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -34,8 +35,12 @@ type APIConfig struct {
 }
 
 type ServerConfig struct {
-	AllowedOrigins []string
-	RateLimit      int
+	AllowedOrigins   []string
+	ConnectionsLimit int
+	ReadTimeout      time.Duration
+	WriteTimeout     time.Duration
+	IdleTimeout      time.Duration
+	HandlerTimeout   time.Duration
 }
 
 func Load() (*Config, error) {
@@ -56,8 +61,12 @@ func Load() (*Config, error) {
 			Key: utils.Must(getEnvWithoutDefault("API_KEY")),
 		},
 		Server: ServerConfig{
-			AllowedOrigins: utils.Must(getSliceEnvWithoutDefault("ALLOWED_ORIGINS")),
-			RateLimit:      getIntEnv("RATE_LIMIT", 60),
+			AllowedOrigins:   utils.Must(getSliceEnvWithoutDefault("ALLOWED_ORIGINS")),
+			ConnectionsLimit: getIntEnv("CONNECTIONS_LIMIT", 100),
+			ReadTimeout:      10 * time.Second,
+			WriteTimeout:     20 * time.Second,
+			IdleTimeout:      60 * time.Second,
+			HandlerTimeout:   25 * time.Second,
 		},
 	}
 
@@ -77,7 +86,7 @@ func (c *Config) validate() error {
 		return fmt.Errorf("missing required config entry: API_KEY")
 	}
 
-	if c.Server.AllowedOrigins == nil || len(c.Server.AllowedOrigins) == 0 {
+	if len(c.Server.AllowedOrigins) == 0 {
 		return fmt.Errorf("missing required config entry: ALLOWED_ORIGINS")
 	}
 
@@ -94,7 +103,7 @@ func getEnv(key, defaultValue string) string {
 func getEnvWithoutDefault(key string) (string, error) {
 	value := os.Getenv(key)
 	if value == "" {
-		return "", fmt.Errorf("Required environment variable %s is not set", key)
+		return "", fmt.Errorf("required environment variable %s is not set", key)
 	}
 	return value, nil
 }

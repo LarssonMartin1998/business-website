@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"backend/blog"
 	"backend/config"
@@ -40,9 +39,9 @@ func main() {
 	server := &http.Server{
 		Addr:           port,
 		Handler:        r.GetHTTPHandler(),
-		ReadTimeout:    15 * time.Second,
-		WriteTimeout:   15 * time.Second,
-		IdleTimeout:    60 * time.Second,
+		ReadTimeout:    cfg.Server.ReadTimeout,
+		WriteTimeout:   cfg.Server.WriteTimeout,
+		IdleTimeout:    cfg.Server.IdleTimeout,
 		MaxHeaderBytes: 1 << 20, // 1 MB
 	}
 	log.Fatal(server.ListenAndServe())

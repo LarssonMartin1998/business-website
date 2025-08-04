@@ -23,12 +23,13 @@ func NewSQLiteDB(cfg *config.Config) (*SQLiteDB, error) {
 	db, err := sql.Open("sqlite3", cfg.Database.Path)
 	if err != nil {
 		log.Printf("Database connection failed: %v", err)
-		return nil, errors.New("Database connection failed.")
+		return nil, errors.New("database connection failed")
 	}
 
+	timeoutMS := cfg.Database.TimeoutSecs * 1000
 	pragmas := []string{
 		"PRAGMA foreign_keys=ON;",
-		fmt.Sprintf("PRAGMA busy_timeout=%d;", cfg.Database.TimeoutSecs*1000),
+		fmt.Sprintf("PRAGMA busy_timeout=%d;", timeoutMS),
 	}
 
 	if cfg.Database.WALMode {
@@ -42,7 +43,7 @@ func NewSQLiteDB(cfg *config.Config) (*SQLiteDB, error) {
 
 	for _, pragma := range pragmas {
 		if _, err := db.Exec(pragma); err != nil {
-			log.Printf("Failed to set PRAGMA settings in SQLite: %s\nFull error: %w", pragma, err)
+			log.Printf("Failed to set PRAGMA settings in SQLite: %s\nFull error: %v", pragma, err)
 			return nil, errors.New("failed to set SQLite PRAGMA settings")
 		}
 	}
@@ -52,8 +53,8 @@ func NewSQLiteDB(cfg *config.Config) (*SQLiteDB, error) {
 	db.SetMaxIdleConns(cfg.Database.MaxIdleConns)
 
 	if err := db.Ping(); err != nil {
-		log.Printf("Failed to ping database: %w", err)
-		return nil, errors.New("failed to ping database.")
+		log.Printf("Failed to ping database: %v", err)
+		return nil, errors.New("failed to ping database")
 	}
 
 	sqlite := &SQLiteDB{db: db}
