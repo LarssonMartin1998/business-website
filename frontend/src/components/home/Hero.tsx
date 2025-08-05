@@ -36,7 +36,7 @@ function Hero({ scrollToServicesRef }: HeroProps) {
         </div>
         <p className={twMerge(whiteText, 'text-shadow-md font-bold sm:text-l mt-2 ml-2')}>{paragraph}</p>
         <div className='flex gap-x-4 mt-8 p-4 pl-2'>
-          <ButtonAccent className='shadow-xl' size='lg' buttonLink='/blog'>Read My Blog</ButtonAccent>
+          <ButtonAccent className='shadow-xl' size='lg' buttonLink='/contact'>Get in Touch</ButtonAccent>
           <ButtonAlert className='shadow-xl' size='lg' onClick={onClickViewServices}>View Services</ButtonAlert>
         </div>
       </div>
