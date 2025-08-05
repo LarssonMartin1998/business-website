@@ -1,4 +1,4 @@
-import { heroBackground } from 'assets/HeroAssets.ts'
+import { heroBackground } from 'assets/HeroAssets.ts';
 
 function HeroBackground() {
   return (
