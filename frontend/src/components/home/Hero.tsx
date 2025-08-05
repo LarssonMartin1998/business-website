@@ -16,7 +16,7 @@ interface HeroProps {
 }
 
 function Hero({ scrollToServicesRef }: HeroProps) {
-  const headline = 'Marsson\u00A0\u00A0';
+  const headline = 'Martin Larsson\u00A0\u00A0';
   const subheadline = '|\u00A0\u00A0Senior Consultant';
   const paragraph = 'I help teams build cool shit in C++, C, Zig, Rust and other wack languages.';
 
@@ -27,7 +27,7 @@ function Hero({ scrollToServicesRef }: HeroProps) {
   const onClickViewServices = () => scrollToServicesRef.current?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section className='flex min-h-screen pr-48 pb-32'>
+    <section className='flex min-h-screen pr-16 pb-32'>
       <HeroBackground />
       <div className='relative ml-auto mt-auto'>
         <div className='flex text-shadow-lg'>
