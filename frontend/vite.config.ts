@@ -11,6 +11,7 @@ export default defineConfig({
       assets: path.resolve(__dirname, 'src/assets'),
       "design-system": path.resolve(__dirname, 'src/design-system'),
       "pages": path.resolve(__dirname, 'src/pages'),
+      "api": path.resolve(__dirname, 'src/api'),
     },
   },
 })
