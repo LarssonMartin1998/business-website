@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -20,7 +21,19 @@ type updatePostRequest struct {
 	Content string `json:"content"`
 }
 
-func (m *Module) verifyPostContent(content string) error {
+func contentHasValidMarkdownHeader(content string) bool {
+	lines := strings.Split(content, "\n")
+	if len(lines) <= 0 {
+		return false
+	}
+
+	firstLine := strings.TrimSpace(lines[0])
+	expression := regexp.MustCompile(`^#\s+\S+`)
+
+	return expression.MatchString(firstLine)
+}
+
+func validatePostContent(content string) error {
 	trimmed := strings.TrimSpace(content)
 	if trimmed == "" {
 		return errors.New("empty ")
@@ -36,6 +49,10 @@ func (m *Module) verifyPostContent(content string) error {
 		return errors.New("too long content submitted in blog post")
 	}
 
+	if !contentHasValidMarkdownHeader(content) {
+		return errors.New("first line is not a valid markdown header")
+	}
+
 	return nil
 }
 
@@ -46,7 +63,7 @@ func (m *Module) createPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if m.verifyPostContent(req.Content) != nil {
+	if validatePostContent(req.Content) != nil {
 		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid post content")
 		return
 	}
@@ -105,7 +122,7 @@ func (m *Module) updatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if m.verifyPostContent(req.Content) != nil {
+	if validatePostContent(req.Content) != nil {
 		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid post content")
 		return
 	}
