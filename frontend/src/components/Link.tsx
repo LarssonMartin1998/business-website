@@ -10,6 +10,7 @@ interface PageLinkProps {
 interface AnchorLinkProps {
   children: React.ReactNode;
   href: Href;
+  external?: boolean;
 }
 
 type RouteTypedProps =
@@ -53,9 +54,15 @@ function PageLink({ children, page }: PageLinkProps) {
   );
 }
 
-function AnchorLink({ children, href }: AnchorLinkProps) {
+function AnchorLink({ children, href, external = true }: AnchorLinkProps) {
   return (
-    <a href={href}>{children}</a>
+    <a
+      href={href}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+    >
+      {children}
+    </a>
   );
 }
 
