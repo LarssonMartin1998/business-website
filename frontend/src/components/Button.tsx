@@ -1,8 +1,10 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { Href, Page, PageLink, AnchorLink, pages } from 'design-system/pages';
+import { Href, Page, pages } from 'design-system/pages';
 import { bg, text, border, hover, type TwColor, type TwStateColor, splitTwColor, Intent } from 'design-system/colors';
+
+import { PageLink, AnchorLink } from 'components/Link';
 
 interface ButtonColor {
   default: TwColor;

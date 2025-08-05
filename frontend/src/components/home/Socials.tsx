@@ -1,9 +1,11 @@
-import { twMerge } from "tailwind-merge";
+import { twMerge } from 'tailwind-merge';
 
-import { GithubLogo, LinkedinLogo, MastodonLogo } from "components/generated/index";
-import { CardDefault } from "components/Card";
-import { bg, text, } from "design-system/colors";
-import { Href, AnchorLink, hrefs } from "design-system/pages";
+import { bg, text, } from 'design-system/colors';
+import { Href, hrefs } from 'design-system/pages';
+
+import { GithubLogo, LinkedinLogo, MastodonLogo } from 'components/generated/index';
+import { CardDefault } from 'components/Card';
+import { AnchorLink } from 'components/Link';
 
 interface LogoProps {
   LogoType: React.ComponentType<{ className?: string }>;

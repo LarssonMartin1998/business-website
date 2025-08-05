@@ -1,6 +1,6 @@
-import { twMerge } from "tailwind-merge";
+import { twMerge } from 'tailwind-merge';
 
-import { bg, text, border } from "design-system/colors";
+import { bg, text, border } from 'design-system/colors';
 
 function Clients() {
   const highlight = 'default';

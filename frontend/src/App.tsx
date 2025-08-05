@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, } from 'react-router-dom';
 
-import { CreateTypedRoute, } from 'design-system/pages';
+import { CreateTypedRoute, } from 'components/Link';
 import Home from 'pages/Home';
 import Contact from 'pages/Contact';
 import Blog from 'pages/Blog';
@@ -14,8 +14,8 @@ function App() {
           path: '/',
           children: [
             CreateTypedRoute({ index: true, element: <Home /> }),
-            CreateTypedRoute({ path: 'contact', element: <Contact /> }),
-            CreateTypedRoute({ path: 'blog', element: <Blog /> }),
+            CreateTypedRoute({ path: '/contact', element: <Contact /> }),
+            CreateTypedRoute({ path: '/blog', element: <Blog /> }),
             CreateTypedRoute({ path: '*', element: <ErrNotFound /> }),
           ],
         })}

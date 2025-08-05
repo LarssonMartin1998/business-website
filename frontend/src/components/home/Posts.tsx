@@ -119,9 +119,9 @@ function Posts() {
       <h2 className={twMerge(text(raw.firGreen), 'font-bold text-center text-5xl text-shadow-sm')}>Posts</h2>
       {uiState.showSpinner && <div>Loading ...</div>}
       {uiState.showReloadButton && (
-        <button onClick={() => setReloads(r => r + 1)} className="mt-4">Reload</button>
+        <button onClick={() => setReloads(r => r + 1)} className='mt-4'>Reload</button>
       )}
-      {uiState.noPostsFound && <div className="mt-4 text-gray-500">No posts found.</div>}
+      {uiState.noPostsFound && <div className='mt-4 text-gray-500'>No posts found.</div>}
       {!uiState.noPostsFound && (
         <ul className='flex justify-center gap-x-20 mt-10'>
           {uiState.posts.slice(0, 3).map(({ id, content }, _) => (

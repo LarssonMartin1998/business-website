@@ -1,7 +1,7 @@
-import { twMerge } from "tailwind-merge";
+import { twMerge } from 'tailwind-merge';
 
-import { ButtonAlertInvis } from "components/Button";
-import { bg } from "design-system/colors";
+import { ButtonAlertInvis } from 'components/Button';
+import { bg } from 'design-system/colors';
 
 function Resume() {
   return (
