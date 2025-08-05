@@ -21,7 +21,7 @@ function ServiceCard({ Icon, bgColRaw, header, bread }: ServiceProps) {
   } as const;
 
   return (
-    <ListCardDefault className='w-64 h-80'>
+    <ListCardDefault className='w-64 min-h-80'>
       <div className='flex flex-col items-center'>
         <Icon {...iconProps} />
         <h3 className={twMerge(mimickBgTextCol, 'font-bold mt-2')}>{header}</h3>
