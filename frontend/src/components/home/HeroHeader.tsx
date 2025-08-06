@@ -2,7 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 import { logotype } from 'assets/Logotype';
-import { hoverRaw, raw, text } from 'design-system/colors';
+import { bg, border, hoverRaw, raw, text } from 'design-system/colors';
 
 interface HeaderListItemProps {
   name: string;
@@ -11,14 +11,12 @@ interface HeaderListItemProps {
 
 function HeaderLogo() {
   return (
-    <Link to='/' className='h-full flex'>
-      <img className='drop-shadow-xl hover:drop-shadow-rust-orange/50' src={logotype} alt='' />
-    </Link>
+    <img className='h-full drop-shadow-xl' src={logotype} alt='' />
   );
 }
 
 function HeaderListItem({ name, routerPath }: HeaderListItemProps) {
-  const colors = twMerge(text('default'), hoverRaw(text(raw.rustOrange)));
+  const colors = twMerge(text('accent'), hoverRaw(text(raw.emberBark)));
   const font = 'uppercase font-bold text-xl';
 
   return (
@@ -29,20 +27,21 @@ function HeaderListItem({ name, routerPath }: HeaderListItemProps) {
 }
 
 function HeroHeader() {
-  const flex = 'flex gap-x-8';
-
   return (
-    <header className='absolute w-full z-20 p-5 h-32'>
-      <nav className={twMerge(flex, 'justify-center', 'h-full')}>
-        <HeaderLogo />
-        <ul className={twMerge(flex, 'items-center')}>
-          <HeaderListItem routerPath='/contact' name='Contact' />
-          <HeaderListItem routerPath='/blog' name='Blog' />
-        </ul>
-      </nav>
+    <header className='w-full z-20 flex justify-center pt-5'>
+      <div className={twMerge(bg('accent'), border('accent'), 'shadow-2xl rounded-l-full rounded-r-full border-2 min-h-16 w-fit p-2 pr-4')}>
 
-      <Outlet />
-    </header>
+        <nav className='flex gap-x-6 justify-center h-20'>
+          <HeaderLogo />
+          <ul className='flex gap-x-8 items-center'>
+            <HeaderListItem routerPath='/contact' name='Contact' />
+            <HeaderListItem routerPath='/blog' name='Blog' />
+          </ul>
+        </nav>
+
+        <Outlet />
+      </div>
+    </header >
   );
 }
 

@@ -1,4 +1,3 @@
-import HeroHeader from 'components/home/HeroHeader';
 import Hero from 'components/home/Hero';
 import Clients from 'components/home/Clients';
 import Services from 'components/home/Services';
@@ -12,11 +11,9 @@ function Home() {
 
   return (
     <>
-      <HeroHeader />
+      <Hero scrollToServicesRef={scrollToServicesRef} />
 
       <main>
-        <Hero scrollToServicesRef={scrollToServicesRef} />
-
         <Clients />
 
         <Services scrollToServicesRef={scrollToServicesRef} />
