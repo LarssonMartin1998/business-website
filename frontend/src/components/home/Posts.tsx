@@ -3,10 +3,20 @@ import { twMerge } from 'tailwind-merge';
 
 import { BlogPost, getBlogPosts } from 'api/blog';
 import { bg, text, border, raw } from 'design-system/colors';
+import { ButtonAccent } from 'components/Button';
 
 interface PostEntryProps {
   header: string;
   bread: string;
+}
+
+interface BlogPostsProps {
+  posts: BlogPost[];
+}
+
+interface ReloadButtonProps {
+  reloads: number;
+  setReloads: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function PostEntry({ header, bread }: PostEntryProps) {
@@ -20,6 +30,7 @@ function PostEntry({ header, bread }: PostEntryProps) {
 
 type UIState = {
   posts: BlogPost[];
+  showCriticalError: boolean;
   showReloadButton: boolean;
   noPostsFound: boolean;
   showSpinner: boolean;
@@ -57,9 +68,55 @@ function extractAndLimitBread(content: string): string {
   return bread;
 }
 
+function Spinner() {
+  return (
+    <div className='flex justify-center items-center py-4'>
+      <span className={text('default')}>Loading posts...</span>
+    </div>
+  );
+}
+
+function CriticalError() {
+  return (
+    <div className='flex flex-col items-center py-4'>
+      <span className='text-red-400 font-bold'>Internal error loading posts.</span>
+    </div>
+  );
+}
+
+function ReloadButton({ reloads, setReloads }: ReloadButtonProps) {
+  return (
+    <div className='flex flex-col items-center py-8 gap-y-4'>
+      <ButtonAccent onClick={() => setReloads(reloads + 1)}>
+        Refresh
+      </ButtonAccent>
+      <span className={twMerge(text('default'), '')}>Temporary failure when loading posts, please try again.</span>
+    </div>
+  );
+}
+
+function NoPostsFound() {
+  return (
+    <span className={text('default')}>
+      There are no written posts yet.
+    </span>
+  );
+}
+
+function BlogPosts({ posts }: BlogPostsProps) {
+  return (
+    <ul className='flex justify-center gap-x-20 mt-10'>
+      {posts.slice(0, 3).map(({ id, content }, _) => (
+        <PostEntry key={id} header={extractHeader(content)} bread={extractAndLimitBread(content)} />
+      ))}
+    </ul>
+  );
+}
+
 function Posts() {
   const [uiState, setUIState] = useState<UIState>({
     posts: [],
+    showCriticalError: false,
     showReloadButton: false,
     noPostsFound: false,
     showSpinner: true,
@@ -86,6 +143,7 @@ function Posts() {
           setUIState(prev => ({
             ...prev,
             posts: postsData,
+            showCriticalError: false,
             showReloadButton: false,
             noPostsFound: postsData.length === 0,
           }));
@@ -94,6 +152,7 @@ function Posts() {
           setUIState(prev => ({
             ...prev,
             posts: [],
+            showCriticalError: false,
             showReloadButton: true,
           }));
           break;
@@ -101,6 +160,7 @@ function Posts() {
           setUIState(prev => ({
             ...prev,
             posts: [],
+            showCriticalError: true,
             showReloadButton: false,
           }));
           break;
@@ -117,18 +177,11 @@ function Posts() {
   return (
     <div className={twMerge(bg(highlight), border(highlight), insetShadow, 'relative border-y-2 flex flex-col min-h-64 p-8 pb-12')}>
       <h2 className={twMerge(text(raw.firGreen), 'font-bold text-center text-5xl text-shadow-sm')}>Posts</h2>
-      {uiState.showSpinner && <div>Loading ...</div>}
-      {uiState.showReloadButton && (
-        <button onClick={() => setReloads(r => r + 1)} className='mt-4'>Reload</button>
-      )}
-      {uiState.noPostsFound && <div className='mt-4 text-gray-500'>No posts found.</div>}
-      {!uiState.noPostsFound && (
-        <ul className='flex justify-center gap-x-20 mt-10'>
-          {uiState.posts.slice(0, 3).map(({ id, content }, _) => (
-            <PostEntry key={id} header={extractHeader(content)} bread={extractAndLimitBread(content)} />
-          ))}
-        </ul>
-      )}
+      {uiState.showSpinner && <Spinner />}
+      {uiState.showCriticalError && <CriticalError />}
+      {uiState.showReloadButton && <ReloadButton reloads={reloads} setReloads={setReloads} />}
+      {uiState.noPostsFound && <NoPostsFound />}
+      {!uiState.noPostsFound && <BlogPosts posts={uiState.posts} />}
     </div>);
 }
 
