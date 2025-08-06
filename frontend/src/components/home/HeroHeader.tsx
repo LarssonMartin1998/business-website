@@ -29,7 +29,7 @@ function HeaderListItem({ name, routerPath }: HeaderListItemProps) {
 function HeroHeader() {
   return (
     <header className='w-full z-20 flex justify-center pt-5'>
-      <div className={twMerge(bg('accent'), border('accent'), 'shadow-2xl rounded-l-full rounded-r-full border-2 min-h-16 w-fit p-2 pr-4')}>
+      <div className={twMerge(bg('accent'), border('accent'), 'shadow-2xl rounded-l-full rounded-r-full border-2 min-h-16 w-fit p-2.5 pr-12')}>
 
         <nav className='flex gap-x-6 justify-center h-20'>
           <HeaderLogo />
