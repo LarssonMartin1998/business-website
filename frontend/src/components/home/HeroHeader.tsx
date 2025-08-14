@@ -1,12 +1,14 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
+import { PageLink } from 'components/Link';
 import { logotype } from 'assets/Logotype';
 import { bg, border, hoverRaw, raw, text } from 'design-system/colors';
+import { Page } from 'design-system/pages';
 
 interface HeaderListItemProps {
   name: string;
-  routerPath: string;
+  routerPath: Page;
 }
 
 function HeaderLogo() {
@@ -17,11 +19,11 @@ function HeaderLogo() {
 
 function HeaderListItem({ name, routerPath }: HeaderListItemProps) {
   const colors = twMerge(text('accent'), hoverRaw(text(raw.emberBark)));
-  const font = 'uppercase font-bold text-xl';
+  const font = 'uppercase font-bold text-lg';
 
   return (
     <li className={twMerge(colors, font, 'text-shadow-lg ')}>
-      <Link to={routerPath}>{name}</Link>
+      <PageLink page={routerPath}>{name}</PageLink>
     </li>
   );
 }
