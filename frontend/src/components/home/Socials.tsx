@@ -53,7 +53,7 @@ function Socials() {
       <SkewedBackground />
       <div className={'relative p-4 pt-0 flex flex-col gap-y-8 items-center'}>
         <h2 className={twMerge(text('accent'), 'font-bold text-center text-5xl text-shadow-sm')}>Socials</h2>
-        <CardDefault className=' w-auto h-auto p-12'>
+        <CardDefault className='w-auto h-auto p-12'>
           <div className='flex gap-x-20'>
             <Logo LogoType={LinkedinLogo} href={hrefs.linkedIn} />
             <Logo LogoType={GithubLogo} href={hrefs.github} />
