@@ -2,7 +2,8 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { Href, Page, pages } from 'design-system/pages';
-import { bg, text, border, hover, type TwColor, type TwStateColor, splitTwColor, Intent } from 'design-system/colors';
+import { bg, text, border, hover, type TwColor, type TwStateColor, splitTwColor, Intent, } from 'design-system/colors';
+import Size from 'design-system/sizes';
 
 import { PageLink, AnchorLink } from 'components/Link';
 
@@ -13,7 +14,7 @@ interface ButtonColor {
 
 interface SealedButtonProps {
   children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: Size;
   className?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   type?: 'button' | 'submit' | 'reset';
@@ -89,16 +90,15 @@ function ButtonIntentVariant({ intent, useBorder, ...props }: SealedButtonProps 
 }
 
 function ButtonInvisIntentVariant({ intent, ...props }: SealedButtonProps & { intent: Intent }) {
-  const bgCol = bg(intent);
   const textCol = text(intent);
 
-  const [, bgColRaw] = splitTwColor(bgCol);
+  const [, bgColRaw] = splitTwColor(bg(intent));
   const [, textColRaw] = splitTwColor(textCol);
 
   return (
     <CustomButton
       bg={{
-        default: bgCol,
+        default: bg('transparent'),
         hover: hover(bg(textColRaw))
       }}
       fg={{
@@ -129,4 +129,5 @@ function ButtonAlertInvis(props: SealedButtonProps) {
   return (<ButtonInvisIntentVariant intent='alert' {...props} />);
 }
 
-export { ButtonAccent, ButtonAccentInvis, ButtonAlert, ButtonAlertInvis, };
+export { CustomButton, ButtonAccent, ButtonAccentInvis, ButtonAlert, ButtonAlertInvis, };
+export type { ButtonColor };
