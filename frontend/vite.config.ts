@@ -12,6 +12,7 @@ export default defineConfig({
       "design-system": path.resolve(__dirname, 'src/design-system'),
       "pages": path.resolve(__dirname, 'src/pages'),
       "api": path.resolve(__dirname, 'src/api'),
+      "utils": path.resolve(__dirname, 'src/utils'),
     },
   },
 })
