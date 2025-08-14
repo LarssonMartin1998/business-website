@@ -5,6 +5,7 @@ import { BlogPost, getBlogPosts } from 'api/blog';
 import { bg, text, border, raw } from 'design-system/colors';
 import { ButtonAccent } from 'components/Button';
 import { HeadingRaw } from 'components/Heading';
+import { extractHeader, extractAndLimitBread } from 'utils/helpers';
 
 interface PostEntryProps {
   header: string;
@@ -36,38 +37,6 @@ type UIState = {
   noPostsFound: boolean;
   showSpinner: boolean;
 };
-
-function extractHeader(content: string): string {
-  const lines = content.split('\n');
-  const headerLine = lines.find(line => line.trim().startsWith('#'));
-  if (!headerLine) return 'Missing Title';
-  let header = headerLine.replace(/^#+\s*/, '').trim();
-  header = header.replace(/<[^>]*>/g, ''); // Remove any HTML tags
-  return header;
-}
-
-function extractAndLimitBread(content: string): string {
-  const lines = content.split('\n').slice(1);
-  let bread = lines.join(' ').trim();
-
-  // Remove markdown formatting
-  bread = bread
-    .replace(/\*\*(.*?)\*\*/g, '$1') // bold
-    .replace(/__(.*?)__/g, '$1')     // underline
-    .replace(/`(.*?)`/g, '$1')       // inline code
-    .replace(/!\[.*?\]\(.*?\)/g, '') // images
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // links
-    .replace(/---/g, '')             // horizontal rule
-    .replace(/#+\s/g, '')            // headers
-    .replace(/<[^>]*>/g, '');        // HTML tags
-
-  const maxLength = 100;
-  if (bread.length > maxLength) {
-    bread = bread.slice(0, maxLength).trim() + '...';
-  }
-
-  return bread;
-}
 
 function Spinner() {
   return (
