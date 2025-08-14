@@ -5,6 +5,7 @@ import Posts from 'components/home/Posts';
 import Resume from 'components/home/Resume';
 import Socials from 'components/home/Socials';
 import { useRef } from 'react';
+import Main from 'components/Main';
 
 function Home() {
   const scrollToServicesRef = useRef<HTMLDivElement>(null);
@@ -13,7 +14,7 @@ function Home() {
     <>
       <Hero scrollToServicesRef={scrollToServicesRef} />
 
-      <main>
+      <Main>
         <Clients />
 
         <Services scrollToServicesRef={scrollToServicesRef} />
@@ -23,7 +24,7 @@ function Home() {
         <Resume />
 
         <Socials />
-      </main >
+      </Main >
     </>
   );
 }
