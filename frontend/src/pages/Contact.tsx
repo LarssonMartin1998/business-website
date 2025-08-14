@@ -1,12 +1,14 @@
-import { bg, hover } from 'design-system/colors';
-import { twMerge } from 'tailwind-merge';
+import Header from 'components/Header';
+import Main from 'components/Main';
 
 function Contact() {
-  const bgCol = bg('accent');
   return (
-    <div className={twMerge(bgCol, hover(bgCol), 'w-full h-64')}>
-      Contact
-    </div>
+    <>
+      <Header />
+      <Main>
+        <></>
+      </Main >
+    </>
   );
 }
 
