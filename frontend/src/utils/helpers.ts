@@ -9,7 +9,7 @@ function extractHeader(content: string): string {
 
 function extractBread(content: string): string {
   const lines = content.split('\n').slice(1);
-  return lines.join(' ').trim();
+  return lines.join('\n').trim();
 }
 
 function limitText(content: string, maxLength: number): string {
