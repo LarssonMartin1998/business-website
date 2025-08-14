@@ -40,7 +40,7 @@ const colors = {
 const raw = {
   transparent: 'transparent',
   ...withTransparency(colors),
-};
+} as const;
 
 const twPrefixes = ['bg', 'text', 'border',] as const;
 type TwPrefix = typeof twPrefixes[number];
