@@ -4,17 +4,26 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { raw, twPrefixes, twStateVariants } from 'design-system/colors';
+import { raw, twPrefixes, specialTwPrefixes, twStateVariants } from 'design-system/colors';
 
 const colours = Object.values(raw);
 const variants = ['', ...twStateVariants] as const;
 
 const classes: string[] = [];
-for (const variant of variants)
-  for (const prefix of twPrefixes)
-    for (const colour of colours)
+for (const variant of variants) {
+  for (const prefix of twPrefixes) {
+    for (const colour of colours) {
       classes.push(variant ? `${variant}:${prefix}-${colour}`
         : `${prefix}-${colour}`);
+    }
+  }
+}
+
+for (const colour of colours) {
+  for (const prefix of specialTwPrefixes) {
+    classes.push(`${prefix}-${colour}`);
+  }
+}
 
 const fileContent = `
 /*

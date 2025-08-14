@@ -1,4 +1,19 @@
-const raw = {
+function withTransparency<T extends Record<string, string>>(colors: T) {
+  const transparencyEntries = Object.entries(colors)
+    .flatMap(([key, value]) =>
+      Array.from({ length: 20 }, (_, i) => {
+        const opacity = (i + 1) * 5;
+        return [`${key}${opacity}`, `${value}/${opacity}`] as const;
+      })
+    );
+
+  return {
+    ...colors,
+    ...Object.fromEntries(transparencyEntries)
+  } as const;
+}
+
+const colors = {
   fogGrey: 'fog-grey',
   fogGreyLight: 'fog-grey-light',
   pineInk: 'pine-ink',
@@ -22,10 +37,18 @@ const raw = {
   emberBarkLight: 'ember-bark-light',
 } as const;
 
+const raw = {
+  transparent: 'transparent',
+  ...withTransparency(colors),
+};
+
 const twPrefixes = ['bg', 'text', 'border',] as const;
 type TwPrefix = typeof twPrefixes[number];
 
-const twStateVariants = ['hover',] as const;
+// Only used to generate safelist
+const specialTwPrefixes = ['from', 'to',] as const;
+
+const twStateVariants = ['hover', 'group-hover',] as const;
 type TwStateVariant = typeof twStateVariants[number];
 
 type RawColor = typeof raw[keyof typeof raw];
@@ -76,7 +99,7 @@ function isIntent(x: unknown): x is Intent {
 }
 
 function makeConcreteColor(prefix: TwPrefix, value: RawColor | Intent): TwColor {
-  const rawColor: RawColor = isIntent(value) ? intentMap[prefix][value] : value;
+  const rawColor: RawColor = isIntent(value) ? intentToRaw(prefix, value) : value;
   return `${prefix}-${rawColor}`;
 }
 
@@ -98,8 +121,20 @@ function border(value: RawColor | Intent): TwColor {
   return makeConcreteColor('border', value);
 }
 
+function from(color: RawColor): string {
+  return `from-${color}`;
+}
+
+function to(color: RawColor): string {
+  return `to-${color}`;
+}
+
 function hoverRaw(color: TwColor): TwStateColor {
   return `hover:${color}`;
+}
+
+function groupHoverRaw(color: TwColor): TwStateColor {
+  return `group-hover:${color}`;
 }
 
 function hover(color: TwColor): TwStateColor {
@@ -108,5 +143,9 @@ function hover(color: TwColor): TwStateColor {
   return hoverRaw(`${prefix}-${light}`);
 }
 
-export { raw, twPrefixes, twStateVariants, bg, text, border, hover, hoverRaw, splitTwColor, };
+function intentToRaw(prefix: TwPrefix, intent: Intent): RawColor {
+  return intentMap[prefix][intent];
+}
+
+export { raw, twPrefixes, twStateVariants, specialTwPrefixes, bg, text, border, hover, hoverRaw, groupHoverRaw, splitTwColor, intentToRaw, from, to };
 export type { RawColor, TwPrefix, TwStateVariant, Intent, TwColor, TwStateColor, };
