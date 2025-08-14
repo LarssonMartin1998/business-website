@@ -3,9 +3,10 @@ import { twMerge } from 'tailwind-merge';
 
 import { CogWheels, Layers, Lightbulb } from 'components/generated/index';
 import { ListCardDefault } from 'components/Card';
-import { bg, RawColor, splitTwColor, text } from 'design-system/colors';
+import { bg, intentToRaw, RawColor, splitTwColor, text } from 'design-system/colors';
 import { ButtonAccent, ButtonAccentInvis } from 'components/Button';
 import { hrefs } from 'design-system/pages';
+import { HeadingRaw } from 'components/Heading';
 
 interface ServiceProps {
   Icon: React.ComponentType<{ className?: string }>;
@@ -21,7 +22,7 @@ function ServiceCard({ Icon, bgColRaw, header, bread }: ServiceProps) {
   } as const;
 
   return (
-    <ListCardDefault className='w-64 min-h-80'>
+    <ListCardDefault className='w-64 min-h-80 p-2.5 flex flex-col text-center justify-center items-center'>
       <div className='flex flex-col items-center'>
         <Icon {...iconProps} />
         <h3 className={twMerge(mimickBgTextCol, 'font-bold mt-2')}>{header}</h3>
@@ -83,7 +84,8 @@ function Services({ scrollToServicesRef }: ServicesProps) {
   return (
     <div ref={scrollToServicesRef} className={twMerge(bgCol, 'p-8')}>
       <div className='flex flex-col items-center'>
-        <h2 className={twMerge(textCol, 'font-bold text-5xl text-shadow-sm')}>{header}</h2>
+
+        <HeadingRaw className='font-bold text-shadow-sm' textStr={header} size='lg' color={intentToRaw('text', highlight)} />
         <p className={twMerge(textCol, 'text-center w-1/2 mt-4')}>{paragraph}</p>
 
         <ServicesGroup bgColRaw={bgColRaw} {...servicesGroupProps} />

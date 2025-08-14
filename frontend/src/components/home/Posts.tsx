@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import { BlogPost, getBlogPosts } from 'api/blog';
 import { bg, text, border, raw } from 'design-system/colors';
 import { ButtonAccent } from 'components/Button';
+import { HeadingRaw } from 'components/Heading';
 
 interface PostEntryProps {
   header: string;
@@ -176,7 +177,7 @@ function Posts() {
   const insetShadow = 'shadow-[inset_0_10px_20px_rgba(0,0,0,0.30)]';
   return (
     <div className={twMerge(bg(highlight), border(highlight), insetShadow, 'relative border-y-2 flex flex-col min-h-64 p-8 pb-12')}>
-      <h2 className={twMerge(text(raw.firGreen), 'font-bold text-center text-5xl text-shadow-sm')}>Posts</h2>
+      <HeadingRaw textStr='Posts' className='font-bold text-center text-shadow-sm' size='lg' color={raw.firGreen} />
       {uiState.showSpinner && <Spinner />}
       {uiState.showCriticalError && <CriticalError />}
       {uiState.showReloadButton && <ReloadButton reloads={reloads} setReloads={setReloads} />}
