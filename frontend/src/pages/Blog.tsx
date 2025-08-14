@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import Markdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { gruvboxLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import Header from 'components/Header';
 import Main from 'components/Main';
@@ -48,6 +50,75 @@ function PostMeta() {
   );
 }
 
+const markdownText = `# This it my Title
+
+Here is some text, wow!
+
+Here is a new line with some **bold** text! That's amazing!
+
+Lets go further, here is some *italic* text, OMG! Are you not entertained?
+
+Here is some code formatting:
+
+\`\`\`cpp
+#include <iostream>
+int main() {
+    std::cout << "Hello World!" << std::endl;
+    return 0;
+}
+\`\`\`
+
+One more thing you can do it so use C++23's \`std::println("Hello World!")\`.
+`;
+
+function StyledMarkdown({ text }: { text: string; }) {
+  const codeStyle = twMerge(bg(raw.fogGreyLight), border(raw.graniteGrey), 'px-1.5 py-0.5 border-1 text-sm font-mono');
+
+  return (
+    <Markdown
+      components={{
+        // Inline code
+        code: ({ children, className, ...props }) => {
+          const match = /language-(\w+)/.exec(className || '');
+          const isInline = !className?.includes('language-');
+
+          if (isInline) {
+            return (
+              <code className={codeStyle} {...props}>
+                {children}
+              </code>
+            );
+          }
+
+          // Code blocks with syntax highlighting
+          return (
+            <div className="my-4">
+              <SyntaxHighlighter
+                style={gruvboxLight}
+                language={match ? match[1] : 'text'}
+                PreTag="div"
+                showLineNumbers={true}
+                customStyle={{
+                  margin: 0,
+                  // borderRadius: '0.375rem',
+                  padding: '0.5rem',
+                  backgroundColor: 'var(--color-fog-grey-light)', // Use your CSS variable
+                  border: '1px solid var(--color-granite-grey)', // Use your CSS variable
+                }}
+              >
+                {String(children).replace(/\n$/, '')}
+              </SyntaxHighlighter>
+            </div>
+          );
+        },
+        // Remove the pre component since SyntaxHighlighter handles it now
+      }}
+    >
+      {text}
+    </Markdown>
+  );
+}
+
 function BlogEntry({ markdown }: BlogEntryProps) {
   const [show, setShow] = useState(false);
   const extractedHeader = extractHeader(markdown);
@@ -55,7 +126,7 @@ function BlogEntry({ markdown }: BlogEntryProps) {
     <CardDefault className='p-4 px-4.5 rounded-xl shadow-md/10'>
       <div className='group min-h-12 flex flex-col gap-y-1 justify-center' onClick={() => setShow(!show)}>
         <div className='flex gap-x-2 items-center'>
-          <HeadingDefaultCard className={twMerge(groupHoverRaw(text(raw.firGreen)), 'font-bold group-hover:underline')} textStr={extractedHeader} size='xs' />
+          <HeadingDefaultCard className={twMerge(groupHoverRaw(text(raw.firGreen)), 'font-bold group-hover:underline decoration-dashed')} textStr={extractedHeader} size='xs' />
           <NewPostBanner />
         </div>
 
@@ -63,7 +134,7 @@ function BlogEntry({ markdown }: BlogEntryProps) {
       </div>
 
       {show && <div className={twMerge(border(raw.graniteGreyLight), 'mt-4 border-dashed border-t-1 pt-4')}>
-        <Markdown>{extractBread(markdown)}</Markdown>
+        <StyledMarkdown text={extractBread(markdownText)} />
       </div>}
     </CardDefault>
   );
