@@ -70,6 +70,7 @@ func (s *SQLiteDB) initSchema() error {
 	CREATE TABLE IF NOT EXISTS blog_posts (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		content TEXT NOT NULL,
+        tags TEXT NOT NULL,
 		published_at DATETIME NOT NULL,
 		updated_at DATETIME NOT NULL
 	);

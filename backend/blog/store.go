@@ -7,6 +7,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -25,12 +26,12 @@ func newBlogStore(db *sql.DB) blogStore {
 }
 
 func (bs *blogStore) create(req *createPostRequest) (*blogPost, error) {
-	query := `INSERT INTO blog_posts (content, published_at, updated_at)
-    VALUES (?, ?, ?)`
+	query := `INSERT INTO blog_posts (content, tags, published_at, updated_at)
+    VALUES (?, ?, ?, ?)`
 	createError := errors.New("failed to create Blog Post")
 
 	now := time.Now()
-	result, err := bs.db.Exec(query, req.Content, now, now)
+	result, err := bs.db.Exec(query, req.Content, strings.ToLower(req.Tags), now, now)
 	if err != nil {
 		log.Printf("Failed to create Blog Post with query: '%s'\nFull error: %v", query, err)
 		return nil, createError
@@ -46,7 +47,7 @@ func (bs *blogStore) create(req *createPostRequest) (*blogPost, error) {
 }
 
 func (bs *blogStore) getAll() ([]*blogPost, error) {
-	query := `SELECT id, content, published_at, updated_at 
+	query := `SELECT id, content, tags, published_at, updated_at 
                 FROM blog_posts 
                 ORDER BY published_at DESC`
 	getAllErr := errors.New("failed to get all Blog Posts")
@@ -77,7 +78,7 @@ func (bs *blogStore) getAll() ([]*blogPost, error) {
 }
 
 func (bs *blogStore) getByID(id int64) (*blogPost, error) {
-	query := `SELECT id, content, published_at, updated_at FROM blog_posts WHERE id = ?`
+	query := `SELECT id, content, tags, published_at, updated_at FROM blog_posts WHERE id = ?`
 	row := bs.db.QueryRow(query, id)
 	post, err := scanBlogPost(row)
 
@@ -92,10 +93,10 @@ func (bs *blogStore) getByID(id int64) (*blogPost, error) {
 }
 
 func (bs *blogStore) update(id int64, req *updatePostRequest) (*blogPost, error) {
-	query := `UPDATE blog_posts SET content = ?, updated_at = ? WHERE id = ?`
+	query := `UPDATE blog_posts SET content = ?, tags = ?, updated_at = ? WHERE id = ?`
 	updateError := errors.New("failed to update Blog Post")
 
-	result, err := bs.db.Exec(query, req.Content, time.Now(), id)
+	result, err := bs.db.Exec(query, req.Content, strings.ToLower(req.Tags), time.Now(), id)
 	if err != nil {
 		log.Printf("Failed to update Blog Post with: '%s'\nFull error: %v", query, err)
 		return nil, updateError
@@ -139,7 +140,7 @@ func (bs *blogStore) delete(id int64) error {
 
 func scanBlogPost(scanner Scanner) (*blogPost, error) {
 	post := blogPost{}
-	err := scanner.Scan(&post.ID, &post.Content, &post.PublishedAt, &post.UpdatedAt)
+	err := scanner.Scan(&post.ID, &post.Content, &post.Tags, &post.PublishedAt, &post.UpdatedAt)
 	if err != nil {
 		log.Printf("Failed to scan Blog Post: %v", err)
 		return nil, errors.New("failed to scan Blog Post")

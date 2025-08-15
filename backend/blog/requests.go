@@ -15,10 +15,12 @@ import (
 
 type createPostRequest struct {
 	Content string `json:"content"`
+	Tags    string `json:"tags"`
 }
 
 type updatePostRequest struct {
 	Content string `json:"content"`
+	Tags    string `json:"tags"`
 }
 
 func contentHasValidMarkdownHeader(content string) bool {
@@ -33,7 +35,12 @@ func contentHasValidMarkdownHeader(content string) bool {
 	return expression.MatchString(firstLine)
 }
 
-func validatePostContent(content string) error {
+func tagsAreValid(tags string) bool {
+	expression := regexp.MustCompile(`^[a-zA-Z,]+$`)
+	return expression.MatchString(tags)
+}
+
+func validatePost(content string, tags string) error {
 	trimmed := strings.TrimSpace(content)
 	if trimmed == "" {
 		return errors.New("empty ")
@@ -53,6 +60,10 @@ func validatePostContent(content string) error {
 		return errors.New("first line is not a valid markdown header")
 	}
 
+	if !tagsAreValid(tags) {
+		return errors.New("")
+	}
+
 	return nil
 }
 
@@ -63,7 +74,7 @@ func (m *Module) createPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if validatePostContent(req.Content) != nil {
+	if validatePost(req.Content, req.Tags) != nil {
 		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid post content")
 		return
 	}
@@ -122,7 +133,7 @@ func (m *Module) updatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if validatePostContent(req.Content) != nil {
+	if validatePost(req.Content, req.Tags) != nil {
 		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid post content")
 		return
 	}
