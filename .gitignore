@@ -5,5 +5,5 @@
 **/src/designSystem/generated/
 backend/tmp/
 backend/main
-backend/.env
+*/.env
 backend/*.db*
