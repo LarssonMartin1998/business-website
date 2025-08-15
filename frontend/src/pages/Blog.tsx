@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, } from 'react';
 import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { gruvboxLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -6,11 +6,13 @@ import { gruvboxLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Header from 'components/Header';
 import Main from 'components/Main';
 import { HeadingDefault, HeadingDefaultCard } from 'components/Heading';
-import { BlogPost, getBlogPosts } from 'api/blog';
+import { BlogPost, } from 'api/blog';
 import { extractHeader, extractBread } from 'utils/helpers';
 import { CardDefault } from 'components/Card';
 import { twMerge } from 'tailwind-merge';
 import { bg, border, groupHoverRaw, raw, text } from 'design-system/colors';
+import { useBlogPosts } from 'hooks/useBlogPosts';
+import { ButtonAccent } from 'components/Button';
 
 interface BlogEntryProps {
   blogPost: BlogPost
@@ -63,7 +65,6 @@ function StyledMarkdown({ text }: { text: string; }) {
   return (
     <Markdown
       components={{
-        // Inline code
         code: ({ children, className, ...props }) => {
           const match = /language-(\w+)/.exec(className || '');
           const isInline = !className?.includes('language-');
@@ -76,7 +77,6 @@ function StyledMarkdown({ text }: { text: string; }) {
             );
           }
 
-          // Code blocks with syntax highlighting
           return (
             <div className="my-4">
               <SyntaxHighlighter
@@ -88,8 +88,8 @@ function StyledMarkdown({ text }: { text: string; }) {
                   margin: 0,
                   // borderRadius: '0.375rem',
                   padding: '0.5rem',
-                  backgroundColor: 'var(--color-fog-grey-light)', // Use your CSS variable
-                  border: '1px solid var(--color-granite-grey)', // Use your CSS variable
+                  backgroundColor: 'var(--color-fog-grey-light)',
+                  border: '1px solid var(--color-granite-grey)',
                 }}
               >
                 {String(children).replace(/\n$/, '')}
@@ -97,7 +97,6 @@ function StyledMarkdown({ text }: { text: string; }) {
             </div>
           );
         },
-        // Remove the pre component since SyntaxHighlighter handles it now
       }}
     >
       {text}
@@ -143,26 +142,54 @@ function BlogEntry({ blogPost }: BlogEntryProps) {
   );
 }
 
+function BlogSection() {
+  const { posts, state, refetch } = useBlogPosts();
+
+  if (state === 'critical-failure') {
+    return (
+      <div className='flex flex-col items-center py-4'>
+        <span className='text-red-400 font-bold'>Internal error loading posts.</span>
+      </div>
+    );
+  }
+
+  if (state === 'temporary-failure') {
+    return (
+      <div className='flex flex-col items-center py-8 gap-y-4'>
+        <ButtonAccent onClick={refetch}>
+          Refresh
+        </ButtonAccent>
+        <span className={twMerge(text('default'), '')}>Temporary failure when loading posts, please try again.</span>
+      </div>
+    );
+  }
+
+  if (state === 'loading') {
+    return (
+      <div className='flex justify-center items-center py-4'>
+        <span className={text('default')}>Loading posts...</span>
+      </div>
+    );
+  }
+
+  if (state === 'success' && posts.length === 0) {
+    return (
+      <div className='flex justify-center items-center py-4'>
+        <span className={text('default')}>No posts written yet.</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className='flex flex-col gap-y-4 p-2.5 mt-4'>
+      {posts.map((blogPost, _) => (
+        <BlogEntry key={blogPost.id} blogPost={blogPost} />
+      ))}
+    </div>
+  );
+}
+
 function Blog() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  useEffect(() => {
-    async function fetchLatestPosts() {
-      const blogPostsPromise = await getBlogPosts();
-      switch (blogPostsPromise.state) {
-        case 'success':
-          let postsData = blogPostsPromise.data ?? [];
-          setPosts(postsData);
-          break;
-        case 'temporary-failure':
-          break;
-        case 'critical-failure':
-          break;
-      }
-    }
-
-    fetchLatestPosts();
-  }, []);
-
   const headline = 'Thoughts about Computers, Programming, and Life';
   return (
     <>
@@ -170,12 +197,7 @@ function Blog() {
       <Main className='flex justify-center'>
         <div className='w-1/2 mt-4 p-2.5'>
           <HeadingDefault className='font-bold' textStr={headline} size='sm' />
-          <div className='flex flex-col gap-y-4 p-2.5 mt-4'>
-            {posts.map((blogPost, _) => (
-              <BlogEntry key={blogPost.id} blogPost={blogPost} />
-            ))}
-          </div>
-
+          <BlogSection />
         </div>
       </Main >
     </>

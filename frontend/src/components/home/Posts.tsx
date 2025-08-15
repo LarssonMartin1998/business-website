@@ -1,24 +1,15 @@
-import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { BlogPost, getBlogPosts } from 'api/blog';
+import { BlogPost, } from 'api/blog';
 import { bg, text, border, raw } from 'design-system/colors';
 import { ButtonAccent } from 'components/Button';
 import { HeadingRaw } from 'components/Heading';
 import { extractHeader, extractAndLimitBread } from 'utils/helpers';
+import { useBlogPosts } from 'hooks/useBlogPosts';
 
 interface PostEntryProps {
   header: string;
   bread: string;
-}
-
-interface BlogPostsProps {
-  posts: BlogPost[];
-}
-
-interface ReloadButtonProps {
-  reloads: number;
-  setReloads: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function PostEntry({ header, bread }: PostEntryProps) {
@@ -29,14 +20,6 @@ function PostEntry({ header, bread }: PostEntryProps) {
     </li>
   );
 }
-
-type UIState = {
-  posts: BlogPost[];
-  showCriticalError: boolean;
-  showReloadButton: boolean;
-  noPostsFound: boolean;
-  showSpinner: boolean;
-};
 
 function Spinner() {
   return (
@@ -54,10 +37,10 @@ function CriticalError() {
   );
 }
 
-function ReloadButton({ reloads, setReloads }: ReloadButtonProps) {
+function ReloadButton({ refetch }: { refetch: () => void }) {
   return (
     <div className='flex flex-col items-center py-8 gap-y-4'>
-      <ButtonAccent onClick={() => setReloads(reloads + 1)}>
+      <ButtonAccent onClick={refetch}>
         Refresh
       </ButtonAccent>
       <span className={twMerge(text('default'), '')}>Temporary failure when loading posts, please try again.</span>
@@ -73,7 +56,33 @@ function NoPostsFound() {
   );
 }
 
-function BlogPosts({ posts }: BlogPostsProps) {
+function BlogPosts() {
+  const { posts, state, refetch } = useBlogPosts();
+
+  if (state === 'loading') {
+    return (
+      <Spinner />
+    );
+  }
+
+  if (state === 'critical-failure') {
+    return (
+      <CriticalError />
+    );
+  }
+
+  if (state === 'temporary-failure') {
+    return (
+      <ReloadButton refetch={refetch} />
+    );
+  }
+
+  if (state === 'success' && posts.length === 0) {
+    return (
+      <NoPostsFound />
+    );
+  }
+
   return (
     <ul className='flex justify-center gap-x-20 mt-10'>
       {posts.slice(0, 3).map(({ id, content }, _) => (
@@ -84,62 +93,6 @@ function BlogPosts({ posts }: BlogPostsProps) {
 }
 
 function Posts() {
-  const [uiState, setUIState] = useState<UIState>({
-    posts: [],
-    showCriticalError: false,
-    showReloadButton: false,
-    noPostsFound: false,
-    showSpinner: true,
-  });
-  const [reloads, setReloads] = useState<number>(0);
-
-  useEffect(() => {
-    async function fetchLatestPosts() {
-      setUIState(prev => ({
-        ...prev,
-        showSpinner: true,
-      }));
-
-      const blogPostsPromise = await getBlogPosts();
-
-      setUIState(prev => ({
-        ...prev,
-        showSpinner: false,
-      }));
-
-      switch (blogPostsPromise.state) {
-        case 'success':
-          let postsData = blogPostsPromise.data ?? [];
-          setUIState(prev => ({
-            ...prev,
-            posts: postsData,
-            showCriticalError: false,
-            showReloadButton: false,
-            noPostsFound: postsData.length === 0,
-          }));
-          break;
-        case 'temporary-failure':
-          setUIState(prev => ({
-            ...prev,
-            posts: [],
-            showCriticalError: false,
-            showReloadButton: true,
-          }));
-          break;
-        case 'critical-failure':
-          setUIState(prev => ({
-            ...prev,
-            posts: [],
-            showCriticalError: true,
-            showReloadButton: false,
-          }));
-          break;
-      }
-    }
-
-    fetchLatestPosts();
-  }, [reloads]);
-
   // The firGreen text is based on the section above accent background.
   // Could couple it against it, but really feel like that is overkill.
   const highlight = 'default';
@@ -147,11 +100,7 @@ function Posts() {
   return (
     <div className={twMerge(bg(highlight), border(highlight), insetShadow, 'relative border-y-2 flex flex-col min-h-64 p-8 pb-12')}>
       <HeadingRaw textStr='Posts' className='font-bold text-center text-shadow-sm' size='lg' color={raw.firGreen} />
-      {uiState.showSpinner && <Spinner />}
-      {uiState.showCriticalError && <CriticalError />}
-      {uiState.showReloadButton && <ReloadButton reloads={reloads} setReloads={setReloads} />}
-      {uiState.noPostsFound && <NoPostsFound />}
-      {!uiState.noPostsFound && <BlogPosts posts={uiState.posts} />}
+      <BlogPosts />
     </div>);
 }
 
