@@ -2,6 +2,7 @@ import { z } from 'zod';
 const BlogPostSchema = z.object({
   id: z.number(),
   content: z.string(),
+  tags: z.string(),
   published_at: z.string().transform(str => new Date(str)),
   updated_at: z.string().transform(str => new Date(str)),
 });
