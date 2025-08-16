@@ -1,16 +1,20 @@
+const opacityLevels = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100] as const;
+type OpacityLevels = typeof opacityLevels[number];
+
 function withTransparency<T extends Record<string, string>>(colors: T) {
   const transparencyEntries = Object.entries(colors)
     .flatMap(([key, value]) =>
-      Array.from({ length: 20 }, (_, i) => {
-        const opacity = (i + 1) * 5;
-        return [`${key}${opacity}`, `${value}/${opacity}`] as const;
-      })
+      opacityLevels.map(opacity =>
+        [`${key}${opacity}`, `${value}/${opacity}`] as const
+      )
     );
 
   return {
     ...colors,
     ...Object.fromEntries(transparencyEntries)
-  } as const;
+  } as T & {
+    [K in keyof T as `${string & K}${OpacityLevels}`]: `${T[K]}/${OpacityLevels}`
+  };
 }
 
 const colors = {
