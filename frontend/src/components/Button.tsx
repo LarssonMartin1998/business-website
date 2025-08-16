@@ -32,6 +32,7 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, button
   const focus = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-deep-forest-blue';
 
   const sizes = {
+    xs: 'px-2 py-1 text-xs w-18 h-10',
     sm: 'px-3 py-1.5 text-sm w-24 h-12',
     md: 'px-4 py-2 text-base w-36 h-14',
     lg: 'px-6 py-3 text-lg w-48 h-14',
