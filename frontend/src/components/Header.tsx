@@ -29,7 +29,7 @@ function HeaderCTAButton({ children, className, ...props }: HeaderCTAButtonProps
 function RSSButton() {
   const props = {
     bg: {
-      default: `${bg(raw.birchWhite)}/5`,
+      default: `${bg(raw.birchWhite5)}`,
       hover: hoverRaw(`${bg(raw.transparent)}`),
     } as const,
     fg: {
