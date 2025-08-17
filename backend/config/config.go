@@ -98,10 +98,6 @@ func (c *Config) validate() error {
 		return fmt.Errorf("missing required config entry: API_KEY")
 	}
 
-	if len(c.Server.AllowedOrigins) == 0 {
-		return fmt.Errorf("missing required config entry: ALLOWED_ORIGINS")
-	}
-
 	return nil
 }
 
