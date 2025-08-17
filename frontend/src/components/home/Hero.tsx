@@ -4,12 +4,12 @@ import { twMerge } from 'tailwind-merge';
 import HeroHeader from 'components/home/HeroHeader';
 import HeroBackground from './HeroBackground';
 import { ButtonAccent, ButtonAlert } from 'components/Button';
-import { bg, raw, text } from 'design-system/colors';
+import { from, raw, text, to } from 'design-system/colors';
 import { HeadingRaw } from 'components/Heading';
 
-function SkewSeparator() {
+function Separator() {
   return (
-    <div className={twMerge(bg('accent'), 'absolute -bottom-6 left-0 w-full h-16 -skew-y-1 z-20 pointer-events-none border-y-2 border-t-moss-teal border-b-granite-grey shadow-[0_-4px_14px_6px_rgba(0,0,0,0.25)]')} />
+    <div className={twMerge(from(raw.firGreen), to(raw.firGreenLight), 'absolute bg-gradient-to-b -bottom-6 left-0 w-full h-16 z-20 pointer-events-none border-y-2 border-t-moss-teal border-b-granite-grey shadow-[0_-4px_14px_6px_rgba(0,0,0,0.25)]')} />
   );
 }
 
@@ -29,7 +29,7 @@ function Hero({ scrollToServicesRef }: HeroProps) {
       <HeroHeader />
       <HeroBackground />
       <div className='relative flex justify-end'>
-        <div className='flex flex-col gap-y-10 w-fit pb-32 pr-16'>
+        <div className='flex flex-col gap-y-10 w-fit pb-32 pr-24'>
 
           <div className='flex flex-col'>
             <div className='flex text-shadow-lg'>
@@ -46,7 +46,7 @@ function Hero({ scrollToServicesRef }: HeroProps) {
 
         </div>
       </div>
-      <SkewSeparator />
+      <Separator />
     </section >
   );
 }

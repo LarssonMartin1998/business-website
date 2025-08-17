@@ -11,7 +11,7 @@ function Clients() {
 
   return (
     <div className={twMerge(background, shadow, 'flex h-64 justify-center ')}>
-      <ul className={twMerge(font, 'flex items-center gap-x-10')}>
+      <ul className={twMerge(font, 'flex items-center gap-x-14')}>
         <li>Farm Heroes Saga</li>
         <li>Atlas</li>
         <li>Mannequin</li>
