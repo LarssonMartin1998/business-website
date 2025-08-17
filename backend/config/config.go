@@ -68,7 +68,7 @@ func Load() (*Config, error) {
 			Key: utils.Must(getEnvWithoutDefault("API_KEY")),
 		},
 		Server: ServerConfig{
-			AllowedOrigins:   utils.Must(getSliceEnvWithoutDefault("ALLOWED_ORIGINS")),
+			AllowedOrigins:   getSliceEnv("ALLOWED_ORIGINS", []string{}),
 			ConnectionsLimit: getIntEnv("CONNECTIONS_LIMIT", 100),
 			RateLimit: RateLimit{
 				PerIPLimit:    getIntEnv("RATE_LIMIT", 10),
@@ -142,17 +142,16 @@ func getIntEnv(key string, defaultValue int) int {
 	return defaultValue
 }
 
-func getSliceEnvWithoutDefault(key string) ([]string, error) {
-	value, err := getEnvWithoutDefault(key)
-	if err != nil {
-		return nil, err
+func getSliceEnv(key string, defaultValue []string) []string {
+	if value := os.Getenv(key); value != "" {
+		parts := strings.Split(value, ",")
+		result := make([]string, len(parts))
+		for i, part := range parts {
+			result[i] = strings.TrimSpace(part)
+		}
+
+		return result
 	}
 
-	parts := strings.Split(value, ",")
-	result := make([]string, len(parts))
-	for i, part := range parts {
-		result[i] = strings.TrimSpace(part)
-	}
-
-	return result, nil
+	return defaultValue
 }
