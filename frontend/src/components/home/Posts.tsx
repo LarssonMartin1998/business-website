@@ -1,25 +1,12 @@
 import { twMerge } from 'tailwind-merge';
 
-import { BlogPost, } from 'api/blog';
 import { bg, text, border, raw } from 'design-system/colors';
 import { ButtonAccent } from 'components/Button';
 import { HeadingRaw } from 'components/Heading';
-import { extractHeader, extractAndLimitBread } from 'utils/helpers';
 import { useBlogPosts } from 'hooks/useBlogPosts';
-
-interface PostEntryProps {
-  header: string;
-  bread: string;
-}
-
-function PostEntry({ header, bread }: PostEntryProps) {
-  return (
-    <li className='max-w-1/5'>
-      <h3 className={twMerge(text('defaultCard'), 'font-bold')}>{header}</h3>
-      <p className={twMerge(text('defaultCard'), 'italic mt-1')}>{bread}</p>
-    </li>
-  );
-}
+import BlogMeta from 'components/BlogMeta';
+import { useNavigate } from 'react-router-dom';
+import { CardDefault } from 'components/Card';
 
 function Spinner() {
   return (
@@ -58,6 +45,11 @@ function NoPostsFound() {
 
 function BlogPosts() {
   const { posts, state, refetch } = useBlogPosts();
+  const navigate = useNavigate();
+
+  const onPressPost = (postId: number) => {
+    navigate('/blog', { state: { expandPostId: postId } });
+  };
 
   if (state === 'loading') {
     return (
@@ -85,8 +77,10 @@ function BlogPosts() {
 
   return (
     <ul className='flex justify-center gap-x-20 mt-10'>
-      {posts.slice(0, 3).map(({ id, content }, _) => (
-        <PostEntry key={id} header={extractHeader(content)} bread={extractAndLimitBread(content)} />
+      {posts.slice(0, 3).map((blogPost, _) => (
+        <CardDefault key={blogPost.id} className='p-4 shadow min-w-1/4'>
+          <BlogMeta blogPost={blogPost} onClick={() => { onPressPost(blogPost.id); }} />
+        </CardDefault>
       ))}
     </ul>
   );
@@ -98,7 +92,7 @@ function Posts() {
   const highlight = 'default';
   const insetShadow = 'shadow-[inset_0_10px_20px_rgba(0,0,0,0.30)]';
   return (
-    <div className={twMerge(bg(highlight), border(highlight), insetShadow, 'relative border-y-2 flex flex-col min-h-64 p-8 pb-12')}>
+    <div className={twMerge(bg(highlight), border(highlight), insetShadow, 'relative border-t-2 flex flex-col min-h-64 p-8 pb-12')}>
       <HeadingRaw textStr='Posts' className='font-bold text-center text-shadow-sm' size='lg' color={raw.firGreen} />
       <BlogPosts />
     </div>);
