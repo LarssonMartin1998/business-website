@@ -29,9 +29,8 @@ type APIResult<T> = {
 async function getBlogPosts(): Promise<APIResult<BlogPost[]>> {
   let response: Response;
 
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
   try {
-    response = await fetch(`${API_BASE_URL}/api/v1/posts`);
+    response = await fetch('/api/v1/posts');
   } catch {
     return { state: 'temporary-failure', data: undefined };
   }
