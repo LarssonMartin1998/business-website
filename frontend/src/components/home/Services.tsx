@@ -13,16 +13,17 @@ interface ServiceProps {
   bgColRaw: RawColor,
   header: string;
   bread: string;
+  className: string;
 }
 
-function ServiceCard({ Icon, bgColRaw, header, bread }: ServiceProps) {
+function ServiceCard({ Icon, bgColRaw, header, bread, className }: ServiceProps) {
   const mimickBgTextCol = text(bgColRaw);
   const iconProps = {
-    className: twMerge(mimickBgTextCol, 'w-24 h-24')
+    className: twMerge(mimickBgTextCol, 'w-24 h-24', className)
   } as const;
 
   return (
-    <ListCardDefault className='w-64 min-h-80 p-2.5 flex flex-col text-center justify-center items-center'>
+    <ListCardDefault className='w-64 min-h-80 p-4 flex flex-col text-center justify-start items-center'>
       <div className='flex flex-col items-center'>
         <Icon {...iconProps} />
         <h3 className={twMerge(mimickBgTextCol, 'font-bold mt-2')}>{header}</h3>
@@ -32,7 +33,7 @@ function ServiceCard({ Icon, bgColRaw, header, bread }: ServiceProps) {
   );
 }
 
-type ServiceTuple = [React.ComponentType<{ className?: string }>, string, string];
+type ServiceTuple = [React.ComponentType<{ className?: string }>, string, string, string?];
 interface ServicesGroupProps {
   services: ReadonlyArray<Readonly<ServiceTuple>>;
   bgColRaw: RawColor,
@@ -45,8 +46,8 @@ interface ServicesProps {
 function ServicesGroup({ services, bgColRaw }: ServicesGroupProps) {
   return (
     <ul className='flex mt-10 gap-x-14'>
-      {services.map(([Icon, header, bread]) => (
-        <ServiceCard key={header} Icon={Icon} bgColRaw={bgColRaw} header={header} bread={bread} />
+      {services.map(([Icon, header, bread, className]) => (
+        <ServiceCard key={header} Icon={Icon} bgColRaw={bgColRaw} header={header} bread={bread} className={className ?? ""} />
       ))}
     </ul>
   );
@@ -54,7 +55,8 @@ function ServicesGroup({ services, bgColRaw }: ServicesGroupProps) {
 
 function Services({ scrollToServicesRef }: ServicesProps) {
   const header = 'Services';
-  const paragraph = 'Lorem, ipsum dolor sit amet, consectetur adipiscing elit. Praesent tempus vitae ante sed lobortis. Sed posuere hendrerit purus, eu cursus purus facilisis eget. Quisque sodales vitae lacus pretium blandit. Maecenas at sem euismod, interdum elit eget, mattis tortor. Etiam sed molestie arcu, nec euismod sem. Maecenas tincidunt venenatis leo eu.';
+  const paragraph = 'I help bring your ideas to market. I’ve shipped multiplayer and console games and worked on large-scale live services reaching millions of players (Farm Heroes Saga). My expertise spans from highly performant Game Engine development, web development with React and Go to low-level programming with C, C++, and Zig, alongside deep Linux experience. I can also help with automation, CI/CD, and hosting.';
+  const cta = 'Ready to discuss your project?';
 
   const servicesGroupProps = {
     services: [
@@ -66,12 +68,14 @@ function Services({ scrollToServicesRef }: ServicesProps) {
       [
         Layers,
         'Full-Stack Expertise',
-        'From backend to frontend, Game Engine to Gameplay, automated tools, and deployment.',
+        'From backend to frontend, Game Engine to networked Gameplay, automated tools, and deployment.',
+        'p-2',
       ],
       [
         Lightbulb,
         'From Idea to Delivery',
         'I help bring your product vision to life. Clearly, efficiently, and with full execution from start to finish.',
+        'p-1'
       ]
     ]
   } as const;
@@ -86,13 +90,16 @@ function Services({ scrollToServicesRef }: ServicesProps) {
       <div className='flex flex-col items-center'>
 
         <HeadingRaw className='font-bold text-shadow-sm' textStr={header} size='lg' color={intentToRaw('text', highlight)} />
-        <p className={twMerge(textCol, 'text-center w-1/2 mt-4')}>{paragraph}</p>
+        <p className={twMerge(textCol, 'text-center w-2/5 mt-4')}>{paragraph}</p>
 
         <ServicesGroup bgColRaw={bgColRaw} {...servicesGroupProps} />
 
-        <div className='flex gap-x-4 mt-4 p-8'>
-          <ButtonAccent buttonLink={hrefs.github}>See My Work</ButtonAccent>
-          <ButtonAccentInvis buttonLink='/contact'>Get in Touch</ButtonAccentInvis>
+        <div className='flex flex-col items-center pt-8'>
+          <p className={twMerge(textCol, 'font-bold')}>{cta}</p>
+          <div className='flex gap-x-4 pt-6'>
+            <ButtonAccent buttonLink={hrefs.github}>See My Work</ButtonAccent>
+            <ButtonAccentInvis buttonLink='/contact'>Get in Touch</ButtonAccentInvis>
+          </div>
         </div>
       </div>
     </div>
