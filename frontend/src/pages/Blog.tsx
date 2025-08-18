@@ -2,19 +2,21 @@ import { useEffect, useRef, useState, } from 'react';
 import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { gruvboxLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useLocation } from 'react-router-dom';
+import { twMerge } from 'tailwind-merge';
+
+import { BlogPost, } from 'api/blog';
+import { extractBread } from 'utils/helpers';
+import { useBlogPosts } from 'hooks/useBlogPosts';
+import { bg, border, raw, text } from 'design-system/colors';
 
 import Header from 'components/Header';
 import Main from 'components/Main';
 import { HeadingDefault, } from 'components/Heading';
-import { BlogPost, } from 'api/blog';
-import { extractBread } from 'utils/helpers';
 import { CardDefault } from 'components/Card';
-import { twMerge } from 'tailwind-merge';
-import { bg, border, raw, text } from 'design-system/colors';
-import { useBlogPosts } from 'hooks/useBlogPosts';
 import { ButtonAccent } from 'components/Button';
 import BlogMeta from 'components/BlogMeta';
-import { useLocation } from 'react-router-dom';
+import Footer from 'components/Footer';
 
 interface BlogEntryProps {
   blogPost: BlogPost
@@ -150,6 +152,7 @@ function Blog() {
           <BlogSection />
         </div>
       </Main >
+      <Footer />
     </>
   );
 }
