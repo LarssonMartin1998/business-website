@@ -7,6 +7,7 @@ import { bg, border, from, hover, hoverRaw, raw, text, to, } from 'design-system
 import { Rss } from 'components/generated/index';
 import { Page } from 'design-system/pages';
 import { PageLink } from './Link';
+import { LogoHorizontalShort } from 'components/generated/index';
 
 interface HeaderCTAButtonProps {
   children: React.ReactNode;
@@ -36,7 +37,7 @@ function RSSButton() {
       default: text('accent'),
     } as const,
     border: {
-      default: `${border(raw.birchWhite)}/20`
+      default: border(raw.birchWhite20)
     },
     className: 'border-1 flex gap-x-1',
   } as const;
@@ -90,9 +91,9 @@ function Header() {
   const location = useLocation();
 
   return (
-    <header className={twMerge(from(raw.firGreen), to(raw.firGreenLight), 'bg-gradient-to-b h-16 shadow-2xl')}>
-      <div className='flex justify-between h-full'>
-        <div className='h-full w-fit flex items-center pl-6 font-bold uppercase text-sm'><span className={twMerge(text('accent'), 'text-center')}>EML</span></div>
+    <header className={twMerge(from(raw.firGreen), to(raw.firGreenLight), border('default'), 'bg-gradient-to-b border-b-2 h-16 shadow-2xl')}>
+      <div className='flex justify-between items-center h-full px-6'>
+        <LogoHorizontalShort className='h-9/10 drop-shadow-2xl' />
         <div className='h-full w-fit'>
           <nav className='h-full'>
             <ul className={twMerge(text('accent'), 'flex h-full justify-center items-center font-bold uppercase gap-x-6 text-sm')}>
@@ -102,7 +103,7 @@ function Header() {
             </ul>
           </nav>
         </div>
-        <div className='flex gap-x-2 h-full w-fit items-center pr-6'>
+        <div className='flex gap-x-2 h-full w-fit items-center'>
           <RSSButton />
           <LetsWorkButton />
         </div>
