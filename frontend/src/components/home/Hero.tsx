@@ -20,7 +20,7 @@ interface HeroProps {
 function Hero({ scrollToServicesRef }: HeroProps) {
   const headline = 'Martin Larsson\u00A0\u00A0';
   const subheadline = '|\u00A0\u00A0Senior Consultant';
-  const paragraph = 'Building reliable systems, from games reaching millions to modern web apps.';
+  const paragraph = 'Building reliable systems, from games reaching millions to modern web apps and automation.';
 
   const onClickViewServices = () => scrollToServicesRef.current?.scrollIntoView({ behavior: 'smooth' });
 
