@@ -1,10 +1,10 @@
 import { twMerge } from 'tailwind-merge';
 
-import { bg, border, from, intentToRaw, raw, text, to, } from 'design-system/colors';
+import { border, from, intentToRaw, raw, text, to, } from 'design-system/colors';
 import { Href, hrefs } from 'design-system/pages';
 
 import { GithubLogo, LinkedinLogo, MastodonLogo } from 'components/generated/index';
-import { CardDefault } from 'components/Card';
+import { CardAccent } from 'components/Card';
 import { AnchorLink } from 'components/Link';
 import { HeadingRaw } from 'components/Heading';
 
@@ -27,13 +27,13 @@ function Socials() {
     <div className={twMerge(from(raw.firGreen), to(raw.firGreenLight), border('accent'), 'bg-gradient-to-b relative border-t-2 p-8 pb-12 flex flex-col gap-y-8 items-center')}>
 
       <HeadingRaw textStr='Socials' className='font-bold text-center text-shadow-sm' size='lg' color={intentToRaw('text', 'accent')} />
-      <CardDefault className='w-auto h-auto p-12'>
+      <CardAccent className='w-auto h-auto p-12'>
         <div className='flex gap-x-20'>
           <Logo LogoType={LinkedinLogo} href={hrefs.linkedIn} />
           <Logo LogoType={GithubLogo} href={hrefs.github} />
           <Logo LogoType={MastodonLogo} href={hrefs.mastodon} />
         </div>
-      </CardDefault>
+      </CardAccent>
 
     </div>
   );
