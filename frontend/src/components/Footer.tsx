@@ -24,11 +24,14 @@ function Footer() {
   return (
     <div className={twMerge(from(raw.firGreen), to(raw.firGreenLight), border('accent'), 'bg-gradient-to-b border-t-2 shadow-2xl flex flex-col justify-center min-h-80 p-8')}>
 
-      <div className='grid grid-cols-3 gap-20 w-full' style={{ gridTemplateColumns: '1fr auto 1fr' }}>
-        <div className='flex justify-end'>
-          <div className='flex flex-col gap-y-4'>
+      <div className='grid grid-cols-3 gap-30 w-full' style={{ gridTemplateColumns: '1fr auto 1fr' }}>
+        <div className='flex justify-end items-center'>
+          <div className='flex flex-col gap-y-4 pr-30 h-9/10'>
             <LogotypeLight />
-            <ButtonAccentInvis className='flex justify-center items-center font-bold'><Rss className='w-8 pb-2' />RSS</ButtonAccentInvis>
+            <ButtonAccentInvis size='md' className='flex justify-center items-center font-bold'><Rss className='w-8 pb-2' />RSS</ButtonAccentInvis>
+          </div>
+          <div className={twMerge(border(raw.cloudHaze30), 'w-1 h-9/10 border-r-1')}>
+
           </div>
         </div>
         <div className='flex items-center'>
