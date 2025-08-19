@@ -147,7 +147,7 @@ function Blog() {
     <>
       <Header />
       <Main className='flex justify-center'>
-        <div className='w-1/2 mt-4 p-2.5'>
+        <div className='w-2/5 mt-4 p-2.5'>
           <HeadingDefault className='font-bold' textStr={headline} size='sm' />
           <BlogSection />
         </div>
