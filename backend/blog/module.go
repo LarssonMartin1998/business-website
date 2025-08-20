@@ -25,4 +25,7 @@ func (m *Module) RegisterRoutes(n *router.RouteNode, cfg *config.Config) {
 		n.Put("/{id}", m.updatePost).With(utils.MiddlewareAPIAuth(cfg.API.Key))
 		n.Delete("/{id}", m.deletePost).With(utils.MiddlewareAPIAuth(cfg.API.Key))
 	})
+	n.Route("/rss", func(n *router.RouteNode) {
+		n.Get("/", m.serveXML)
+	})
 }

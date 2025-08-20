@@ -4,6 +4,7 @@ import (
 	"backend/utils"
 	"database/sql"
 	"encoding/json"
+	"encoding/xml"
 	"errors"
 	"net/http"
 	"regexp"
@@ -175,4 +176,23 @@ func (m *Module) deletePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.RespondWithJSON(w, http.StatusOK, true, nil, "")
+}
+
+func (m *Module) serveXML(w http.ResponseWriter, r *http.Request) {
+	posts, err := m.store.getAll()
+	if err != nil {
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, "Error serving RSS Feed")
+		return
+	}
+
+	xmlData, err := constructXMLFeed(posts, r)
+	if err != nil {
+		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, "Error serving RSS Feed")
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/rss+xml; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(xml.Header))
+	w.Write(xmlData)
 }
