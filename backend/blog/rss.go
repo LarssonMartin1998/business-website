@@ -65,9 +65,9 @@ func constructXMLFeed(posts []*blogPost, r *http.Request) ([]byte, error) {
 	rss := RSS{
 		Version: "2.0",
 		Channel: Channel{
-			Title:       "Your Blog Title",
+			Title:       "Martin Larsson",
 			Link:        baseURL,
-			Description: "Your blog description",
+			Description: "Thoughts about Computers, Programming, and Life.",
 			Language:    "en-us",
 			Items:       make([]Item, len(posts)),
 		},
