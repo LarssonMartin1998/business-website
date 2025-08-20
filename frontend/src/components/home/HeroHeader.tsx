@@ -13,7 +13,7 @@ interface HeaderListItemProps {
 
 function HeaderListItem({ name, routerPath }: HeaderListItemProps) {
   const colors = twMerge(text('accent'), hoverRaw(text(raw.emberBark)));
-  const font = 'uppercase font-bold text-lg';
+  const font = 'uppercase font-bold text-md sm:text-lg';
 
   return (
     <li className={twMerge(colors, font, 'text-shadow-lg ')}>
@@ -29,7 +29,7 @@ function HeroHeader() {
 
         <nav className='flex gap-x-6 justify-center h-fit'>
           <LogotypeLight className='w-24 h-24 drop-shadow-2xl' />
-          <ul className='flex gap-x-8 items-center'>
+          <ul className='flex gap-x-6 sm:gap-x-8 items-center'>
             <HeaderListItem routerPath='/contact' name='Contact' />
             <HeaderListItem routerPath='/blog' name='Blog' />
           </ul>
