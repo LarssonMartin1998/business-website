@@ -22,7 +22,19 @@ export default defineConfig({
         target: 'http://localhost:3000',
         changeOrigin: true,
         secure: false
-      }
+      },
+      '/rss': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) =>
+          path.replace(/^\/rss\/?$/, '/api/v1/rss'),
+      },
+      '/feed': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) =>
+          path.replace(/^\/feed\/?$/, '/api/v1/rss'),
+      },
     }
   }
 })
