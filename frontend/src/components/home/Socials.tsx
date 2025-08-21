@@ -17,7 +17,7 @@ function Logo({ LogoType, href }: LogoProps) {
   const animation = 'transition-transform duration-200 hover:scale-102 hover:-translate-y-1 hover:drop-shadow-lg';
   return (
     <AnchorLink href={href}>
-      <LogoType className={twMerge(text('defaultCard'), animation, 'w-32 h-32 ')} />
+      <LogoType className={twMerge(text('defaultCard'), animation, 'w-20 h-20 md:w-32 md:h-32')} />
     </AnchorLink>
   );
 }
@@ -27,8 +27,8 @@ function Socials() {
     <div className={twMerge(from(raw.firGreen), to(raw.firGreenLight), border('accent'), 'bg-gradient-to-b relative border-t-2 p-8 pb-12 flex flex-col gap-y-8 items-center')}>
 
       <HeadingRaw textStr='Socials' className='font-bold text-center text-shadow-sm' size='lg' color={intentToRaw('text', 'accent')} />
-      <CardAccent className='w-auto h-auto p-12'>
-        <div className='flex gap-x-20'>
+      <CardAccent className='w-auto h-auto p-8 md:p-12'>
+        <div className='flex gap-x-10 md:gap-x-20'>
           <Logo LogoType={LinkedinLogo} href={hrefs.linkedIn} />
           <Logo LogoType={GithubLogo} href={hrefs.github} />
           <Logo LogoType={MastodonLogo} href={hrefs.mastodon} />
