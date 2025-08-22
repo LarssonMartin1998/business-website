@@ -12,11 +12,11 @@ import { bg, border, raw, text } from 'design-system/colors';
 
 import Header from 'components/Header';
 import Main from 'components/Main';
-import { HeadingDefault, } from 'components/Heading';
 import { CardDefault } from 'components/Card';
 import { ButtonAccent } from 'components/Button';
 import BlogMeta from 'components/BlogMeta';
 import Footer from 'components/Footer';
+import SectionHeading from 'components/home/SectionHeading';
 
 interface BlogEntryProps {
   blogPost: BlogPost
@@ -148,7 +148,7 @@ function Blog() {
       <Header />
       <Main className='flex justify-center'>
         <div className='w-2/5 mt-4 p-2.5'>
-          <HeadingDefault className='font-bold' textStr={headline} size='sm' />
+          <SectionHeading className={twMerge(text('default'), 'text-xl text-left')}>{headline}</SectionHeading>
           <BlogSection />
         </div>
       </Main >

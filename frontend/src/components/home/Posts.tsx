@@ -2,11 +2,12 @@ import { twMerge } from 'tailwind-merge';
 
 import { bg, text, border, raw } from 'design-system/colors';
 import { ButtonAccent } from 'components/Button';
-import { HeadingRaw } from 'components/Heading';
 import { useBlogPosts } from 'hooks/useBlogPosts';
 import BlogMeta from 'components/BlogMeta';
 import { useNavigate } from 'react-router-dom';
 import { CardDefault } from 'components/Card';
+import SectionHeading from 'components/home/SectionHeading';
+import { BlogPost } from 'api/blog';
 
 function Spinner() {
   return (
@@ -43,13 +44,33 @@ function NoPostsFound() {
   );
 }
 
-function BlogPosts() {
-  const { posts, state, refetch } = useBlogPosts();
+interface DinMammaMannenProps {
+  className: string;
+  cardClasses: string;
+  numPosts: number
+  posts: BlogPost[];
+}
+
+function DinMammaMannen({ className, cardClasses, numPosts, posts }: DinMammaMannenProps) {
   const navigate = useNavigate();
 
   const onPressPost = (postId: number) => {
     navigate('/blog', { state: { expandPostId: postId } });
   };
+
+  return (
+    <ul className={className}>
+      {posts.slice(0, numPosts).map((blogPost, _) => (
+        <CardDefault key={blogPost.id} className={cardClasses}>
+          <BlogMeta headerClasses='text-md max-[500px]:!text-xs' blogPost={blogPost} onClick={() => { onPressPost(blogPost.id); }} />
+        </CardDefault>
+      ))}
+    </ul>
+  );
+}
+
+function BlogPosts() {
+  const { posts, state, refetch } = useBlogPosts();
 
   if (state === 'loading') {
     return (
@@ -75,14 +96,30 @@ function BlogPosts() {
     );
   }
 
+  const screenSizes = [
+    [
+      2,
+      'flex px-2 min-[600px]:!px-10 min-[800px]:!px-30 min-[1000px]:!px-40 min-[1150px]:!px-60 flex-col items-center gap-y-4 mt-10 min-[1300px]:hidden',
+      'p-4 shadow w-full'
+    ],
+    [
+      2,
+      'hidden min-[1300px]:flex min-[1920px]:hidden justify-center gap-x-20 mt-10',
+      'p-4 shadow min-w-2/5'
+    ],
+    [
+      3,
+      'hidden min-[1920px]:flex justify-center gap-x-16 mt-10 min-[2100px]:!gap-x-20',
+      'p-4 shadow min-w-3/10 min-[2100px]:!min-w-1/4'
+    ],
+  ];
+
   return (
-    <ul className='flex justify-center gap-x-20 mt-10'>
-      {posts.slice(0, 3).map((blogPost, _) => (
-        <CardDefault key={blogPost.id} className='p-4 shadow min-w-1/4'>
-          <BlogMeta blogPost={blogPost} onClick={() => { onPressPost(blogPost.id); }} />
-        </CardDefault>
+    <>
+      {screenSizes.map(([numPosts, className, cardClasses], idx) => (
+        <DinMammaMannen key={idx} posts={posts} numPosts={numPosts as number} className={className as string} cardClasses={cardClasses as string} />
       ))}
-    </ul>
+    </>
   );
 }
 
@@ -92,8 +129,8 @@ function Posts() {
   const highlight = 'default';
   const insetShadow = 'shadow-[inset_0_10px_20px_rgba(0,0,0,0.30)]';
   return (
-    <div className={twMerge(bg(highlight), border(highlight), insetShadow, 'relative border-t-2 flex flex-col min-h-64 p-8 pb-12')}>
-      <HeadingRaw textStr='Posts' className='font-bold text-center text-shadow-sm' size='lg' color={raw.firGreen} />
+    <div className={twMerge(bg(highlight), border(highlight), insetShadow, 'relative border-t-2 flex flex-col min-h-64 py-8')}>
+      <SectionHeading className={text(raw.firGreen)}>Posts</SectionHeading>
       <BlogPosts />
     </div>);
 }

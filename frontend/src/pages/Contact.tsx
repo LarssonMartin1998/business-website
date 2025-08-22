@@ -4,8 +4,8 @@ import Footer from 'components/Footer';
 import Services from 'components/Services';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { bg, intentToRaw, text } from 'design-system/colors';
-import { HeadingDefault, HeadingRaw } from 'components/Heading';
+import { bg, text } from 'design-system/colors';
+import SectionHeading from 'components/home/SectionHeading';
 
 interface ContactFormData {
   name: string;
@@ -177,7 +177,7 @@ function Contact() {
         <Services
           highlight='default'
           title={
-            <HeadingDefault className='font-bold mt-4 self-start' textStr={headline} size='sm' />
+            <SectionHeading className={twMerge(text('default'), 'text-xl mt-4 self-start')}>{headline}</SectionHeading>
           }
           cta={
             <ContactForm />

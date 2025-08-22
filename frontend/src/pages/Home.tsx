@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { bg, intentToRaw, text } from 'design-system/colors';
+import { bg, text } from 'design-system/colors';
 import { hrefs } from 'design-system/pages';
 
 import Hero from 'components/home/Hero';
@@ -12,7 +12,7 @@ import Resume from 'components/home/Resume';
 import Socials from 'components/home/Socials';
 import Main from 'components/Main';
 import { ButtonAccent, ButtonAccentInvis } from 'components/Button';
-import { HeadingRaw } from 'components/Heading';
+import SectionHeading from 'components/home/SectionHeading';
 
 function Home() {
   const scrollToServicesRef = useRef<HTMLDivElement>(null);
@@ -30,7 +30,8 @@ function Home() {
           <Services
             highlight={servicesIntent}
             title={
-              <HeadingRaw className='font-bold text-shadow-sm text-center' textStr='Services' size='lg' color={intentToRaw('text', servicesIntent)} />}
+              <SectionHeading className={text('accent')}>Services</SectionHeading>
+            }
             cta={
               <>
                 <p className={twMerge(text(servicesIntent), 'font-bold')}>{'Ready to discuss your project?'}</p>

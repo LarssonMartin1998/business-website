@@ -5,7 +5,6 @@ import HeroHeader from 'components/home/HeroHeader';
 import HeroBackground from './HeroBackground';
 import { ButtonAccent, ButtonAlert } from 'components/Button';
 import { from, raw, text, to } from 'design-system/colors';
-import { HeadingRaw } from 'components/Heading';
 
 function Separator() {
   return (
@@ -15,6 +14,14 @@ function Separator() {
 
 interface HeroProps {
   scrollToServicesRef: RefObject<HTMLDivElement | null>,
+}
+
+function HeroHeading({ children, className }: { children: React.ReactNode; className: string; }) {
+  return (
+    <h1 className={className}>
+      {children}
+    </h1>
+  );
 }
 
 function Hero({ scrollToServicesRef }: HeroProps) {
@@ -32,9 +39,9 @@ function Hero({ scrollToServicesRef }: HeroProps) {
         <div className='flex flex-col gap-y-10 w-fit pb-32 pr-24'>
 
           <div className='flex flex-col'>
-            <div className='flex text-shadow-lg'>
-              <HeadingRaw textStr={headline} size='xl' color={raw.rustOrange} className='font-bold' />
-              <HeadingRaw textStr={subheadline} size='xl' color={raw.cloudHaze} />
+            <div className='flex text-shadow-lg font-bold text-6xl'>
+              <HeroHeading className={text(raw.rustOrange)}>{headline}</HeroHeading>
+              <HeroHeading className={text(raw.cloudHaze)}>{subheadline}</HeroHeading>
             </div>
             <p className={twMerge(text(raw.cloudHaze), 'grow text-shadow-md font-bold sm:text-l mt-2 ml-2')}>{paragraph}</p>
           </div>

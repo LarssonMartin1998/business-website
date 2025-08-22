@@ -3,7 +3,6 @@ import { twMerge } from 'tailwind-merge';
 import { CogWheels, Layers, Lightbulb } from 'components/generated/index';
 import { ListCardDefault, ListCardAccent, } from 'components/Card';
 import { bg, Intent, intentToRaw, RawColor, splitTwColor, text } from 'design-system/colors';
-import { HeadingRaw } from 'components/Heading';
 
 interface ServiceProps {
   Icon: React.ComponentType<{ className?: string }>;
@@ -26,7 +25,7 @@ function ServiceCard({ Icon, bgColRaw, header, bread, className }: ServiceProps)
     <ListCard className='w-70 min-h-70 md:w-58 lg:w-64 md:min-h-80 p-4 flex flex-col text-center justify-start items-center'>
       <div className={twMerge('flex flex-col items-center')}>
         <Icon {...iconProps} />
-        <HeadingRaw className='font-bold' textStr={header} size='xs' color={rawAccentBg} />
+        <h3 className={twMerge(text(rawAccentBg), 'font-bold')}>{header}</h3>
       </div>
       <p className={twMerge(text('default'), 'mt-4 min-h-24')}>{bread}</p>
     </ListCard>

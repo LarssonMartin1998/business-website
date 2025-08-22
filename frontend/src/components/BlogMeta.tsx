@@ -4,7 +4,6 @@ import { BlogPost } from 'api/blog';
 import { bg, border, groupHoverRaw, raw, text } from 'design-system/colors';
 
 import { extractHeader } from 'utils/helpers';
-import { HeadingDefaultCard } from 'components/Heading';
 
 function NewPostBanner() {
   return (
@@ -31,13 +30,21 @@ interface PostDetailsProps {
   readTimeMins: number;
   tags: string;
 }
+
 function PostDetails({ date, readTimeMins, tags }: PostDetailsProps) {
   const splitTags = tags.split(",");
   return (
-    <div className='flex gap-x-4 text-xs'>
-      <span>{date.toLocaleDateString('sv-SE')}</span>
-      <span>{readTimeMins} min</span>
-      {splitTags.length > 0 && <div className='flex gap-x-1'>
+    <div className='flex flex-col gap-y-1 text-xs'>
+      <div className='flex gap-x-4'>
+        <span>{date.toLocaleDateString('sv-SE')}</span>
+        <span>{readTimeMins} min</span>
+        {splitTags.length > 0 && <div className='hidden min-[500px]:!flex gap-x-1'>
+          {splitTags.map((tag, idx) => (
+            <PostTag key={idx}>{tag}</PostTag>
+          ))}
+        </div>}
+      </div>
+      {splitTags.length > 0 && <div className='hidden max-[499px]:!flex gap-x-1'>
         {splitTags.map((tag, idx) => (
           <PostTag key={idx}>{tag}</PostTag>
         ))}
@@ -47,11 +54,12 @@ function PostDetails({ date, readTimeMins, tags }: PostDetailsProps) {
 }
 
 interface BlogMetaProps {
+  headerClasses?: string;
   blogPost: BlogPost;
   onClick: () => void;
 }
 
-function BlogMeta({ blogPost, onClick }: BlogMetaProps) {
+function BlogMeta({ headerClasses, blogPost, onClick }: BlogMetaProps) {
   const extractedHeader = extractHeader(blogPost.content);
 
   const publishedAtTime = blogPost.published_at.getTime();
@@ -61,7 +69,7 @@ function BlogMeta({ blogPost, onClick }: BlogMetaProps) {
   const now = new Date();
   const diff = Math.abs(now.getTime() - latestBlogTime);
   const daysSinceBlogDate = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const newPostThresholdInDays = 14;
+  const newPostThresholdInDays = 7;
   const shouldMarkPostAsNew = daysSinceBlogDate <= newPostThresholdInDays;
 
   const readSpeedAvgWordsPerMin = 238;
@@ -72,7 +80,9 @@ function BlogMeta({ blogPost, onClick }: BlogMetaProps) {
   return (
     <div className='group min-h-12 flex flex-col gap-y-1 justify-center' onClick={onClick}>
       <div className='flex gap-x-2 items-center'>
-        <HeadingDefaultCard className={twMerge(groupHoverRaw(text(raw.firGreen)), 'font-bold group-hover:underline decoration-dashed')} textStr={extractedHeader} size='xs' />
+        <h3 className={twMerge(groupHoverRaw(text(raw.firGreen)), 'font-bold group-hover:underline decoration-dashed'
+          , headerClasses)}>{extractedHeader}</h3>
+
         {shouldMarkPostAsNew && <NewPostBanner />}
       </div>
 
