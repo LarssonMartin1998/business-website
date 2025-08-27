@@ -16,7 +16,7 @@ import { CardDefault } from 'components/Card';
 import { ButtonAccent } from 'components/Button';
 import BlogMeta from 'components/BlogMeta';
 import Footer from 'components/Footer';
-import SectionHeading from 'components/home/SectionHeading';
+import MainHeading from 'components/MainHeading';
 
 interface BlogEntryProps {
   blogPost: BlogPost
@@ -148,7 +148,7 @@ function Blog() {
       <Header />
       <Main className='flex justify-center'>
         <div className='w-2/5 mt-4 p-2.5'>
-          <SectionHeading className={twMerge(text('default'), 'text-xl text-left')}>{headline}</SectionHeading>
+          <MainHeading >{headline}</MainHeading>
           <BlogSection />
         </div>
       </Main >

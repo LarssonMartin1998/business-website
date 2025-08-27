@@ -4,11 +4,14 @@ function HeroBackground() {
   return (
 
     <picture>
-      {/* <source srcSet={heroBackground.mobile} media='(max-width: 640px)' /> */}
-      {/* <source srcSet={heroBackground.tablet} media='(max-width: 1024px)' /> */}
+      <source type="image/webp" srcSet={heroBackground.xl} media='(min-width: 2150px)' />
+      <source type="image/webp" srcSet={heroBackground.lg} media='(min-width: 1280px)' />
+      <source type="image/webp" srcSet={heroBackground.md} media='(min-width: 640px)' />
       <img
-        src={heroBackground.desktop}
+        src={heroBackground.sm}
         alt='Hero Background'
+        fetchPriority='high'
+        decoding='async'
         className='absolute inset-0 w-full h-full object-cover'
       />
     </picture>

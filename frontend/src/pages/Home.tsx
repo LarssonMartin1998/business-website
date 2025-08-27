@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { bg, text } from 'design-system/colors';
+import { bg, raw, text } from 'design-system/colors';
 import { hrefs } from 'design-system/pages';
 
 import Hero from 'components/home/Hero';
@@ -22,7 +22,7 @@ function Home() {
     <>
       <Hero scrollToServicesRef={scrollToServicesRef} />
 
-      <Main>
+      <Main className={bg(raw.firGreenLight)}>
         <Clients />
 
         <div ref={scrollToServicesRef} className={twMerge(bg(servicesIntent), 'flex flex-col items-center p-8')}>

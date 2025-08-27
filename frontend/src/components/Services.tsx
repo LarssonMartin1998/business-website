@@ -39,6 +39,7 @@ interface ServicesGroupProps {
 }
 
 interface ServicesProps {
+  className?: string;
   highlight: Intent;
   cta: React.ReactNode;
   title?: React.ReactNode;
@@ -54,7 +55,7 @@ function ServicesGroup({ services, bgColRaw }: ServicesGroupProps) {
   );
 }
 
-function Services({ title, highlight, cta }: ServicesProps) {
+function Services({ className, title, highlight, cta, }: ServicesProps) {
   const paragraph = 'I help bring your ideas to market. I’ve shipped multiplayer and console games and worked on large-scale live services reaching millions of players (Farm Heroes Saga). My expertise spans from highly performant Game Engine development, web development with React and Go to low-level programming with C, C++, and Zig, alongside deep Linux experience. I can also help with automation, CI/CD, and hosting.';
 
   const servicesGroupProps = {
@@ -93,7 +94,7 @@ function Services({ title, highlight, cta }: ServicesProps) {
     'min-[2100px]:!w-2/5'
   );
   return (
-    <div className={twMerge(width, 'flex flex-col items-center')}>
+    <div className={twMerge(width, 'flex flex-col items-center', className)}>
       {title}
       <p className={twMerge(textCol, 'text-left mt-4')}>{paragraph}</p>
 
