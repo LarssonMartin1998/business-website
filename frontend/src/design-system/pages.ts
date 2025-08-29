@@ -2,6 +2,7 @@ const hrefs = {
   linkedIn: 'https://www.linkedin.com/in/martin-larsson-b26200137/',
   github: 'https://www.github.com/LarssonMartin1998',
   mastodon: 'https://social.just-a-shell.dev/@martin',
+  resume: '/resume.pdf',
 } as const;
 type Href = typeof hrefs[keyof typeof hrefs];
 
