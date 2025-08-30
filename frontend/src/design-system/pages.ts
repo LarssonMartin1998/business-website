@@ -3,6 +3,7 @@ const hrefs = {
   github: 'https://www.github.com/LarssonMartin1998',
   mastodon: 'https://social.just-a-shell.dev/@martin',
   resume: '/resume.pdf',
+  rss: '/rss',
 } as const;
 type Href = typeof hrefs[keyof typeof hrefs];
 

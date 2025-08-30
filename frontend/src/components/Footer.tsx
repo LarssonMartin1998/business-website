@@ -20,41 +20,58 @@ function FooterAnchorLink({ href, children }: { href: Href; children: React.Reac
   );
 }
 
+function LogotypeRss({ className }: { className?: string; }) {
+  return (
+    <div className={twMerge('flex flex-col gap-y-4 h-9/10', className)}>
+      <LogotypeLight />
+      <AnchorLink href={hrefs.rss}>
+        <ButtonAccentInvis size='md' className='flex justify-center items-center font-bold'><Rss className='w-8 pb-2' />RSS</ButtonAccentInvis>
+      </AnchorLink>
+    </div>
+  );
+}
+function Navigation() {
+  return (
+    <div className='flex items-center'>
+      <div className={twMerge(text('accent'), 'flex gap-x-20')}>
+        <nav>
+          <ul>
+            <FooterPageLink page='/'>Home</FooterPageLink>
+            <FooterPageLink page='/contact'>Contact</FooterPageLink>
+            <FooterPageLink page='/blog'>Blog</FooterPageLink>
+          </ul>
+        </nav>
+
+        <nav>
+          <ul>
+            <FooterAnchorLink href={hrefs.linkedIn}>LinkedIn</FooterAnchorLink>
+            <FooterAnchorLink href={hrefs.github}>Github</FooterAnchorLink>
+            <FooterAnchorLink href={hrefs.mastodon}>Mastodon</FooterAnchorLink>
+          </ul>
+        </nav>
+
+      </div>
+    </div>);
+}
+
 function Footer() {
   return (
     <div className={twMerge(from(raw.firGreen), to(raw.firGreenLight), border('accent'), 'bg-gradient-to-b border-t-2 shadow-2xl flex flex-col justify-center min-h-80 p-8')}>
 
-      <div className='grid grid-cols-3 gap-30 w-full' style={{ gridTemplateColumns: '1fr auto 1fr' }}>
+      <div className='hidden lg:grid grid-cols-3 gap-16 xl:gap-30 w-full' style={{ gridTemplateColumns: '1fr auto 1fr' }}>
         <div className='flex justify-end items-center'>
-          <div className='flex flex-col gap-y-4 pr-30 h-9/10'>
-            <LogotypeLight />
-            <ButtonAccentInvis size='md' className='flex justify-center items-center font-bold'><Rss className='w-8 pb-2' />RSS</ButtonAccentInvis>
-          </div>
-          <div className={twMerge(border(raw.cloudHaze30), 'w-1 h-9/10 border-r-1')}>
-
-          </div>
+          <LogotypeRss className='pr-16 xl:pr-30' />
+          <div className={twMerge(border(raw.cloudHaze30), 'w-1 h-9/10 border-r-1')}> </div>
         </div>
-        <div className='flex items-center'>
-          <div className={twMerge(text('accent'), 'flex gap-x-20')}>
-            <nav>
-              <ul>
-                <FooterPageLink page='/'>Home</FooterPageLink>
-                <FooterPageLink page='/contact'>Contact</FooterPageLink>
-                <FooterPageLink page='/blog'>Blog</FooterPageLink>
-              </ul>
-            </nav>
 
-            <nav>
-              <ul>
-                <FooterAnchorLink href={hrefs.linkedIn}>LinkedIn</FooterAnchorLink>
-                <FooterAnchorLink href={hrefs.github}>Github</FooterAnchorLink>
-                <FooterAnchorLink href={hrefs.mastodon}>Mastodon</FooterAnchorLink>
-              </ul>
-            </nav>
-
-          </div>
-        </div>
+        <Navigation />
         <div></div>
+      </div>
+
+      <div className='flex lg:hidden flex-col gap-y-16 py-8 justify-center items-center'>
+        <LogotypeRss />
+        <div className={twMerge(border(raw.cloudHaze30), 'w-80 h-1 border-t-1')}> </div>
+        <Navigation />
       </div>
 
     </div>

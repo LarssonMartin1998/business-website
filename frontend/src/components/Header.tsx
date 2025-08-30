@@ -5,8 +5,8 @@ import { ButtonColor, CustomButton, } from 'components/Button';
 
 import { bg, border, from, hover, hoverRaw, raw, text, to, } from 'design-system/colors';
 import { Rss } from 'components/generated/index';
-import { Page } from 'design-system/pages';
-import { PageLink } from './Link';
+import { hrefs, Page } from 'design-system/pages';
+import { AnchorLink, PageLink } from './Link';
 import { LogoHorizontalShort } from 'components/generated/index';
 
 interface HeaderCTAButtonProps {
@@ -41,7 +41,11 @@ function RSSButton() {
     },
     className: 'border-1 flex gap-x-1',
   } as const;
-  return (<HeaderCTAButton {...props}><Rss className='w-4 h-4' /> RSS</HeaderCTAButton>);
+  return (
+    <AnchorLink href={hrefs.rss}>
+      <HeaderCTAButton {...props}><Rss className='w-4 h-4' /> RSS</HeaderCTAButton>
+    </AnchorLink>
+  );
 }
 
 function LetsWorkButton() {
