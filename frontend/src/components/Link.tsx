@@ -4,6 +4,7 @@ import { Href, Page, RouteEntry } from 'design-system/pages';
 
 interface PageLinkProps {
   children: React.ReactNode;
+  className?: string;
   page: Page;
 }
 
@@ -49,9 +50,9 @@ function CreateTypedRoute(props: RouteTypedProps) {
   return <Route path={props.path} element={props.element} />;
 }
 
-function PageLink({ children, page }: PageLinkProps) {
+function PageLink({ children, className, page }: PageLinkProps) {
   return (
-    <Link to={page}>{children}</Link>
+    <Link className={className} to={page}>{children}</Link>
   );
 }
 
