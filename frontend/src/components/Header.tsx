@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useLocation, Location } from 'react-router-dom';
 
@@ -6,9 +7,9 @@ import { hrefs, Page } from 'design-system/pages';
 
 import { ButtonColor, CustomButton, } from 'components/Button';
 import { AnchorLink, PageLink } from 'components/Link';
+import AnimatedHamburgerIcon from 'components/AnimatedHamburgerIcon';
 import { LogoHorizontalShort } from 'components/generated/index';
 import { Rss } from 'components/generated/index';
-import { useState } from 'react';
 
 interface HeaderProps {
   location: Location;
@@ -95,7 +96,7 @@ function WideNavListEntry({ children, page, currentRoute }: NavListEntryProps) {
 
   return (
     <PageLink page={page}>
-      <li className={twMerge(bg('transparent'), `${hover(bg(raw.birchWhite))}/5`, 'rounded-lg p-2')}>
+      <li className={twMerge(bg('transparent'), 'hover:bg-black/5 rounded-lg p-2')}>
         {children}
       </li>
     </PageLink>
@@ -125,14 +126,14 @@ function HamburgerNavListEntry({ children, currentRoute, page, }: NavListEntryPr
   }
 
   return (
-    <li className={twMerge(text('accent'), liStyling, `${hover(bg(raw.birchWhite))}/5`)}>
+    <li className={twMerge(text('accent'), liStyling, 'hover:bg-black/5')}>
       <PageLink
         className={twMerge(flex, 'w-full h-full')}
         page={page}
       >
         {children}
       </PageLink >
-    </li>
+    </li >
   );
 }
 
@@ -144,11 +145,18 @@ function HamburgerHeader({ location }: HeaderProps) {
   return (
     <div className={twMerge('block min-[640px]:!hidden', headerColor(), border('default'), 'border-b-2 shadow-2xl')}>
       <div className='flex flex-col justify-start'>
-        <div className='h-16 pt-2'>
+        <div className='h-16 py-1'>
           <div className='flex justify-around items-center h-full'>
             <LogoHorizontalShort className='h-9/10 drop-shadow-2xl' />
             <div></div>
-            <button aria-label='Toggle navigation menu' aria-expanded={isExpanded} onClick={toggleExpanded} className='h-2/3 w-12 bg-red-500 flex justify-center items-center'>X</button>
+            <button
+              aria-label='Toggle navigation menu'
+              aria-expanded={isExpanded}
+              onClick={toggleExpanded}
+              className={twMerge(text('accent'), 'mt-1 h-12 w-12 flex justify-center items-center rounded-lg hover:bg-black/5')}
+            >
+              <AnimatedHamburgerIcon isExpanded={isExpanded} />
+            </button>
           </div>
         </div>
         {isExpanded && <nav className='flex justify-center'>
