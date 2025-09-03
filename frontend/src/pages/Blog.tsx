@@ -146,15 +146,16 @@ function Blog() {
   return (
     <>
       <Header />
-      <Main className='flex justify-center'>
-        <div className='w-2/5 mt-4 p-2.5'>
-          <MainHeading >{headline}</MainHeading>
+      <Main className='flex justify-center px-4'>
+        <div className='w-full max-w-4xl mt-4 p-2.5'>
+          <MainHeading>{headline}</MainHeading>
           <BlogSection />
         </div>
-      </Main >
+      </Main>
       <Footer />
     </>
   );
 }
+
 
 export default Blog;
