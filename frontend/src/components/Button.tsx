@@ -53,17 +53,27 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, button
     className
   );
 
-  const finalButton = (
-    <button className={buttonClassName} {...props}>
-      {children}
-    </button>
-  );
+  if (!buttonLink) {
+    return (
+      <button className={buttonClassName} {...props}>
+        {children}
+      </button>
+    );
+  }
 
-  return buttonLink
-    ? (pages as readonly string[]).includes(buttonLink)
-      ? <PageLink page={buttonLink as Page}>{finalButton}</PageLink>
-      : <AnchorLink href={buttonLink as Href}>{finalButton}</AnchorLink>
-    : finalButton;
+  if ((pages as readonly string[]).includes(buttonLink)) {
+    return (
+      <PageLink page={buttonLink as Page} className={buttonClassName} {...props}>
+        {children}
+      </PageLink>
+    );
+  } else {
+    return (
+      <AnchorLink href={buttonLink as Href} className={buttonClassName} {...props}>
+        {children}
+      </AnchorLink>
+    );
+  }
 }
 
 function ButtonIntentVariant({ intent, useBorder, ...props }: SealedButtonProps & { useBorder: boolean, intent: Intent }) {

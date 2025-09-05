@@ -3,10 +3,10 @@ import { twMerge } from 'tailwind-merge';
 import { useLocation, Location } from 'react-router-dom';
 
 import { bg, border, from, hover, hoverRaw, raw, text, to, } from 'design-system/colors';
-import { hrefs, Page } from 'design-system/pages';
+import { Href, hrefs, Page } from 'design-system/pages';
 
 import { ButtonColor, CustomButton, } from 'components/Button';
-import { AnchorLink, PageLink } from 'components/Link';
+import { PageLink } from 'components/Link';
 import AnimatedHamburgerIcon from 'components/AnimatedHamburgerIcon';
 import { LogoHorizontalShort } from 'components/generated/index';
 import { Rss } from 'components/generated/index';
@@ -17,6 +17,7 @@ interface HeaderProps {
 
 interface HeaderCTAButtonProps {
   children: React.ReactNode;
+  buttonLink?: Page | Href;
   bg: ButtonColor;
   fg: ButtonColor;
   className?: string;
@@ -60,11 +61,10 @@ function RSSButton() {
       default: border(raw.birchWhite20)
     },
     className: 'border-1 flex gap-x-1',
+    buttonLink: hrefs.rss,
   } as const;
   return (
-    <AnchorLink href={hrefs.rss}>
-      <HeaderCTAButton {...props}><Rss className='w-4 h-4' /> RSS</HeaderCTAButton>
-    </AnchorLink>
+    <HeaderCTAButton {...props}><Rss className='w-4 h-4' /> RSS</HeaderCTAButton>
   );
 }
 
@@ -88,7 +88,7 @@ function LetsWorkButton() {
 function WideNavListEntry({ children, page, currentRoute }: NavListEntryProps) {
   if (isCurrentRoute(currentRoute, page)) {
     return (
-      <li className={twMerge(text(raw.emberBark), 'rounded-lg p-2')}>
+      <li className={twMerge(text(raw.emberBark), 'cursor-default select-none rounded-lg p-2')}>
         {children}
       </li>
     );
@@ -117,7 +117,8 @@ function HamburgerNavListEntry({ children, currentRoute, page, }: NavListEntryPr
           twMerge(
             text(raw.emberBark),
             liStyling,
-            flex
+            flex,
+            'select-none cursor-default'
           )}
       >
         {children}
@@ -147,7 +148,7 @@ function HamburgerHeader({ location }: HeaderProps) {
       <div className='flex flex-col justify-start'>
         <div className='h-16 py-1'>
           <div className='flex justify-around items-center h-full'>
-            <LogoHorizontalShort className='h-9/10 drop-shadow-2xl' />
+            <LogoHorizontalShort className='select-none h-9/10 drop-shadow-2xl z-10' />
             <div></div>
             <button
               aria-label='Toggle navigation menu'
@@ -180,7 +181,7 @@ function WideHeader({ location }: HeaderProps) {
   return (
     <div className={twMerge('hidden min-[640px]:!block', headerColor(), border('default'), 'border-b-2 h-16 shadow-2xl')}>
       <div className='flex justify-between items-center h-full px-6'>
-        <LogoHorizontalShort className='h-9/10 drop-shadow-2xl' />
+        <LogoHorizontalShort className='select-none h-9/10 drop-shadow-2xl' />
         <div className='h-full w-fit'>
           <nav className='h-full'>
             <ul className={twMerge(text('accent'), 'flex h-full justify-center items-center font-bold uppercase gap-x-6 text-sm')}>

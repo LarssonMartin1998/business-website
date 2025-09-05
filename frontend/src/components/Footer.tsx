@@ -24,9 +24,7 @@ function LogotypeRss({ className }: { className?: string; }) {
   return (
     <div className={twMerge('flex flex-col gap-y-4 h-9/10', className)}>
       <LogotypeLight />
-      <AnchorLink href={hrefs.rss}>
-        <ButtonAccentInvis size='md' className='flex justify-center items-center font-bold'><Rss className='w-8 pb-2' />RSS</ButtonAccentInvis>
-      </AnchorLink>
+      <ButtonAccentInvis buttonLink={hrefs.rss} size='md' className='flex justify-center items-center font-bold'><Rss className='w-8 pb-2' />RSS</ButtonAccentInvis>
     </div>
   );
 }
