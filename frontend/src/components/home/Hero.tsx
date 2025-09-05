@@ -31,7 +31,6 @@ function Hero({ scrollToServicesRef }: HeroProps) {
     'min-[2320px]:pr-34',
   );
 
-
   const headingSizes = twMerge(
     'text-md',
     'min-[800px]:!text-xl',
@@ -48,6 +47,7 @@ function Hero({ scrollToServicesRef }: HeroProps) {
   );
 
   const onClickViewServices = () => scrollToServicesRef.current?.scrollIntoView({ behavior: 'smooth' });
+
   return (
     <section className='flex flex-col justify-between min-h-screen it'>
       <HeroHeader />
@@ -63,7 +63,15 @@ function Hero({ scrollToServicesRef }: HeroProps) {
             <p className={twMerge(text(raw.cloudHaze), paragraphSizes, 'grow text-shadow-md font-bold mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
           </div>
 
-          <div className='flex min-[1280px]:!hidden flex-col w-fit max-w-90 text-shadow-md font-bold text-justify'>
+          <div className='hidden min-[640px]:!flex min-[1280px]:!hidden flex-col w-fit max-w-150 text-shadow-md font-bold text-justify'>
+            <div className='flex'>
+              <h1 className={twMerge(text(raw.rustOrange), 'text-4xl')}>{headline}</h1>
+              <h1 className={twMerge(text(raw.cloudHaze), 'text-4xl')}>{separator + subheadline}</h1>
+            </div>
+            <p className={twMerge(text(raw.cloudHaze), paragraphSizes, 'mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
+          </div>
+
+          <div className='flex min-[640px]:!hidden flex-col w-fit max-w-90 text-shadow-md font-bold text-justify'>
             <h1 className={twMerge(text(raw.rustOrange), 'text-2xl')}>{headline}</h1>
             <h1 className={twMerge(text(raw.cloudHaze), 'text-2xl')}>{subheadline}</h1>
             <p className={twMerge(text(raw.cloudHaze), paragraphSizes, 'mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
@@ -82,10 +90,3 @@ function Hero({ scrollToServicesRef }: HeroProps) {
 }
 
 export default Hero;
-
-// ❮ ffmpeg -hide_banner -loglevel error -y -i hero_blurred.JPG \
-//   -vf "crop=trunc(iw*0.33):ih:trunc(iw*0.1):0" \
-//   -c:v libwebp -q:v 30 -compression_level 6 \
-//   hero_40.webp
-//
-//
