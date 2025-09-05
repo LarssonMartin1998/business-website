@@ -56,10 +56,10 @@ function PostDetails({ date, readTimeMins, tags }: PostDetailsProps) {
 interface BlogMetaProps {
   headerClasses?: string;
   blogPost: BlogPost;
-  onClick: () => void;
+  applyUnderline: boolean;
 }
 
-function BlogMeta({ headerClasses, blogPost, onClick }: BlogMetaProps) {
+function BlogMeta({ headerClasses, blogPost, applyUnderline, }: BlogMetaProps) {
   const extractedHeader = extractHeader(blogPost.content);
 
   const publishedAtTime = blogPost.published_at.getTime();
@@ -78,11 +78,16 @@ function BlogMeta({ headerClasses, blogPost, onClick }: BlogMetaProps) {
   const wordCount = blogPost.content.split(' ').length;
   const readingTimeGuess = Math.max(1, Math.round(wordCount / readSpeedAvgWordsPerMin) * technicalComplexityPunishmentGuess * markdownSyntaxRemovalGuess);
   return (
-    <div className='group min-h-12 flex flex-col gap-y-1 justify-center' onClick={onClick}>
+    <div className='select-none hover:cursor-pointer min-h-12 flex flex-col gap-y-1 justify-center'>
       <div className='flex gap-x-2 items-center'>
-        <h3 className={twMerge(groupHoverRaw(text(raw.firGreen)), 'font-bold group-hover:underline decoration-dashed'
-          , headerClasses)}>{extractedHeader}</h3>
-
+        <h3 className={twMerge(
+          groupHoverRaw(text(raw.firGreen)),
+          'font-bold decoration-dashed',
+          applyUnderline && 'group-hover:underline',
+          headerClasses)}
+        >
+          {extractedHeader}
+        </h3>
         {shouldMarkPostAsNew && <NewPostBanner />}
       </div>
 

@@ -1,13 +1,14 @@
+import { useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
-import { bg, text, border, raw } from 'design-system/colors';
-import { ButtonAccent } from 'components/Button';
 import { useBlogPosts } from 'hooks/useBlogPosts';
+import { bg, text, raw, hover, border } from 'design-system/colors';
+import { BlogPost } from 'api/blog';
+
+import { ButtonAccent } from 'components/Button';
 import BlogMeta from 'components/BlogMeta';
-import { useNavigate } from 'react-router-dom';
 import { CardDefault } from 'components/Card';
 import SectionHeading from 'components/home/SectionHeading';
-import { BlogPost } from 'api/blog';
 
 function Spinner() {
   return (
@@ -44,14 +45,14 @@ function NoPostsFound() {
   );
 }
 
-interface DinMammaMannenProps {
+interface ResponsiveBlogListProps {
   className: string;
   cardClasses: string;
   numPosts: number
   posts: BlogPost[];
 }
 
-function DinMammaMannen({ className, cardClasses, numPosts, posts }: DinMammaMannenProps) {
+function ResponsiveBlogList({ className, cardClasses, numPosts, posts }: ResponsiveBlogListProps) {
   const navigate = useNavigate();
 
   const onPressPost = (postId: number) => {
@@ -59,13 +60,13 @@ function DinMammaMannen({ className, cardClasses, numPosts, posts }: DinMammaMan
   };
 
   return (
-    <ul className={className}>
+    <div className={className}>
       {posts.slice(0, numPosts).map((blogPost, _) => (
-        <CardDefault key={blogPost.id} className={cardClasses}>
-          <BlogMeta headerClasses='text-md max-[500px]:!text-xs' blogPost={blogPost} onClick={() => { onPressPost(blogPost.id); }} />
+        <CardDefault key={blogPost.id} onClick={() => { onPressPost(blogPost.id); }} className={twMerge(cardClasses, hover(border(raw.emberBark)), 'w-full h-full group')}>
+          <BlogMeta applyUnderline={false} headerClasses='text-md max-[500px]:!text-xs' blogPost={blogPost} />
         </CardDefault>
       ))}
-    </ul>
+    </div>
   );
 }
 
@@ -104,12 +105,12 @@ function BlogPosts() {
     ],
     [
       2,
-      'hidden min-[1300px]:flex min-[1920px]:hidden justify-center gap-x-20 mt-10',
+      'hidden min-[1300px]:flex min-[1920px]:hidden justify-center gap-x-20 px-30 mt-10',
       'p-4 shadow min-w-2/5'
     ],
     [
       3,
-      'hidden min-[1920px]:flex justify-center gap-x-16 mt-10 min-[2100px]:!gap-x-20',
+      'hidden min-[1920px]:flex justify-center gap-x-16 mt-10 min-[2100px]:!gap-x-20 px-20',
       'p-4 shadow min-w-3/10 min-[2100px]:!min-w-1/4'
     ],
   ];
@@ -117,7 +118,7 @@ function BlogPosts() {
   return (
     <>
       {screenSizes.map(([numPosts, className, cardClasses], idx) => (
-        <DinMammaMannen key={idx} posts={posts} numPosts={numPosts as number} className={className as string} cardClasses={cardClasses as string} />
+        <ResponsiveBlogList key={idx} posts={posts} numPosts={numPosts as number} className={className as string} cardClasses={cardClasses as string} />
       ))}
     </>
   );

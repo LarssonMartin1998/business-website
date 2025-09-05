@@ -1,5 +1,6 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
+
 import { bg, border, TwColor } from 'design-system/colors';
 
 interface BaseCardProps extends CardProps {
@@ -10,6 +11,7 @@ interface BaseCardProps extends CardProps {
 interface CardProps {
   children: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }
 
 function ListCardDefault(props: CardProps) {
@@ -39,9 +41,11 @@ function CardAccent(props: CardProps) {
 }
 
 function Card({ border, bg, children, className }: BaseCardProps) {
-  return (<div className={twMerge(border, bg, 'border-1 rounded-2xl p-2.5 shadow-xl/10', className)}>
-    {children}
-  </div>);
+  return (
+    <div className={twMerge(border, bg, 'border-1 rounded-2xl p-2.5 shadow-xl/10', className)}>
+      {children}
+    </div>
+  );
 }
 
 export { ListCardDefault, ListCardAccent, CardDefault, CardAccent };

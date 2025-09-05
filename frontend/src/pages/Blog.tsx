@@ -8,7 +8,7 @@ import { twMerge } from 'tailwind-merge';
 import { BlogPost, } from 'api/blog';
 import { extractBread } from 'utils/helpers';
 import { useBlogPosts } from 'hooks/useBlogPosts';
-import { bg, border, raw, text } from 'design-system/colors';
+import { bg, border, groupHoverRaw, hover, peerHoverRaw, raw, text } from 'design-system/colors';
 
 import Header from 'components/Header';
 import Main from 'components/Main';
@@ -82,12 +82,15 @@ function BlogEntry({ blogPost }: BlogEntryProps) {
   }, [show, shouldExpandFromNav]);
 
   return (
-    <CardDefault className='p-4 px-4.5 rounded-xl shadow-md/10'>
-      <div ref={entryRef}>
+    <CardDefault className={twMerge(
+      'p-0 rounded-xl shadow-md/10',
+      !show && hover(border(raw.emberBark))
+    )}>
+      <div ref={entryRef} onClick={visibilityToggler} className='peer group w-full h-full p-4 px-4.5 hover:cursor-pointer'>
+        <BlogMeta applyUnderline={show} blogPost={blogPost} />
       </div>
-      <BlogMeta blogPost={blogPost} onClick={visibilityToggler} />
 
-      {show && <div className={twMerge(border(raw.graniteGreyLight), 'mt-4 border-dashed border-t-1 pt-4')}>
+      {show && <div className={twMerge(border(raw.graniteGreyLight), peerHoverRaw(border(raw.emberBark)), 'border-dashed border-t-1 px-4.5 py-4')}>
         <StyledMarkdown text={extractBread(blogPost.content)} />
       </div>}
     </CardDefault>
