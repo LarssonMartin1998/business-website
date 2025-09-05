@@ -28,8 +28,7 @@ interface CustomButtonProps {
 }
 
 function CustomButton({ children, size = 'md', border, bg, fg, className, buttonLink, ...props }: CustomButtonProps & SealedButtonProps) {
-  const base = 'inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none';
-  const focus = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-deep-forest-blue';
+  const base = 'inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none hover:cursor-pointer';
 
   const sizes = {
     xs: 'px-2 py-1 text-xs w-18 h-10',
@@ -43,7 +42,6 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, button
 
   const buttonClassName = twMerge(
     base,
-    focus,
     sizes[size],
     borderProps,
     bg.default,
