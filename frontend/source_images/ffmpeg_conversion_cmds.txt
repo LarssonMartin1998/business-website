@@ -1,0 +1,43 @@
+ffmpeg -hide_banner -loglevel error -y -i hero_blurred.JPG \
+   vf "scale=5160:-1,crop=trunc(iw*0.33):trunc(ih*0.9):trunc(iw*0.1):0" \
+   c:v libaom-av1 -still-picture 1 -b:v 0 -crf 32 -cpu-used 6 \
+   ero_40.avif
+
+ffmpeg -hide_banner -loglevel error -y -i hero_blurred.JPG \
+   vf "scale=5160:-1,crop=trunc(iw*0.5):ih:trunc(iw*0.025):0" \
+   c:v libaom-av1 -still-picture 1 -b:v 0 -crf 32 -cpu-used 6 \
+   ero_60.avif
+
+ffmpeg -hide_banner -loglevel error -y -i hero.JPG \
+   vf "scale=5160:-1,crop=trunc(iw*0.7):ih:trunc(iw*0.1):0" \
+   c:v libaom-av1 -still-picture 1 -b:v 0 -crf 33 -cpu-used 6 \
+   ero_80.avif
+
+ffmpeg -hide_banner -loglevel error -y -i hero.JPG \
+  vf "scale=5160:-1" \
+  c:v libaom-av1 -still-picture 1 -b:v 0 -crf 33 -cpu-used 6 \
+  ero_100.avif
+
+ffmpeg -hide_banner -loglevel error -y -i hero_blurred.JPG \
+  -vf "scale=5160:-1,crop=trunc(iw*0.33):trunc(ih*0.9):trunc(iw*0.1):0" \
+  -pix_fmt yuv420p \
+  -c:v libwebp -lossless 0 -q:v 74 -compression_level 6 -preset photo \
+  hero_40.webp
+
+ffmpeg -hide_banner -loglevel error -y -i hero_blurred.JPG \
+  -vf "scale=5160:-1,crop=trunc(iw*0.5):ih:trunc(iw*0.025):0" \
+  -pix_fmt yuv420p \
+  -c:v libwebp -lossless 0 -q:v 72 -compression_level 6 -preset photo \
+  hero_60.webp
+
+ffmpeg -hide_banner -loglevel error -y -i hero.JPG \
+  -vf "scale=5160:-1,crop=trunc(iw*0.7):ih:trunc(iw*0.1):0" \
+  -pix_fmt yuv420p \
+  -c:v libwebp -lossless 0 -q:v 62 -compression_level 6 -preset photo \
+  hero_80.webp
+
+ffmpeg -hide_banner -loglevel error -y -i hero.JPG \
+  -vf "scale=5160:-1" \
+  -pix_fmt yuv420p \
+  -c:v libwebp -lossless 0 -q:v 62 -compression_level 6 -preset photo \
+  hero_100.webp
