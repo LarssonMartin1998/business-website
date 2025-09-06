@@ -6,6 +6,7 @@ interface PageLinkProps {
   children: React.ReactNode;
   className?: string;
   page: Page;
+  hash?: string;
 }
 
 interface AnchorLinkProps {
@@ -50,9 +51,10 @@ function CreateTypedRoute(props: RouteTypedProps) {
   return <Route path={props.path} element={props.element} />;
 }
 
-function PageLink({ children, className, page }: PageLinkProps) {
+function PageLink({ children, className, page, hash }: PageLinkProps) {
+  const to = hash ? `${page}#${hash}` : page;
   return (
-    <Link className={className} to={page}>{children}</Link>
+    <Link className={className} to={to}>{children}</Link>
   );
 }
 

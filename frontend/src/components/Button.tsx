@@ -19,6 +19,7 @@ interface SealedButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   type?: 'button' | 'submit' | 'reset';
   buttonLink?: Page | Href;
+  pageHash?: string;
 }
 
 interface CustomButtonProps {
@@ -27,7 +28,7 @@ interface CustomButtonProps {
   fg: ButtonColor;
 }
 
-function CustomButton({ children, size = 'md', border, bg, fg, className, buttonLink, ...props }: CustomButtonProps & SealedButtonProps) {
+function CustomButton({ children, size = 'md', border, bg, fg, className, buttonLink, pageHash, ...props }: CustomButtonProps & SealedButtonProps) {
   const base = 'inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none hover:cursor-pointer';
 
   const sizes = {
@@ -61,7 +62,7 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, button
 
   if ((pages as readonly string[]).includes(buttonLink)) {
     return (
-      <PageLink page={buttonLink as Page} className={buttonClassName} {...props}>
+      <PageLink page={buttonLink as Page} hash={pageHash} className={buttonClassName} {...props}>
         {children}
       </PageLink>
     );

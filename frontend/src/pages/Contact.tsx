@@ -37,7 +37,7 @@ function ContactForm() {
   );
 
   return (
-    <div className='py-6'>
+    <div id='contactForm' className='py-6'>
       <div className='text-center mb-8'>
         <p className={twMerge(text('default'), 'text-sm')}>
           Feel free to reach out at{' '}
