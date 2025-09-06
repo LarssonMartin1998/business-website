@@ -6,7 +6,6 @@
   --animation-duration: 8s;
   --gradient-color-1: var(--color-ember-bark);
   --gradient-color-2: var(--color-ember-bark-light);
-  --background-color: var(--color-rust-orange);
   --gradient-inset: -15rem;
   
   position: relative;
@@ -23,9 +22,8 @@
   z-index: 0;
   background: conic-gradient(
     from 0turn, 
-    var(--gradient-color-1) 25%, 
-    var(--gradient-color-1), 
-    var(--gradient-color-2) 99%, 
+    var(--gradient-color-1) 1%, 
+    var(--gradient-color-2) 70%, 
     var(--color-fog-grey)
   );
   animation: spin var(--animation-duration) linear infinite;
@@ -35,9 +33,9 @@
   content: "";
   position: absolute;
   inset: var(--border-width);
-  border-radius: inherit;
+  border-radius: 4px;
   background-clip: padding-box;
-  background-color: var(--background-color);
+  background-color: inherit;
 }
 
 @theme static {

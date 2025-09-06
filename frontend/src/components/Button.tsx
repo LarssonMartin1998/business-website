@@ -21,15 +21,19 @@ interface SealedButtonProps {
   buttonLink?: Page | Href;
   pageHash?: string;
   animated?: boolean;
+  style?: React.CSSProperties;
 }
 
 interface CustomButtonProps {
   border?: ButtonColor;
   bg: ButtonColor;
   fg: ButtonColor;
+  style?: React.CSSProperties;
 }
 
 function CustomButton({ children, size = 'md', border, bg, fg, className, buttonLink, pageHash, animated, ...props }: CustomButtonProps & SealedButtonProps) {
+  console.log('CustomButton received props:', props);
+  console.log('CustomButton animated:', animated);
   const base = 'inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none hover:cursor-pointer';
 
   const sizes = {
@@ -45,12 +49,12 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, button
   const buttonClassName = twMerge(
     base,
     sizes[size],
-    animated ? '' : borderProps, // Skip border for animated buttons
-    bg.default,  // Skip bg for animated buttons
-    bg.hover,    // Skip bg hover for animated buttons
+    animated ? '' : borderProps,
+    bg.default,
+    bg.hover,
     fg.default,
     fg.hover,
-    animated ? 'animated-border relative' : '', // Add animated classes
+    animated ? 'animated-border' : '',
     className
   );
 
@@ -107,10 +111,15 @@ function ButtonInvisIntentVariant({ intent, ...props }: SealedButtonProps & { in
   const [, bgColRaw] = splitTwColor(bg(intent));
   const [, textColRaw] = splitTwColor(textCol);
 
+  const animatedStyle = props.animated ? {
+    '--gradient-color-1': `var(--color-${textColRaw})`,
+    '--gradient-color-2': `var(--color-${bgColRaw})`,
+  } as React.CSSProperties : undefined;
+
   return (
     <CustomButton
       bg={{
-        default: bg('transparent'),
+        default: bg(props.animated ? bgColRaw : 'transparent'),
         hover: hover(bg(textColRaw))
       }}
       fg={{
@@ -120,6 +129,7 @@ function ButtonInvisIntentVariant({ intent, ...props }: SealedButtonProps & { in
       border={{
         default: border(textColRaw)
       }}
+      style={animatedStyle}
       {...props}
     />
   );

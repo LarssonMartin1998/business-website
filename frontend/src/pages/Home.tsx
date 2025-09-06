@@ -37,7 +37,7 @@ function Home() {
                 <p className={twMerge(text(servicesIntent), 'font-bold')}>{'Ready to discuss your project?'}</p>
                 <div className='flex gap-x-4 pt-8'>
                   <ButtonAccent buttonLink={hrefs.github}>See My Work</ButtonAccent>
-                  <ButtonAccentInvis buttonLink='/contact' pageHash='contactForm'>Get in Touch</ButtonAccentInvis>
+                  <ButtonAccentInvis animated buttonLink='/contact' pageHash='contactForm'><span className='z-10'>Get in Touch</span></ButtonAccentInvis>
                 </div>
               </>
             } />

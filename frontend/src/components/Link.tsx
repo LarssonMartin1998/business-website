@@ -7,6 +7,7 @@ interface PageLinkProps {
   className?: string;
   page: Page;
   hash?: string;
+  style?: React.CSSProperties;
 }
 
 interface AnchorLinkProps {
@@ -14,6 +15,7 @@ interface AnchorLinkProps {
   className?: string;
   href: Href;
   external?: boolean;
+  style?: React.CSSProperties;
 }
 
 type RouteTypedProps =
@@ -51,20 +53,19 @@ function CreateTypedRoute(props: RouteTypedProps) {
   return <Route path={props.path} element={props.element} />;
 }
 
-function PageLink({ children, className, page, hash }: PageLinkProps) {
+function PageLink({ children, page, hash, ...props }: PageLinkProps) {
   const to = hash ? `${page}#${hash}` : page;
   return (
-    <Link className={className} to={to}>{children}</Link>
+    <Link to={to} {...props}>{children}</Link>
   );
 }
 
-function AnchorLink({ children, className, href, external = true }: AnchorLinkProps) {
+function AnchorLink({ children, external = true, ...props }: AnchorLinkProps) {
   return (
     <a
-      className={className}
-      href={href}
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener noreferrer' : undefined}
+      {...props}
     >
       {children}
     </a>
