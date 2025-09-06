@@ -20,6 +20,7 @@ interface SealedButtonProps {
   type?: 'button' | 'submit' | 'reset';
   buttonLink?: Page | Href;
   pageHash?: string;
+  animated?: boolean;
 }
 
 interface CustomButtonProps {
@@ -28,7 +29,7 @@ interface CustomButtonProps {
   fg: ButtonColor;
 }
 
-function CustomButton({ children, size = 'md', border, bg, fg, className, buttonLink, pageHash, ...props }: CustomButtonProps & SealedButtonProps) {
+function CustomButton({ children, size = 'md', border, bg, fg, className, buttonLink, pageHash, animated, ...props }: CustomButtonProps & SealedButtonProps) {
   const base = 'inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none hover:cursor-pointer';
 
   const sizes = {
@@ -44,11 +45,12 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, button
   const buttonClassName = twMerge(
     base,
     sizes[size],
-    borderProps,
-    bg.default,
-    bg.hover,
+    animated ? '' : borderProps, // Skip border for animated buttons
+    bg.default,  // Skip bg for animated buttons
+    bg.hover,    // Skip bg hover for animated buttons
     fg.default,
     fg.hover,
+    animated ? 'animated-border relative' : '', // Add animated classes
     className
   );
 

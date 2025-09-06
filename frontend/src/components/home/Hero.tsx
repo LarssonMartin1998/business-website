@@ -79,7 +79,7 @@ function Hero({ scrollToServicesRef }: HeroProps) {
 
           <div className='flex gap-x-4 min-[1280px]:pl-2'>
             <ButtonAccent className='shadow-xl' size='md' onClick={onClickViewServices}>View Services</ButtonAccent>
-            <ButtonAlert className='shadow-xl' size='md' buttonLink='/contact' pageHash='contactForm'>Work With Me</ButtonAlert>
+            <ButtonAlert animated className='shadow-xl' size='md' buttonLink='/contact' pageHash='contactForm'><span className='z-10'>Work With Me</span></ButtonAlert>
           </div>
 
         </div>

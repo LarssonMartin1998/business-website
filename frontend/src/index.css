@@ -1,5 +1,45 @@
 @import 'tailwindcss';
 
+.animated-border {
+  /* Default values that can be overridden */
+  --border-width: 2px;
+  --animation-duration: 8s;
+  --gradient-color-1: var(--color-ember-bark);
+  --gradient-color-2: var(--color-ember-bark-light);
+  --background-color: var(--color-rust-orange);
+  --gradient-inset: -15rem;
+  
+  position: relative;
+  isolation: isolate;
+  place-items: center;
+  overflow: hidden;
+}
+
+.animated-border::before {
+  content: "";
+  position: absolute;
+  inset: var(--gradient-inset);
+  pointer-events: none;
+  z-index: 0;
+  background: conic-gradient(
+    from 0turn, 
+    var(--gradient-color-1) 25%, 
+    var(--gradient-color-1), 
+    var(--gradient-color-2) 99%, 
+    var(--color-fog-grey)
+  );
+  animation: spin var(--animation-duration) linear infinite;
+}
+
+.animated-border::after {
+  content: "";
+  position: absolute;
+  inset: var(--border-width);
+  border-radius: inherit;
+  background-clip: padding-box;
+  background-color: var(--background-color);
+}
+
 @theme static {
   --color-fog-grey: #f4f3f1;
   --color-fog-grey-light: #eeece8;
