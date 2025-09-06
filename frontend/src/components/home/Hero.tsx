@@ -49,7 +49,7 @@ function Hero({ scrollToServicesRef }: HeroProps) {
   const onClickViewServices = () => scrollToServicesRef.current?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section className='flex flex-col justify-between min-h-dvh it'>
+    <section className='flex flex-col justify-between min-h-svh it'>
       <HeroHeader />
       <HeroBackground />
       <div className='relative flex justify-center min-[1280px]:!justify-end'>
