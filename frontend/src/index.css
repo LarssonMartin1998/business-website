@@ -1,5 +1,21 @@
 @import 'tailwindcss';
 
+@layer base {
+  html {
+    color-scheme: light dark;
+  }
+
+  body {
+    background-color: #f4f3f1;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #2c2e28;
+    }
+  }
+}
+
 .animated-border {
   /* Default values that can be overridden */
   --border-width: 2px;
