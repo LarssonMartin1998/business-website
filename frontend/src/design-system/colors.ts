@@ -52,7 +52,7 @@ type TwPrefix = typeof twPrefixes[number];
 // Only used to generate safelist
 const specialTwPrefixes = ['from', 'to',] as const;
 
-const twStateVariants = ['hover', 'group-hover', 'peer-hover',] as const;
+const twStateVariants = ['hover', 'group-hover', 'peer-hover', 'placeholder',] as const;
 type TwStateVariant = typeof twStateVariants[number];
 
 type RawColor = typeof raw[keyof typeof raw];
@@ -133,6 +133,10 @@ function to(color: RawColor): string {
   return `to-${color}`;
 }
 
+function placeholder(color: TwColor): TwStateColor {
+  return `placeholder:${color}`;
+}
+
 function hoverRaw(color: TwColor): TwStateColor {
   return `hover:${color}`;
 }
@@ -155,5 +159,5 @@ function intentToRaw(prefix: TwPrefix, intent: Intent): RawColor {
   return intentMap[prefix][intent];
 }
 
-export { raw, twPrefixes, twStateVariants, specialTwPrefixes, bg, text, border, hover, hoverRaw, groupHoverRaw, peerHoverRaw, splitTwColor, intentToRaw, from, to };
+export { raw, twPrefixes, twStateVariants, specialTwPrefixes, bg, text, border, placeholder, hover, hoverRaw, groupHoverRaw, peerHoverRaw, splitTwColor, intentToRaw, from, to };
 export type { RawColor, TwPrefix, TwStateVariant, Intent, TwColor, TwStateColor, };
