@@ -9,15 +9,16 @@ import { LogotypeLight } from 'components/generated/index';
 interface HeaderListItemProps {
   name: string;
   routerPath: Page;
+  'aria-label': string;
 }
 
-function HeaderListItem({ name, routerPath }: HeaderListItemProps) {
+function HeaderListItem({ name, routerPath, ...props }: HeaderListItemProps) {
   const colors = twMerge(text('accent'), hoverRaw(text(raw.emberBark)));
   const font = 'uppercase font-bold text-md sm:text-lg';
 
   return (
     <li className={twMerge(colors, font, 'text-shadow-lg ')}>
-      <PageLink page={routerPath}>{name}</PageLink>
+      <PageLink page={routerPath} {...props}>{name}</PageLink>
     </li>
   );
 }
@@ -30,8 +31,8 @@ function HeroHeader() {
         <nav className='flex gap-x-6 justify-center h-fit'>
           <LogotypeLight className='w-24 h-24 drop-shadow-2xl' />
           <ul className='flex gap-x-6 sm:gap-x-8 items-center'>
-            <HeaderListItem routerPath='/contact' name='Contact' />
-            <HeaderListItem routerPath='/blog' name='Blog' />
+            <HeaderListItem aria-label='Navigate to contact page' routerPath='/contact' name='Contact' />
+            <HeaderListItem aria-label='Navigate to blog page' routerPath='/blog' name='Blog' />
           </ul>
         </nav>
 

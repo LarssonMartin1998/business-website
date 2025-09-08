@@ -25,7 +25,7 @@ function Home() {
       <Main className={bg(raw.firGreenLight)}>
         <Clients />
 
-        <div ref={scrollToServicesRef} className={twMerge(bg(servicesIntent), 'flex flex-col items-center p-8')}>
+        <section ref={scrollToServicesRef} className={twMerge(bg(servicesIntent), 'flex flex-col items-center p-8')}>
 
           <Services
             highlight={servicesIntent}
@@ -36,13 +36,13 @@ function Home() {
               <>
                 <p className={twMerge(text(servicesIntent), 'font-bold')}>{'Ready to discuss your project?'}</p>
                 <div className='flex gap-x-4 pt-8'>
-                  <ButtonAccent buttonLink={hrefs.github}>See My Work</ButtonAccent>
-                  <ButtonAccentInvis animated buttonLink='/contact' pageHash='contactForm'><span className='z-10'>Get in Touch</span></ButtonAccentInvis>
+                  <ButtonAccent aria-label='See My Work - Open external Github page' buttonLink={hrefs.github}>See My Work</ButtonAccent>
+                  <ButtonAccentInvis aria-label='Get in Touch - Navigate to contact form' animated buttonLink='/contact' pageHash='contactForm'><span className='z-10'>Get in Touch</span></ButtonAccentInvis>
                 </div>
               </>
             } />
 
-        </div>
+        </section>
 
         <Posts />
 

@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 import { BlogPost, } from 'api/blog';
-import { extractBread } from 'utils/helpers';
+import { extractBread, extractHeader } from 'utils/helpers';
 import { useBlogPosts } from 'hooks/useBlogPosts';
 import { bg, border, hover, peerHoverRaw, raw, text } from 'design-system/colors';
 
@@ -87,17 +87,24 @@ function BlogEntry({ blogPost }: BlogEntryProps) {
     }
   }, [show, shouldExpandFromNav]);
 
+  const postTitle = extractHeader(blogPost.content);
+  const postBread = extractBread(blogPost.content);
+
   return (
-    <CardDefault className={twMerge(
+    <CardDefault as={'article'} className={twMerge(
       'p-0 rounded-xl shadow-md/10',
       !show && hover(border(raw.emberBark))
     )}>
-      <div ref={entryRef} onClick={visibilityToggler} className='peer group w-full h-full p-4 px-4.5 hover:cursor-pointer'>
+      <button
+        onClick={visibilityToggler}
+        className='peer group w-full p-4 px-4.5 hover:cursor-pointer'
+        aria-label={show ? `Close blog post ${postTitle}` : `Open blog post ${postTitle}`}
+      >
         <BlogMeta applyUnderline={show} blogPost={blogPost} />
-      </div>
+      </button>
 
-      {show && <div className={twMerge(border(raw.graniteGreyLight), peerHoverRaw(border(raw.emberBark)), 'border-dashed border-t-1 px-4.5 py-4')}>
-        <StyledMarkdown markdownText={extractBread(blogPost.content)} />
+      {show && <div ref={entryRef} className={twMerge(border(raw.graniteGreyLight), peerHoverRaw(border(raw.emberBark)), 'border-dashed border-t-1 px-4.5 py-4')}>
+        <StyledMarkdown markdownText={postBread} />
       </div>}
     </CardDefault>
   );
@@ -117,7 +124,7 @@ function BlogSection() {
   if (state === 'temporary-failure') {
     return (
       <div className='flex flex-col items-center py-8 gap-y-4'>
-        <ButtonAccent onClick={refetch}>
+        <ButtonAccent aria-label='Refresh blog posts' onClick={refetch}>
           Refresh
         </ButtonAccent>
         <span className={twMerge(text('default'), '')}>Temporary failure when loading posts, please try again.</span>

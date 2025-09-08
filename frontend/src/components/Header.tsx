@@ -17,6 +17,7 @@ interface HeaderProps {
 
 interface HeaderCTAButtonProps {
   children: React.ReactNode;
+  'aria-label': string;
   buttonLink?: Page | Href;
   bg: ButtonColor;
   fg: ButtonColor;
@@ -25,6 +26,7 @@ interface HeaderCTAButtonProps {
 
 interface NavListEntryProps {
   children: React.ReactNode;
+  'aria-label': string;
   page: Page;
   currentRoute: string;
 }
@@ -64,7 +66,7 @@ function RSSButton() {
     buttonLink: hrefs.rss,
   } as const;
   return (
-    <HeaderCTAButton {...props}><Rss className='w-4 h-4' /> RSS</HeaderCTAButton>
+    <HeaderCTAButton aria-label='Subscribe to RSS feed' {...props}><Rss className='w-4 h-4' /> RSS</HeaderCTAButton>
   );
 }
 
@@ -82,10 +84,10 @@ function LetsWorkButton() {
     } as ButtonColor,
     buttonLink: '/contact'
   } as const;
-  return (<HeaderCTAButton  {...props}>Lets Work</HeaderCTAButton>);
+  return (<HeaderCTAButton aria-label='Work With Me CTA - Navigate to contact page' {...props}>Lets Work</HeaderCTAButton>);
 }
 
-function WideNavListEntry({ children, page, currentRoute }: NavListEntryProps) {
+function WideNavListEntry({ children, page, currentRoute, ...props }: NavListEntryProps) {
   if (isCurrentRoute(currentRoute, page)) {
     return (
       <li className={twMerge(text(raw.emberBark), 'cursor-default select-none rounded-lg p-2')}>
@@ -95,7 +97,7 @@ function WideNavListEntry({ children, page, currentRoute }: NavListEntryProps) {
   }
 
   return (
-    <PageLink page={page}>
+    <PageLink page={page} {...props}>
       <li className={twMerge(bg('transparent'), 'hover:bg-black/5 rounded-lg p-2')}>
         {children}
       </li>
@@ -103,7 +105,7 @@ function WideNavListEntry({ children, page, currentRoute }: NavListEntryProps) {
   );
 }
 
-function HamburgerNavListEntry({ children, currentRoute, page, }: NavListEntryProps) {
+function HamburgerNavListEntry({ children, currentRoute, page, ...props }: NavListEntryProps) {
   const liStyling = twMerge(
     border(raw.cloudHaze10),
     'border-b-1 first:border-t-1 uppercase font-bold'
@@ -131,6 +133,7 @@ function HamburgerNavListEntry({ children, currentRoute, page, }: NavListEntryPr
       <PageLink
         className={twMerge(flex, 'w-full h-full')}
         page={page}
+        {...props}
       >
         {children}
       </PageLink >
@@ -162,9 +165,9 @@ function HamburgerHeader({ location }: HeaderProps) {
         </div>
         {isExpanded && <nav className='flex justify-center'>
           <ul className='w-7/10 mt-2 [&>li]:h-16'>
-            <HamburgerNavListEntry page={'/'} currentRoute={location.pathname}>Home</HamburgerNavListEntry>
-            <HamburgerNavListEntry page={'/contact'} currentRoute={location.pathname}>Contact</HamburgerNavListEntry>
-            <HamburgerNavListEntry page={'/blog'} currentRoute={location.pathname}>Blog</HamburgerNavListEntry>
+            <HamburgerNavListEntry aria-label='Navigate to home page' page={'/'} currentRoute={location.pathname}>Home</HamburgerNavListEntry>
+            <HamburgerNavListEntry aria-label='Navigate to contact page' page={'/contact'} currentRoute={location.pathname}>Contact</HamburgerNavListEntry>
+            <HamburgerNavListEntry aria-label='Navigate to blog page' page={'/blog'} currentRoute={location.pathname}>Blog</HamburgerNavListEntry>
 
             <li className='flex justify-between items-center'>
               <RSSButton />
@@ -185,9 +188,9 @@ function WideHeader({ location }: HeaderProps) {
         <div className='h-full w-fit'>
           <nav className='h-full'>
             <ul className={twMerge(text('accent'), 'flex h-full justify-center items-center font-bold uppercase gap-x-6 text-sm')}>
-              <WideNavListEntry page='/' currentRoute={location.pathname}>Home</WideNavListEntry>
-              <WideNavListEntry page='/contact' currentRoute={location.pathname}>Contact</WideNavListEntry>
-              <WideNavListEntry page='/blog' currentRoute={location.pathname}>Blog</WideNavListEntry>
+              <WideNavListEntry aria-label='Navigate to home page' page='/' currentRoute={location.pathname}>Home</WideNavListEntry>
+              <WideNavListEntry aria-label='Navigate to contact page' page='/contact' currentRoute={location.pathname}>Contact</WideNavListEntry>
+              <WideNavListEntry aria-label='Navigate to blog page' page='/blog' currentRoute={location.pathname}>Blog</WideNavListEntry>
             </ul>
           </nav>
         </div>

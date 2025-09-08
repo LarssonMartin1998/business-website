@@ -85,7 +85,7 @@ function ContactForm() {
           rows={5}
         />
 
-        <ButtonAccent type='submit' className='w-full h-fit py-3'>
+        <ButtonAccent aria-label='Submit the contact form and I will get back to you' type='submit' className='w-full h-fit py-3'>
           Let&apos;s Talk
         </ButtonAccent>
       </form>

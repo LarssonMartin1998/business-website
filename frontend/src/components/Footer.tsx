@@ -7,16 +7,21 @@ import { ButtonAccentInvis } from 'components/Button';
 import { PageLink, AnchorLink } from 'components/Link';
 import { Page, Href, hrefs } from 'design-system/pages';
 
-function FooterPageLink({ page, children }: { page: Page; children: React.ReactNode; }) {
+interface BaseFooterLink {
+  children: React.ReactNode;
+  'aria-label': string;
+}
+
+function FooterPageLink({ page, children, ...props }: { page: Page; } & BaseFooterLink) {
   return (
-    <PageLink page={page}><li className='hover:underline'>{children}</li></PageLink>
+    <PageLink page={page} {...props}><li className='hover:underline'>{children}</li></PageLink>
   );
 }
 
 
-function FooterAnchorLink({ href, children }: { href: Href; children: React.ReactNode; }) {
+function FooterAnchorLink({ href, children, ...props }: { href: Href; } & BaseFooterLink) {
   return (
-    <AnchorLink href={href}><li className='hover:underline'>{children}</li></AnchorLink>
+    <AnchorLink href={href} {...props}><li className='hover:underline'>{children}</li></AnchorLink>
   );
 }
 
@@ -24,7 +29,7 @@ function LogotypeRss({ className }: { className?: string; }) {
   return (
     <div className={twMerge('flex flex-col gap-y-4 h-9/10', className)}>
       <LogotypeLight />
-      <ButtonAccentInvis buttonLink={hrefs.rss} size='md' className='flex justify-center items-center font-bold'><Rss className='w-8 pb-2' />RSS</ButtonAccentInvis>
+      <ButtonAccentInvis aria-label='Subscribe to RSS feed' buttonLink={hrefs.rss} size='md' className='flex justify-center items-center font-bold'><Rss className='w-8 pb-2' />RSS</ButtonAccentInvis>
     </div>
   );
 }
@@ -34,17 +39,17 @@ function Navigation() {
       <div className={twMerge(text('accent'), 'flex gap-x-20')}>
         <nav>
           <ul>
-            <FooterPageLink page='/'>Home</FooterPageLink>
-            <FooterPageLink page='/contact'>Contact</FooterPageLink>
-            <FooterPageLink page='/blog'>Blog</FooterPageLink>
+            <FooterPageLink aria-label='Navigate to home page' page='/'>Home</FooterPageLink>
+            <FooterPageLink aria-label='Navigate to contact page' page='/contact'>Contact</FooterPageLink>
+            <FooterPageLink aria-label='Navigate to blog page' page='/blog'>Blog</FooterPageLink>
           </ul>
         </nav>
 
         <nav>
           <ul>
-            <FooterAnchorLink href={hrefs.linkedIn}>LinkedIn</FooterAnchorLink>
-            <FooterAnchorLink href={hrefs.github}>Github</FooterAnchorLink>
-            <FooterAnchorLink href={hrefs.mastodon}>Mastodon</FooterAnchorLink>
+            <FooterAnchorLink aria-label='Open external page LinkedIn' href={hrefs.linkedIn}>LinkedIn</FooterAnchorLink>
+            <FooterAnchorLink aria-label='Open external page Github' href={hrefs.github}>Github</FooterAnchorLink>
+            <FooterAnchorLink aria-label='Open external page Mastodon' href={hrefs.mastodon}>Mastodon</FooterAnchorLink>
           </ul>
         </nav>
 

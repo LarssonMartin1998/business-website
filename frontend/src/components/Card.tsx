@@ -3,16 +3,16 @@ import { twMerge } from 'tailwind-merge';
 
 import { bg, border, TwColor } from 'design-system/colors';
 
-interface BaseCardProps extends CardProps {
+interface BaseCardProps extends React.HTMLAttributes<HTMLElement> {
+  as?: React.ElementType;
   border: TwColor;
   bg: TwColor;
-  onClick?: () => void;
+  children: React.ReactNode;
 }
 
-interface CardProps {
+interface CardProps extends React.HTMLAttributes<HTMLElement> {
+  as?: React.ElementType;
   children: React.ReactNode;
-  className?: string;
-  onClick?: () => void;
 }
 
 function ListCardDefault(props: CardProps) {
@@ -41,12 +41,12 @@ function CardAccent(props: CardProps) {
   );
 }
 
-function Card({ border, bg, children, className, ...props }: BaseCardProps) {
+function Card({ as: Component = 'div', border, bg, children, className, ...props }: BaseCardProps) {
   const pointerHover = props.onClick ? 'hover:cursor-pointer' : '';
   return (
-    <div className={twMerge(border, bg, 'border-1 rounded-2xl p-2.5 shadow-xl/10', pointerHover, className)} {...props}>
+    <Component className={twMerge(border, bg, 'border-1 rounded-2xl p-2.5 shadow-xl/10', pointerHover, className)} {...props}>
       {children}
-    </div>
+    </Component>
   );
 }
 

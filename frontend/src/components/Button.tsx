@@ -14,6 +14,7 @@ interface ButtonColor {
 
 interface SealedButtonProps {
   children: React.ReactNode;
+  'aria-label': string;
   size?: Size;
   className?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -31,9 +32,7 @@ interface CustomButtonProps {
   style?: React.CSSProperties;
 }
 
-function CustomButton({ children, size = 'md', border, bg, fg, className, buttonLink, pageHash, animated, ...props }: CustomButtonProps & SealedButtonProps) {
-  console.log('CustomButton received props:', props);
-  console.log('CustomButton animated:', animated);
+function CustomButton({ children, 'aria-label': ariaLabel, size = 'md', border, bg, fg, className, buttonLink, pageHash, animated, ...props }: CustomButtonProps & SealedButtonProps) {
   const base = 'inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none hover:cursor-pointer';
 
   const sizes = {
@@ -60,7 +59,7 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, button
 
   if (!buttonLink) {
     return (
-      <button className={buttonClassName} {...props}>
+      <button aria-label={ariaLabel} className={buttonClassName} {...props}>
         {children}
       </button>
     );
@@ -68,13 +67,13 @@ function CustomButton({ children, size = 'md', border, bg, fg, className, button
 
   if ((pages as readonly string[]).includes(buttonLink)) {
     return (
-      <PageLink page={buttonLink as Page} hash={pageHash} className={buttonClassName} {...props}>
+      <PageLink aria-label={ariaLabel} page={buttonLink as Page} hash={pageHash} className={buttonClassName} {...props}>
         {children}
       </PageLink>
     );
   } else {
     return (
-      <AnchorLink href={buttonLink as Href} className={buttonClassName} {...props}>
+      <AnchorLink href={buttonLink as Href} aria-label={ariaLabel} className={buttonClassName} {...props}>
         {children}
       </AnchorLink>
     );

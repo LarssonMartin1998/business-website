@@ -4,18 +4,20 @@ import { Href, Page, RouteEntry } from 'design-system/pages';
 
 interface PageLinkProps {
   children: React.ReactNode;
-  className?: string;
   page: Page;
   hash?: string;
+  className?: string;
   style?: React.CSSProperties;
+  'aria-label': string;
 }
 
 interface AnchorLinkProps {
   children: React.ReactNode;
-  className?: string;
   href: Href;
   external?: boolean;
+  className?: string;
   style?: React.CSSProperties;
+  'aria-label': string;
 }
 
 type RouteTypedProps =
@@ -56,7 +58,7 @@ function CreateTypedRoute(props: RouteTypedProps) {
 function PageLink({ children, page, hash, ...props }: PageLinkProps) {
   const to = hash ? `${page}#${hash}` : page;
   return (
-    <Link to={to} {...props}>{children}</Link>
+    <Link {...props} to={to}>{children}</Link>
   );
 }
 

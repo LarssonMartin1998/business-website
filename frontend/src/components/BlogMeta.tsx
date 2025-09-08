@@ -7,9 +7,15 @@ import { extractHeader } from 'utils/helpers';
 
 function NewPostBanner() {
   return (
-    <div className={twMerge(bg('alert'), text('alert'), 'min-h-5 flex rounded-full font-bold text-xs px-2.5 w-fit justify-center items-center')}>
+    <span
+      className={twMerge(
+        bg('alert'),
+        text('alert'),
+        'min-h-5 flex rounded-full font-bold text-xs px-2.5 w-fit justify-center items-center')}
+      aria-label="New article"
+    >
       New
-    </div>
+    </span>
   );
 }
 
@@ -36,7 +42,7 @@ function PostDetails({ date, readTimeMins, tags }: PostDetailsProps) {
   return (
     <div className='flex flex-col gap-y-1 text-xs'>
       <div className='flex gap-x-4'>
-        <span>{date.toLocaleDateString('sv-SE')}</span>
+        <time>{date.toLocaleDateString('sv-SE')}</time>
         <span>{readTimeMins} min</span>
         {splitTags.length > 0 && <div className='hidden min-[500px]:!flex gap-x-1'>
           {splitTags.map((tag, idx) => (

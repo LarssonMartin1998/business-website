@@ -13,10 +13,10 @@ function Resume() {
     'xl:skew-12 xl:-top-8 xl:rotate-0',
   );
   return (
-    <div className={twMerge(from(raw.rustOrange), to(raw.rustOrangeLight), border('alert'), 'relative bg-gradient-to-b border-t-2 min-h-30 flex flex-col items-center justify-center overflow-hidden')}>
+    <section className={twMerge(from(raw.rustOrange), to(raw.rustOrangeLight), border('alert'), 'relative bg-gradient-to-b border-t-2 min-h-30 flex flex-col items-center justify-center overflow-hidden')}>
       <div className={twMerge(from(raw.rustOrangeLight), to(raw.rustOrange), 'bg-gradient-to-b absolute w-2/1 h-110', skewPos)}></div>
-      <ButtonAlertInvis buttonLink={hrefs.resume} size='xl' className='border-3 font-bold uppercase z-1'>Download Resume</ButtonAlertInvis>
-    </div>
+      <ButtonAlertInvis aria-label='Download my resume' buttonLink={hrefs.resume} size='xl' className='border-3 font-bold uppercase z-1'>Download Resume</ButtonAlertInvis>
+    </section>
   );
 }
 

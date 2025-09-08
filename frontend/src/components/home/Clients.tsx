@@ -22,7 +22,7 @@ function Clients() {
   ];
 
   return (
-    <div className={twMerge(background, 'shadow-2xl flex min-h-64 justify-center items-center')}>
+    <section className={twMerge(background, 'shadow-2xl flex min-h-64 justify-center items-center')}>
       <ul className={twMerge(font, 'flex flex-col md:hidden justify-center items-center gap-y-4 max-[380px]:!text-sm sm:text-md')}>
         {clients.map((client) => (
           <li key={client}>{client}</li>
@@ -44,7 +44,7 @@ function Clients() {
         ))}
       </ul>
 
-    </div>
+    </section>
   );
 }
 
