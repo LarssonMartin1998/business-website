@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { bg, raw, text } from 'design-system/colors';
+import { raw, text } from 'design-system/colors';
 
 import Header from 'components/Header';
 import Main from 'components/Main';
 import Footer from 'components/Footer';
 import Services from 'components/Services';
 import MainHeading from 'components/MainHeading';
+import { Field, TextAreaField } from 'components/forms/FormFields';
+import { ButtonAccent } from 'components/Button';
 
 interface ContactFormData {
   name: string;
@@ -21,6 +23,29 @@ function ContactForm() {
     name: '', email: '', company: '', message: ''
   });
 
+  const fields = [
+    { label: 'Name *', type: 'text', name: 'name' as keyof ContactFormData, placeholder: 'Your full name', required: true },
+    { label: 'Email *', type: 'email', name: 'email' as keyof ContactFormData, placeholder: 'your.email@company.com', required: true },
+    { label: 'Company/Organization', type: 'text', name: 'company' as keyof ContactFormData, placeholder: 'Your company name (optional)', required: false }
+  ] as const;
+
+  let iter = 0;
+  const nextField = () => {
+    const field = fields[iter];
+    iter++;
+    return (
+      <Field
+        label={field.label}
+        type={field.type}
+        name={field.name}
+        value={formData[field.name]}
+        onChange={handleChange}
+        placeholder={field.placeholder}
+        required={field.required}
+      />
+    );
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
@@ -29,12 +54,6 @@ function ContactForm() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
-
-  const inputClass = twMerge(
-    'w-full p-3 border rounded-lg',
-    'border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200',
-    'transition-colors duration-200'
-  );
 
   return (
     <div id='contactForm' className='py-6'>
@@ -50,67 +69,25 @@ function ContactForm() {
 
       <form onSubmit={handleSubmit} className='space-y-6 max-[520px]:px-4'>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <div>
-            <label className='block text-sm font-medium mb-2'>Name *</label>
-            <input
-              type='text'
-              name='name'
-              required
-              value={formData.name}
-              onChange={handleChange}
-              className={inputClass}
-              placeholder='Your full name'
-            />
-          </div>
-          <div>
-            <label className='block text-sm font-medium mb-2'>Email *</label>
-            <input
-              type='email'
-              name='email'
-              required
-              value={formData.email}
-              onChange={handleChange}
-              className={inputClass}
-              placeholder='your.email@company.com'
-            />
-          </div>
+          {nextField()}
+          {nextField()}
         </div>
 
-        <div>
-          <label className='block text-sm font-medium mb-2'>Company/Organization</label>
-          <input
-            type='text'
-            name='company'
-            value={formData.company}
-            onChange={handleChange}
-            className={inputClass}
-            placeholder='Your company name (optional)'
-          />
-        </div>
-        <div>
-          <label className='block text-sm font-medium mb-2'>Tell me about your challenge *</label>
-          <textarea
-            name='message'
-            required
-            rows={5}
-            value={formData.message}
-            onChange={handleChange}
-            className={inputClass}
-            placeholder='What challenges are you facing? Feel free to share details about your project, current setup, team size, etc ...'
-          />
-        </div>
+        {nextField()}
 
-        <button
-          type='submit'
-          className={twMerge(
-            bg('accent'), text('accent'),
-            'w-full py-3 px-6 rounded-lg font-semibold',
-            'hover:opacity-90 transition-opacity duration-200',
-            'focus:ring-4 focus:ring-blue-200'
-          )}
-        >
+        <TextAreaField
+          label='Tell me about your project *'
+          name='message'
+          value={formData.message}
+          onChange={handleChange}
+          placeholder='What challenges are you facing? Feel free to share details about your project, current setup, team size, etc ...'
+          required
+          rows={5}
+        />
+
+        <ButtonAccent type='submit' className='w-full h-fit py-3'>
           Let&apos;s Talk
-        </button>
+        </ButtonAccent>
       </form>
 
       <div className='mt-12 pt-8 border-t border-gray-200'>
