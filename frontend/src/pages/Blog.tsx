@@ -8,7 +8,7 @@ import { twMerge } from 'tailwind-merge';
 import { BlogPost, } from 'api/blog';
 import { extractBread } from 'utils/helpers';
 import { useBlogPosts } from 'hooks/useBlogPosts';
-import { bg, border, groupHoverRaw, hover, peerHoverRaw, raw, text } from 'design-system/colors';
+import { bg, border, hover, peerHoverRaw, raw, text } from 'design-system/colors';
 
 import Header from 'components/Header';
 import Main from 'components/Main';
@@ -22,48 +22,54 @@ interface BlogEntryProps {
   blogPost: BlogPost
 }
 
-function StyledMarkdown({ text }: { text: string; }) {
-  const codeStyle = twMerge(bg(raw.fogGreyLight), border(raw.graniteGrey), 'px-1.5 py-0.5 border-1 text-sm font-mono');
+function StyledMarkdown({ markdownText }: { markdownText: string; }) {
+  const inlineCodeStyle = twMerge(
+    bg(raw.fogGreyLight),
+    border(raw.graniteGrey),
+    text(raw.pineInkLight),
+    'px-1.5 py-0.5 border-1 text-sm font-mono'
+  );
 
   return (
-    <Markdown
-      components={{
-        code: ({ children, className, ...props }) => {
-          const match = /language-(\w+)/.exec(className || '');
-          const isInline = !className?.includes('language-');
+    <div className={text('defaultCard')}>
+      <Markdown
+        components={{
+          code: ({ children, className, ...props }) => {
+            const match = /language-(\w+)/.exec(className || '');
+            const isInline = !className?.includes('language-');
 
-          if (isInline) {
+            if (isInline) {
+              return (
+                <code className={inlineCodeStyle} {...props}>
+                  {children}
+                </code>
+              );
+            }
+
             return (
-              <code className={codeStyle} {...props}>
-                {children}
-              </code>
+              <div className="my-4">
+                <SyntaxHighlighter
+                  style={gruvboxLight}
+                  language={match ? match[1] : 'text'}
+                  PreTag="div"
+                  showLineNumbers={true}
+                  customStyle={{
+                    margin: 0,
+                    padding: '0.5rem',
+                    backgroundColor: 'var(--color-fog-grey-light)',
+                    border: '1px solid var(--color-granite-grey)',
+                  }}
+                >
+                  {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+              </div>
             );
-          }
-
-          return (
-            <div className="my-4">
-              <SyntaxHighlighter
-                style={gruvboxLight}
-                language={match ? match[1] : 'text'}
-                PreTag="div"
-                showLineNumbers={true}
-                customStyle={{
-                  margin: 0,
-                  // borderRadius: '0.375rem',
-                  padding: '0.5rem',
-                  backgroundColor: 'var(--color-fog-grey-light)',
-                  border: '1px solid var(--color-granite-grey)',
-                }}
-              >
-                {String(children).replace(/\n$/, '')}
-              </SyntaxHighlighter>
-            </div>
-          );
-        },
-      }}
-    >
-      {text}
-    </Markdown>
+          },
+        }}
+      >
+        {markdownText}
+      </Markdown>
+    </div>
   );
 }
 
@@ -91,7 +97,7 @@ function BlogEntry({ blogPost }: BlogEntryProps) {
       </div>
 
       {show && <div className={twMerge(border(raw.graniteGreyLight), peerHoverRaw(border(raw.emberBark)), 'border-dashed border-t-1 px-4.5 py-4')}>
-        <StyledMarkdown text={extractBread(blogPost.content)} />
+        <StyledMarkdown markdownText={extractBread(blogPost.content)} />
       </div>}
     </CardDefault>
   );

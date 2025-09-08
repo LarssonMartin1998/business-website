@@ -78,7 +78,7 @@ function BlogMeta({ headerClasses, blogPost, applyUnderline, }: BlogMetaProps) {
   const wordCount = blogPost.content.split(' ').length;
   const readingTimeGuess = Math.max(1, Math.round(wordCount / readSpeedAvgWordsPerMin) * technicalComplexityPunishmentGuess * markdownSyntaxRemovalGuess);
   return (
-    <div className='select-none min-h-12 flex flex-col gap-y-1 justify-center'>
+    <div className={twMerge(text('defaultCard'), 'select-none min-h-12 flex flex-col gap-y-1 justify-center')} >
       <div className='flex gap-x-2 items-center'>
         <h3 className={twMerge(
           groupHoverRaw(text(raw.firGreen)),
