@@ -28,7 +28,7 @@ function FooterAnchorLink({ href, children, ...props }: { href: Href; } & BaseFo
 function LogotypeRss({ className }: { className?: string; }) {
   return (
     <div className={twMerge('flex flex-col gap-y-4 h-9/10', className)}>
-      <LogotypeLight />
+      <PageLink aria-label='Navigate to home page' page='/'><LogotypeLight /></PageLink>
       <ButtonAccentInvis aria-label='Subscribe to RSS feed' buttonLink={hrefs.rss} size='md' className='flex justify-center items-center font-bold'><Rss className='w-8 pb-2' />RSS</ButtonAccentInvis>
     </div>
   );
