@@ -29,6 +29,7 @@ export function useBlogPosts(options: UseBlogPostsOptions = {}): UseBlogPostsRet
 
       switch (result.state) {
         case 'success':
+        case 'success-cached':
           setPosts(result.data ?? []);
           setState('success');
           break;

@@ -13,21 +13,41 @@ const BlogPostsResponseSchema = z.object({
   data: z.array(BlogPostSchema),
 });
 
-type ResultState = 'success' | 'temporary-failure' | 'critical-failure';
+var cache: Cache = {
+  blogPosts: null,
+  createdAt: Date.now(),
+};
+
+type ResultState = 'success' | 'success-cached' | 'temporary-failure' | 'critical-failure';
 type APIResult<T> = {
   state: ResultState;
   data?: T;
 };
 
-// THIS is not a concern right now, and might not be ever. However, this can be expanded to:
-// - Quickly check if DB has changed, otherwise JUST cache results
-// - Fetch only what we need ATM, meaning, dont fetch all posts for landing page.
-// - If user choose to enter blog page, load first and second pager sections, as the user changes page,
-// load and cache the next one and slowly build up a complete picture.
-//
-// ^ This is a good idea, but too much to focus on now, this is even good enough to ship for my usecase.
+type Cache = {
+  blogPosts: BlogPost[] | null;
+  createdAt: number;
+};
+
+function isCacheDirty(): boolean {
+  if (cache.blogPosts == null) {
+    return true;
+  }
+
+  const maxLegalAgeMS = 60 * 10 * 1000; // 10 minutes
+  if (Date.now() > cache.createdAt + maxLegalAgeMS) {
+    return true;
+  }
+
+  return false;
+}
+
 async function getBlogPosts(): Promise<APIResult<BlogPost[]>> {
   let response: Response;
+
+  if (!isCacheDirty()) {
+    return { state: 'success-cached', data: cache.blogPosts as BlogPost[] };
+  }
 
   try {
     response = await fetch('/api/v1/posts');
@@ -51,6 +71,12 @@ async function getBlogPosts(): Promise<APIResult<BlogPost[]>> {
     if (!parsed.success) {
       return { state: 'critical-failure', data: undefined };
     }
+
+    cache = {
+      blogPosts: parsed.data,
+      createdAt: Date.now(),
+    };
+
     return { state: 'success', data: parsed.data };
   } catch {
     return { state: 'critical-failure', data: undefined };
