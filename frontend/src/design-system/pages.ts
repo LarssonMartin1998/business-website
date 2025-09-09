@@ -4,6 +4,12 @@ const hrefs = {
   mastodon: 'https://social.just-a-shell.dev/@martin',
   resume: '/resume.pdf',
   rss: '/rss',
+
+  fhs: 'https://www.king.com/game/farmheroes',
+  atlas: 'https://www.github.com/LarssonMartin1998/atlas',
+  mannequin: 'https://fasttravelgames.com/games/mannequin',
+  citiesVr: 'https://fasttravelgames.com/games/citiesvr',
+  curiousTale: 'https://fasttravelgames.com/games/thecurioustaleofthestolenpets',
 } as const;
 type Href = typeof hrefs[keyof typeof hrefs];
 
