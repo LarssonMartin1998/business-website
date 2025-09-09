@@ -87,6 +87,12 @@ function LetsWorkButton() {
   return (<HeaderCTAButton aria-label='Work With Me CTA - Navigate to contact page' {...props}>Lets Work</HeaderCTAButton>);
 }
 
+function Logo() {
+  return (
+    <PageLink aria-label='Navigate to home page' page='/'><LogoHorizontalShort className='select-none w-32 h-9/10 drop-shadow-2xl z-10' /></PageLink>
+  );
+}
+
 function WideNavListEntry({ children, page, currentRoute, ...props }: NavListEntryProps) {
   if (isCurrentRoute(currentRoute, page)) {
     return (
@@ -151,7 +157,7 @@ function HamburgerHeader({ location }: HeaderProps) {
       <div className='flex flex-col justify-start'>
         <div className='h-16 py-1'>
           <div className='flex justify-around items-center h-full'>
-            <LogoHorizontalShort className='select-none h-9/10 drop-shadow-2xl z-10' />
+            <Logo />
             <div></div>
             <button
               aria-label='Toggle navigation menu'
@@ -184,7 +190,7 @@ function WideHeader({ location }: HeaderProps) {
   return (
     <div className={twMerge('hidden min-[640px]:!block', headerColor(), border('default'), 'border-b-2 h-16 shadow-2xl')}>
       <div className='flex justify-between items-center h-full px-6'>
-        <LogoHorizontalShort className='select-none h-9/10 drop-shadow-2xl' />
+        <Logo />
         <div className='h-full w-fit'>
           <nav className='h-full'>
             <ul className={twMerge(text('accent'), 'flex h-full justify-center items-center font-bold uppercase gap-x-6 text-sm')}>
