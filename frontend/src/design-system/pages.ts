@@ -1,4 +1,5 @@
 const hrefs = {
+  home: '/',
   linkedIn: 'https://www.linkedin.com/in/martin-larsson-b26200137/',
   github: 'https://www.github.com/LarssonMartin1998',
   mastodon: 'https://social.just-a-shell.dev/@martin',

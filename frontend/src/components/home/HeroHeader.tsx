@@ -1,9 +1,9 @@
 import { Outlet } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
-import { PageLink } from 'components/Link';
+import { AnchorLink, PageLink } from 'components/Link';
 import { border, from, hoverRaw, raw, text, to } from 'design-system/colors';
-import { Page } from 'design-system/pages';
+import { hrefs, Page } from 'design-system/pages';
 import { LogotypeLight } from 'components/generated/index';
 
 interface HeaderListItemProps {
@@ -29,7 +29,7 @@ function HeroHeader() {
       <div className={twMerge(from(raw.firGreen), to(raw.firGreenLight), border('accent'), 'bg-gradient-to-b shadow-2xl rounded-l-full rounded-r-full border-2 min-h-16 w-fit p-2.5 pr-14')}>
 
         <nav className='flex gap-x-6 justify-center h-fit'>
-          <LogotypeLight className='w-24 h-24 drop-shadow-2xl' />
+          <AnchorLink external={false} aria-label='Refresh home page' href={hrefs.home}><LogotypeLight className='w-24 h-24 drop-shadow-2xl' /></AnchorLink>
           <ul className='flex gap-x-6 sm:gap-x-8 items-center'>
             <HeaderListItem aria-label='Navigate to contact page' routerPath='/contact' name='Contact' />
             <HeaderListItem aria-label='Navigate to blog page' routerPath='/blog' name='Blog' />
