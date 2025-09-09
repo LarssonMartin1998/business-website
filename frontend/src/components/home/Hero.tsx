@@ -26,14 +26,13 @@ function Hero({ scrollToServicesRef }: HeroProps) {
     'pl-0',
     'min-[1280px]:pr-10',
     'min-[1500px]:pr-20',
-    'min-[2000px]:pr-24',
+    'min-[1700px]:pr-40',
+    'min-[1975px]:pr-24',
     'min-[2150px]:pr-26',
     'min-[2320px]:pr-34',
   );
 
   const headingSizes = twMerge(
-    'text-md',
-    'min-[800px]:!text-xl',
     'min-[1280px]:!text-2xl',
     'min-[1350px]:!text-3xl',
     'min-[1500px]:!text-4xl',
@@ -63,10 +62,10 @@ function Hero({ scrollToServicesRef }: HeroProps) {
             <p className={twMerge(text(raw.cloudHaze), paragraphSizes, 'grow text-shadow-md font-bold mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
           </div>
 
-          <div className='hidden min-[640px]:!flex min-[1280px]:!hidden flex-col w-fit max-w-150 text-shadow-md font-bold text-justify'>
-            <div className='flex'>
-              <h1 className={twMerge(text(raw.rustOrange), 'text-4xl')}>{headline}</h1>
-              <h1 className={twMerge(text(raw.cloudHaze), 'text-4xl')}>{separator + subheadline}</h1>
+          <div className='hidden min-[640px]:!flex min-[1280px]:!hidden flex-col w-fit max-w-126 text-shadow-md font-bold text-justify'>
+            <div className='flex text-2xl'>
+              <h1 className={twMerge(text(raw.rustOrange))}>{headline}</h1>
+              <h1 className={twMerge(text(raw.cloudHaze))}>{separator + subheadline}</h1>
             </div>
             <p className={twMerge(text(raw.cloudHaze), paragraphSizes, 'mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
           </div>
