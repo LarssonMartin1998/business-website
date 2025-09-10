@@ -75,7 +75,7 @@ function Hero({ scrollToServicesRef }: HeroProps) {
           <div className='flex min-[640px]:!hidden flex-col w-fit max-w-90 text-shadow-md font-bold text-justify'>
             <h1 className={twMerge(text(raw.rustOrange), 'text-2xl')}>{headline}</h1>
             <h1 className={twMerge(text(raw.cloudHaze), 'text-2xl')}>{subheadline}</h1>
-            <p className={twMerge(text(raw.cloudHaze), 'text-sm mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
+            <p className={twMerge(text(raw.cloudHaze), 'text-xs mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
           </div>
 
           <div className='flex gap-x-4 min-[1280px]:pl-2'>
