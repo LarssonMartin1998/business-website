@@ -13,6 +13,7 @@ import (
 
 	"backend/blog"
 	"backend/config"
+	"backend/contact"
 	"backend/database"
 	"backend/router"
 	"backend/utils"
@@ -26,6 +27,7 @@ func main() {
 	r.SetupRoutes(&router.RoutingContext{
 		Providers: []router.RouteProvider{
 			blog.NewModule(db),
+			contact.NewModule(cfg),
 		},
 	}, cfg)
 

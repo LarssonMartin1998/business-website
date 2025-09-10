@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -27,6 +28,17 @@ func RespondWithJSON(w http.ResponseWriter, status int, success bool, data any, 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(response)
+}
+
+func DecodeJSON(w http.ResponseWriter, r *http.Request, req any) error {
+	r.Body = http.MaxBytesReader(w, r.Body, 64<<10)
+	dec := json.NewDecoder(r.Body)
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(req); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func MiddlewareAPIAuth(configAPIKey string) func(next http.Handler) http.Handler {
@@ -64,4 +76,54 @@ func Must[T any](value T, err error) T {
 	}
 
 	return value
+}
+
+func IsStringValidEmail(value string) bool {
+	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+	if !emailRegex.MatchString(value) {
+		return false
+	}
+
+	parts := strings.Split(value, "@")
+	if len(parts) != 2 {
+		return false
+	}
+
+	localPart, domain := parts[0], parts[1]
+	if len(localPart) > 64 {
+		return false
+	}
+
+	if len(domain) > 253 {
+		return false
+	}
+
+	return IsStringValidDomain(domain)
+}
+
+func IsStringValidDomain(value string) bool {
+	if len(value) == 0 || len(value) > 253 {
+		return false
+	}
+
+	// Domain cannot start or end with a hyphen or dot
+	if strings.HasPrefix(value, "-") || strings.HasSuffix(value, "-") ||
+		strings.HasPrefix(value, ".") || strings.HasSuffix(value, ".") {
+		return false
+	}
+
+	if strings.Contains(value, "..") {
+		return false
+	}
+
+	domainRegex := regexp.MustCompile(`^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$`)
+	if !domainRegex.MatchString(value) {
+		return false
+	}
+
+	if !strings.Contains(value, ".") {
+		return false
+	}
+
+	return true
 }

@@ -20,6 +20,7 @@ type Config struct {
 	Database DatabaseConfig
 	API      APIConfig
 	Server   ServerConfig
+	Mail     MailConfig
 }
 
 type DatabaseConfig struct {
@@ -48,6 +49,23 @@ type ServerConfig struct {
 	WriteTimeout     time.Duration
 	IdleTimeout      time.Duration
 	HandlerTimeout   time.Duration
+}
+
+type MailAuth struct {
+	Host string
+	Port int
+	User string
+	Pw   string
+}
+
+type MailConfig struct {
+	FormSender             string // used for forwarding form submissions to hello@
+	FormSenderAuth         MailAuth
+	NotificationSender     string // used for sending confirmations to the user if everything was successful (noreply)
+	NotificationSenderAuth MailAuth
+	NotificationSubject    string
+	NotificationBody       string
+	Receiver               string // used for receiving the emails from the sender that contains information from the form
 }
 
 func Load() (*Config, error) {
@@ -80,6 +98,25 @@ func Load() (*Config, error) {
 			IdleTimeout:      60 * time.Second,
 			HandlerTimeout:   25 * time.Second,
 		},
+		Mail: MailConfig{
+			FormSender: utils.Must(getEnvWithoutDefault("MAIL_FORM_SENDER")),
+			FormSenderAuth: MailAuth{
+				Host: utils.Must(getEnvWithoutDefault("MAIL_FORM_SENDER_HOST")),
+				Port: getIntEnv("MAIL_FORM_SENDER_PORT", 465),
+				User: utils.Must(getEnvWithoutDefault("MAIL_FORM_SENDER_USER")),
+				Pw:   utils.Must(getEnvWithoutDefault("MAIL_FORM_SENDER_PW")),
+			},
+			NotificationSender: utils.Must(getEnvWithoutDefault("MAIL_NOTIFICATION_SENDER")),
+			NotificationSenderAuth: MailAuth{
+				Host: utils.Must(getEnvWithoutDefault("MAIL_NOTIFICATION_SENDER_HOST")),
+				Port: getIntEnv("MAIL_NOTIFICATION_SENDER_PORT", 465),
+				User: utils.Must(getEnvWithoutDefault("MAIL_NOTIFICATION_SENDER_USER")),
+				Pw:   utils.Must(getEnvWithoutDefault("MAIL_NOTIFICATION_SENDER_PW")),
+			},
+			NotificationSubject: utils.Must(getEnvWithoutDefault("MAIL_NOTIFICATION_SUBJECT")),
+			NotificationBody:    utils.Must(readFileFromEnvPath("MAIL_NOTIFICATION_BODY_FILE")),
+			Receiver:            utils.Must(getEnvWithoutDefault("MAIL_RECEIVER")),
+		},
 	}
 
 	if err := config.validate(); err != nil {
@@ -90,12 +127,20 @@ func Load() (*Config, error) {
 }
 
 func (c *Config) validate() error {
-	if c.Database.Path == "" {
-		return fmt.Errorf("missing required config entry: DB_PATH")
+	if !utils.IsStringValidEmail(c.Mail.FormSender) {
+		return fmt.Errorf("invalid FromSender email in .env")
 	}
-
-	if c.API.Key == "" {
-		return fmt.Errorf("missing required config entry: API_KEY")
+	if !utils.IsStringValidEmail(c.Mail.NotificationSender) {
+		return fmt.Errorf("invalid NotificationSender email in .env")
+	}
+	if !utils.IsStringValidEmail(c.Mail.Receiver) {
+		return fmt.Errorf("invalid Receiver email in .env")
+	}
+	if !utils.IsStringValidDomain(c.Mail.FormSenderAuth.Host) {
+		return fmt.Errorf("invalid FromSenderHost domain in .env")
+	}
+	if !utils.IsStringValidDomain(c.Mail.NotificationSenderAuth.Host) {
+		return fmt.Errorf("invalid NotificationSenderHost domain in .env")
 	}
 
 	return nil
@@ -150,4 +195,10 @@ func getSliceEnv(key string, defaultValue []string) []string {
 	}
 
 	return defaultValue
+}
+
+func readFileFromEnvPath(envPath string) (string, error) {
+	relativeFilePath := utils.Must(getEnvWithoutDefault(envPath))
+	fileContents := utils.Must(os.ReadFile(relativeFilePath))
+	return string(fileContents), nil
 }

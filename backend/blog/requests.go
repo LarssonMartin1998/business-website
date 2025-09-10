@@ -3,7 +3,6 @@ package blog
 import (
 	"backend/utils"
 	"database/sql"
-	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"net/http"
@@ -68,9 +67,9 @@ func validatePost(content string, tags string) error {
 	return nil
 }
 
-func (m *Module) createPost(w http.ResponseWriter, r *http.Request) {
+func (m *Module) handleCreatePostReq(w http.ResponseWriter, r *http.Request) {
 	var req createPostRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	if err := utils.DecodeJSON(w, r, &req); err != nil {
 		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid JSON format")
 		return
 	}
@@ -89,7 +88,7 @@ func (m *Module) createPost(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithJSON(w, http.StatusCreated, true, post, "")
 }
 
-func (m *Module) getPosts(w http.ResponseWriter, r *http.Request) {
+func (m *Module) handleGetPostsReq(w http.ResponseWriter, r *http.Request) {
 	posts, err := m.store.getAll()
 	if err != nil {
 		utils.RespondWithJSON(w, http.StatusInternalServerError, false, posts, "Error reading Blog Posts")
@@ -99,7 +98,7 @@ func (m *Module) getPosts(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithJSON(w, http.StatusOK, true, posts, "")
 }
 
-func (m *Module) getPost(w http.ResponseWriter, r *http.Request) {
+func (m *Module) handleGetPostReq(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
@@ -120,7 +119,7 @@ func (m *Module) getPost(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithJSON(w, http.StatusOK, true, post, "")
 }
 
-func (m *Module) updatePost(w http.ResponseWriter, r *http.Request) {
+func (m *Module) handleUpdatePostReq(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
@@ -129,7 +128,7 @@ func (m *Module) updatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req updatePostRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	if err := utils.DecodeJSON(w, r, &req); err != nil {
 		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid JSON format")
 		return
 	}
@@ -156,7 +155,7 @@ func (m *Module) updatePost(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithJSON(w, http.StatusOK, true, post, "")
 }
 
-func (m *Module) deletePost(w http.ResponseWriter, r *http.Request) {
+func (m *Module) handleDeletePostReq(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
@@ -178,7 +177,7 @@ func (m *Module) deletePost(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithJSON(w, http.StatusOK, true, nil, "")
 }
 
-func (m *Module) serveXML(w http.ResponseWriter, r *http.Request) {
+func (m *Module) handleServeXMLReq(w http.ResponseWriter, r *http.Request) {
 	posts, err := m.store.getAll()
 	if err != nil {
 		utils.RespondWithJSON(w, http.StatusInternalServerError, false, nil, "Error serving RSS Feed")

@@ -19,13 +19,13 @@ func NewModule(db *database.SQLiteDB) *Module {
 
 func (m *Module) RegisterRoutes(n *router.RouteNode, cfg *config.Config) {
 	n.Route("/posts", func(n *router.RouteNode) {
-		n.Post("/", m.createPost).With(utils.MiddlewareAPIAuth(cfg.API.Key))
-		n.Get("/", m.getPosts)
-		n.Get("/{id}", m.getPost)
-		n.Put("/{id}", m.updatePost).With(utils.MiddlewareAPIAuth(cfg.API.Key))
-		n.Delete("/{id}", m.deletePost).With(utils.MiddlewareAPIAuth(cfg.API.Key))
+		n.Post("/", m.handleCreatePostReq).With(utils.MiddlewareAPIAuth(cfg.API.Key))
+		n.Get("/", m.handleGetPostsReq)
+		n.Get("/{id}", m.handleGetPostReq)
+		n.Put("/{id}", m.handleUpdatePostReq).With(utils.MiddlewareAPIAuth(cfg.API.Key))
+		n.Delete("/{id}", m.handleDeletePostReq).With(utils.MiddlewareAPIAuth(cfg.API.Key))
 	})
 	n.Route("/rss", func(n *router.RouteNode) {
-		n.Get("/", m.serveXML)
+		n.Get("/", m.handleServeXMLReq)
 	})
 }
