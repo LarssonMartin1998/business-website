@@ -30,6 +30,13 @@ function Hero({ scrollToServicesRef }: HeroProps) {
     'min-[1975px]:pr-24',
     'min-[2150px]:pr-26',
     'min-[2320px]:pr-34',
+    'min-[2620px]:pr-60',
+    'min-[2820px]:pr-80',
+    'min-[3000px]:pr-120',
+    'min-[3200px]:pr-140',
+    'min-[3200px]:pr-160',
+    'min-[3400px]:pr-180',
+    'min-[3600px]:pr-190',
   );
 
   const headingSizes = twMerge(
@@ -38,11 +45,6 @@ function Hero({ scrollToServicesRef }: HeroProps) {
     'min-[1500px]:!text-4xl',
     'min-[1975px]:!text-5xl',
     'min-[2240px]:!text-6xl',
-  );
-
-  const paragraphSizes = twMerge(
-    'text-xs',
-    'min-[1280px]:!text-s',
   );
 
   const onClickViewServices = () => scrollToServicesRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -59,7 +61,7 @@ function Hero({ scrollToServicesRef }: HeroProps) {
               <h1 className={text(raw.rustOrange)}>{headline}</h1>
               <h1 className={text(raw.cloudHaze)}>{separator + subheadline}</h1>
             </div>
-            <p className={twMerge(text(raw.cloudHaze), paragraphSizes, 'grow text-shadow-md font-bold mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
+            <p className={twMerge(text(raw.cloudHaze), 'text-md grow text-shadow-md font-bold mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
           </div>
 
           <div className='hidden min-[640px]:!flex min-[1280px]:!hidden flex-col w-fit max-w-126 text-shadow-md font-bold text-justify'>
@@ -67,13 +69,13 @@ function Hero({ scrollToServicesRef }: HeroProps) {
               <h1 className={twMerge(text(raw.rustOrange))}>{headline}</h1>
               <h1 className={twMerge(text(raw.cloudHaze))}>{separator + subheadline}</h1>
             </div>
-            <p className={twMerge(text(raw.cloudHaze), paragraphSizes, 'mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
+            <p className={twMerge(text(raw.cloudHaze), 'text-sm mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
           </div>
 
           <div className='flex min-[640px]:!hidden flex-col w-fit max-w-90 text-shadow-md font-bold text-justify'>
             <h1 className={twMerge(text(raw.rustOrange), 'text-2xl')}>{headline}</h1>
             <h1 className={twMerge(text(raw.cloudHaze), 'text-2xl')}>{subheadline}</h1>
-            <p className={twMerge(text(raw.cloudHaze), paragraphSizes, 'mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
+            <p className={twMerge(text(raw.cloudHaze), 'text-sm mt-2 min-[1280px]:!ml-2')}>{paragraph}</p>
           </div>
 
           <div className='flex gap-x-4 min-[1280px]:pl-2'>

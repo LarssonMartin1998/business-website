@@ -122,7 +122,7 @@ function BlogPosts() {
     ],
     [
       3,
-      'hidden min-[1920px]:flex justify-center gap-x-16 mt-10 min-[2100px]:!gap-x-20 px-20',
+      'hidden min-[1920px]:flex justify-center gap-x-16 mt-10 min-[2100px]:!gap-x-20 px-20 max-w-[2600px] bg-red-500 w-full max-w-[2600px] mx-auto',
       'p-4 shadow',
       'min-w-3/10 min-[2100px]:!min-w-1/4'
     ],

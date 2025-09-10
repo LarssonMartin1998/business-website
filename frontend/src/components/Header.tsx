@@ -189,7 +189,7 @@ function HamburgerHeader({ location }: HeaderProps) {
 function WideHeader({ location }: HeaderProps) {
   return (
     <div className={twMerge('hidden min-[640px]:!block', headerColor(), border('default'), 'border-b-2 h-16 shadow-2xl')}>
-      <div className='flex justify-between items-center h-full px-6'>
+      <div className='flex justify-between items-center h-full px-6 max-w-[2560px] w-full mx-auto'>
         <Logo />
         <div className='h-full w-fit'>
           <nav className='h-full'>
