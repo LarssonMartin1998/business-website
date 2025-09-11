@@ -78,11 +78,11 @@ function BlogMeta({ headerClasses, blogPost, applyUnderline, }: BlogMetaProps) {
   const newPostThresholdInDays = 7;
   const shouldMarkPostAsNew = daysSinceBlogDate <= newPostThresholdInDays;
 
-  const readSpeedAvgWordsPerMin = 238;
-  const technicalComplexityPunishmentGuess = 0.8;
-  const markdownSyntaxRemovalGuess = 0.95;
+  const readSpeedAvgWordsPerMin = 200;
+  const technicalComplexityPunishmentGuess = 0.7;
+  const markdownSyntaxRemovalGuess = 0.90;
   const wordCount = blogPost.content.split(' ').length;
-  const readingTimeGuess = Math.max(1, Math.round(wordCount / readSpeedAvgWordsPerMin) * technicalComplexityPunishmentGuess * markdownSyntaxRemovalGuess);
+  const readingTimeGuess = Math.max(1, Math.floor(((wordCount / readSpeedAvgWordsPerMin) * technicalComplexityPunishmentGuess * markdownSyntaxRemovalGuess) + 0.999));
   return (
     <div className={twMerge(text('defaultCard'), 'select-none min-h-12 flex flex-col gap-y-1 justify-center')} >
       <div className='flex gap-x-2 items-center'>
