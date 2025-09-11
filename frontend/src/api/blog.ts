@@ -1,4 +1,7 @@
 import { z } from 'zod';
+
+import { APIResult } from 'api/types';
+
 const BlogPostSchema = z.object({
   id: z.number(),
   content: z.string(),
@@ -16,12 +19,6 @@ const BlogPostsResponseSchema = z.object({
 var cache: Cache = {
   blogPosts: null,
   createdAt: Date.now(),
-};
-
-type ResultState = 'success' | 'success-cached' | 'temporary-failure' | 'critical-failure';
-type APIResult<T> = {
-  state: ResultState;
-  data?: T;
 };
 
 type Cache = {

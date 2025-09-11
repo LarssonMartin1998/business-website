@@ -23,6 +23,7 @@ interface SealedButtonProps {
   pageHash?: string;
   animated?: boolean;
   style?: React.CSSProperties;
+  disabled?: boolean;
 }
 
 interface CustomButtonProps {
@@ -32,8 +33,24 @@ interface CustomButtonProps {
   style?: React.CSSProperties;
 }
 
-function CustomButton({ children, 'aria-label': ariaLabel, size = 'md', border, bg, fg, className, buttonLink, pageHash, animated, ...props }: CustomButtonProps & SealedButtonProps) {
-  const base = 'inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none hover:cursor-pointer';
+
+function CustomButton({
+  children,
+  'aria-label': ariaLabel,
+  size = 'md',
+  border,
+  bg,
+  fg,
+  className,
+  buttonLink,
+  pageHash,
+  animated,
+  ...props
+}: CustomButtonProps & SealedButtonProps) {
+  const isDisabled = !!props.disabled;
+
+  const base =
+    'inline-flex items-center justify-center rounded-md font-medium transition-colors hover:cursor-pointer disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed';
 
   const sizes = {
     xs: 'px-2 py-1 text-xs w-18 h-10',
@@ -54,31 +71,65 @@ function CustomButton({ children, 'aria-label': ariaLabel, size = 'md', border, 
     fg.default,
     fg.hover,
     animated ? 'animated-border' : '',
+    isDisabled && 'opacity-50 pointer-events-none cursor-not-allowed',
     className
   );
 
   if (!buttonLink) {
     return (
-      <button aria-label={ariaLabel} className={buttonClassName} {...props}>
+      <button
+        aria-label={ariaLabel}
+        className={buttonClassName}
+        disabled={isDisabled}
+        type={props.type}
+        onClick={props.onClick}
+        style={props.style}
+      >
         {children}
       </button>
     );
   }
 
+  if (isDisabled) {
+    return (
+      <span
+        role='button'
+        aria-label={ariaLabel}
+        aria-disabled='true'
+        className={buttonClassName}
+        style={props.style}
+      >
+        {children}
+      </span>
+    );
+  }
+
   if ((pages as readonly string[]).includes(buttonLink)) {
     return (
-      <PageLink aria-label={ariaLabel} page={buttonLink as Page} hash={pageHash} className={buttonClassName} {...props}>
+      <PageLink
+        aria-label={ariaLabel}
+        page={buttonLink as Page}
+        hash={pageHash}
+        className={buttonClassName}
+        style={props.style}
+      >
         {children}
       </PageLink>
     );
-  } else {
-    return (
-      <AnchorLink href={buttonLink as Href} aria-label={ariaLabel} className={buttonClassName} {...props}>
-        {children}
-      </AnchorLink>
-    );
   }
+
+  return (
+    <AnchorLink
+      href={buttonLink as Href}
+      aria-label={ariaLabel}
+      className={buttonClassName}
+      style={props.style}
+    >
+      {children}
+    </AnchorLink>
+  );
 }
+
 
 function ButtonIntentVariant({ intent, useBorder, ...props }: SealedButtonProps & { useBorder: boolean, intent: Intent }) {
   const bgCol = bg(intent);

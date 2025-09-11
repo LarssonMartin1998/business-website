@@ -16,6 +16,7 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   required?: boolean;
+  error?: boolean;
 }
 
 interface TextAreaProps {
@@ -26,6 +27,7 @@ interface TextAreaProps {
   placeholder?: string;
   required?: boolean;
   rows?: number;
+  error?: boolean;
 }
 
 function Label({ children, htmlFor }: LabelProps) {
@@ -38,21 +40,21 @@ function Label({ children, htmlFor }: LabelProps) {
     </label>
   );
 }
-function Input({ id, ...props }: InputProps) {
+function Input({ id, error, ...props }: InputProps) {
   return (
     <input
       id={id}
-      className={useInputStyling()}
+      className={useInputStyling(!!error)}
       {...props}
     />
   );
 }
 
-function TextArea({ id, ...props }: TextAreaProps) {
+function TextArea({ id, error, ...props }: TextAreaProps) {
   return (
     <textarea
       id={id}
-      className={useInputStyling()}
+      className={useInputStyling(!!error)}
       {...props}
     />
   );

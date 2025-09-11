@@ -38,4 +38,44 @@ function extractAndLimitBread(content: string): string {
   return limitText(bread, maxLength);
 }
 
-export { extractHeader, extractAndLimitBread, extractBread, limitText, sanitizeMarkdown };
+function isStringValidDomain(value: string): boolean {
+  if (value.length === 0 || value.length > 253) {
+    return false;
+  }
+
+  // Domain cannot start or end with a hyphen or dot
+  if (value.startsWith('-') || value.endsWith('-') || value.startsWith('.') || value.endsWith('.')) {
+    return false;
+  }
+
+  if (value.includes('..')) {
+    return false;
+  }
+
+  const domainRegex = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  if (!domainRegex.test(value)) {
+    return false;
+  }
+
+  if (!value.includes('.')) {
+    return false;
+  }
+
+  return true;
+}
+
+function isStringValidEmail(value: string): boolean {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(value)) return false;
+
+  const parts = value.split('@');
+  if (parts.length !== 2) return false;
+
+  const [localPart, domain] = parts;
+  if (localPart.length > 64) return false;
+  if (domain.length > 253) return false;
+
+  return isStringValidDomain(domain);
+}
+
+export { extractHeader, extractAndLimitBread, extractBread, limitText, sanitizeMarkdown, isStringValidDomain, isStringValidEmail };

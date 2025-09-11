@@ -7,6 +7,7 @@ interface BaseFieldProps {
   value: string;
   placeholder?: string;
   required?: boolean;
+  error?: string;
 }
 
 interface FieldProps extends BaseFieldProps {
@@ -19,8 +20,9 @@ interface TextAreaFieldProps extends BaseFieldProps {
   rows?: number;
 }
 
-function Field({ label, type, name, value, onChange, placeholder, required }: FieldProps) {
+function Field({ label, type, name, value, onChange, placeholder, required, error }: FieldProps) {
   const id = useId();
+  const errorId = error ? `${id}-error` : undefined;
 
   return (
     <div>
@@ -33,13 +35,22 @@ function Field({ label, type, name, value, onChange, placeholder, required }: Fi
         onChange={onChange}
         placeholder={placeholder}
         required={required}
+        aria-invalid={!!error}
+        aria-describedby={errorId}
+        error={!!error}
       />
+      {error && (
+        <p id={errorId} className='mt-1 text-xs text-red-600'>
+          {error}
+        </p>
+      )}
     </div>
   );
 }
 
-function TextAreaField({ label, name, value, onChange, placeholder, required, rows = 5 }: TextAreaFieldProps) {
+function TextAreaField({ label, name, value, onChange, placeholder, required, rows = 5, error }: TextAreaFieldProps) {
   const id = useId();
+  const errorId = error ? `${id}-error` : undefined;
 
   return (
     <div>
@@ -52,9 +63,18 @@ function TextAreaField({ label, name, value, onChange, placeholder, required, ro
         placeholder={placeholder}
         required={required}
         rows={rows}
+        aria-invalid={!!error}
+        aria-describedby={errorId}
+        error={!!error}
       />
+      {error && (
+        <p id={errorId} className='mt-1 text-xs text-red-600'>
+          {error}
+        </p>
+      )}
     </div>
   );
 }
+
 
 export { Field, TextAreaField, };
