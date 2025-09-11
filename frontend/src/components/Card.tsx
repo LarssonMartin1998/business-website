@@ -1,11 +1,18 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import { base, TwColor } from '../designSystem/colors';
 
-interface CardProps {
+import { bg, border, TwColor } from 'design-system/colors';
+
+interface BaseCardProps extends React.HTMLAttributes<HTMLElement> {
+  as?: React.ElementType;
+  border: TwColor;
+  bg: TwColor;
   children: React.ReactNode;
-  w: string,
-  h: string,
+}
+
+interface CardProps extends React.HTMLAttributes<HTMLElement> {
+  as?: React.ElementType;
+  children: React.ReactNode;
 }
 
 function ListCardDefault(props: CardProps) {
@@ -23,17 +30,24 @@ function ListCardAccent(props: CardProps) {
 }
 
 function CardDefault(props: CardProps) {
-  return Card(base.border.default, base.bg.defaultCard, props);
+  return (
+    <Card border={border('defaultCard')} bg={bg('defaultCard')} {...props} />
+  );
 }
 
 function CardAccent(props: CardProps) {
-  return Card(base.border.accent, base.bg.accentCard, props);
+  return (
+    <Card border={border('accentCard')} bg={bg('accentCard')} {...props} />
+  );
 }
 
-function Card(border: TwColor, bg: TwColor, { children, w, h }: CardProps) {
-  return (<div className={twMerge(border, bg, 'border-2', 'flex', 'flex-col', 'text-center', 'justify-center', 'items-center', 'rounded-2xl', 'p-2.5', w, h)}>
-    {children}
-  </div>);
+function Card({ as: Component = 'div', border, bg, children, className, ...props }: BaseCardProps) {
+  const pointerHover = props.onClick ? 'hover:cursor-pointer' : '';
+  return (
+    <Component className={twMerge(border, bg, 'border-1 rounded-2xl p-2.5 shadow-xl/10', pointerHover, className)} {...props}>
+      {children}
+    </Component>
+  );
 }
 
 export { ListCardDefault, ListCardAccent, CardDefault, CardAccent };

@@ -16,6 +16,7 @@
       system:
       let
         pkgs = import nixpkgs { inherit system; };
+        CGO = "1";
         go = pkgs.go;
       in
       {
@@ -24,10 +25,10 @@
           version = "0.1.0";
           src = ./.;
 
-          vendorHash = "sha256-0DmVUIaSSibyNy819LIEaExI4F9VA4CRNkrFx++q1HU=";
+          vendorHash = "sha256-1OoBfO2KqtyTVFNLr+ftE5KIS50MyR71rO8zB/FFjVQ=";
 
           env = {
-            CGO_ENABLED = "0";
+            CGO_ENABLED = CGO;
           };
 
           doCheck = true;
@@ -41,10 +42,16 @@
             go
             delve
             gotools
+            air
           ];
+
+          env = {
+            CGO_ENABLED = CGO;
+          };
 
           shellHook = ''
             echo "🦫 $(${go}/bin/go version) ready!"
+            echo "CGO_ENABLED: $CGO_ENABLED"
           '';
         };
       }

@@ -2,3 +2,9 @@
 **/node_modules/
 **/.DS_Store
 **/src/components/generated/
+**/src/designSystem/generated/
+backend/tmp/
+backend/vendor
+backend/main
+*/.env
+backend/*.db*

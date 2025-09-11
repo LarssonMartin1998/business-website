@@ -1,90 +1,205 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import { base, hover, type TwColor } from './../designSystem/colors.ts';
+
+import { Href, Page, pages } from 'design-system/pages';
+import { bg, text, border, hover, type TwColor, type TwStateColor, splitTwColor, Intent, } from 'design-system/colors';
+import Size from 'design-system/sizes';
+
+import { PageLink, AnchorLink } from 'components/Link';
 
 interface ButtonColor {
   default: TwColor;
-  hover?: TwColor;
+  hover?: TwStateColor;
 }
 
 interface SealedButtonProps {
   children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg';
+  'aria-label': string;
+  size?: Size;
   className?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   type?: 'button' | 'submit' | 'reset';
+  buttonLink?: Page | Href;
+  pageHash?: string;
+  animated?: boolean;
+  style?: React.CSSProperties;
+  disabled?: boolean;
 }
 
 interface CustomButtonProps {
-  border?: ButtonColor,
-  bg: ButtonColor,
-  fg: ButtonColor,
+  border?: ButtonColor;
+  bg: ButtonColor;
+  fg: ButtonColor;
+  style?: React.CSSProperties;
 }
 
-function CustomButton({ children, size = 'md', border, bg, fg, className, ...props }: CustomButtonProps & SealedButtonProps) {
-  const base = 'inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none';
-  const focus = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-deep-forest-blue';
+
+function CustomButton({
+  children,
+  'aria-label': ariaLabel,
+  size = 'md',
+  border,
+  bg,
+  fg,
+  className,
+  buttonLink,
+  pageHash,
+  animated,
+  ...props
+}: CustomButtonProps & SealedButtonProps) {
+  const isDisabled = !!props.disabled;
+
+  const base =
+    'inline-flex items-center justify-center rounded-md font-medium transition-colors hover:cursor-pointer disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed';
 
   const sizes = {
+    xs: 'px-2 py-1 text-xs w-18 h-10',
     sm: 'px-3 py-1.5 text-sm w-24 h-12',
-    md: 'px-4 py-2 text-base w-36 h-14',
+    md: 'px-4 py-2 text-base w-40 h-14',
     lg: 'px-6 py-3 text-lg w-48 h-14',
+    xl: 'px-6 py-3 text-lg w-68 h-16',
   };
 
   const borderProps = border != undefined ? twMerge(border.default, border.hover, 'border-2') : undefined;
 
   const buttonClassName = twMerge(
     base,
-    focus,
     sizes[size],
-    borderProps,
+    animated ? '' : borderProps,
     bg.default,
     bg.hover,
     fg.default,
     fg.hover,
+    animated ? 'animated-border' : '',
+    isDisabled && 'opacity-50 pointer-events-none cursor-not-allowed',
     className
   );
 
+  if (!buttonLink) {
+    return (
+      <button
+        aria-label={ariaLabel}
+        className={buttonClassName}
+        disabled={isDisabled}
+        type={props.type}
+        onClick={props.onClick}
+        style={props.style}
+      >
+        {children}
+      </button>
+    );
+  }
+
+  if (isDisabled) {
+    return (
+      <span
+        role='button'
+        aria-label={ariaLabel}
+        aria-disabled='true'
+        className={buttonClassName}
+        style={props.style}
+      >
+        {children}
+      </span>
+    );
+  }
+
+  if ((pages as readonly string[]).includes(buttonLink)) {
+    return (
+      <PageLink
+        aria-label={ariaLabel}
+        page={buttonLink as Page}
+        hash={pageHash}
+        className={buttonClassName}
+        style={props.style}
+      >
+        {children}
+      </PageLink>
+    );
+  }
+
   return (
-    <button className={buttonClassName} {...props}>
+    <AnchorLink
+      href={buttonLink as Href}
+      aria-label={ariaLabel}
+      className={buttonClassName}
+      style={props.style}
+    >
       {children}
-    </button>)
+    </AnchorLink>
+  );
 }
 
-function DefaultButton(props: SealedButtonProps) {
+
+function ButtonIntentVariant({ intent, useBorder, ...props }: SealedButtonProps & { useBorder: boolean, intent: Intent }) {
+  const bgCol = bg(intent);
+  const textCol = text(intent);
+  const borderObj = useBorder ? {
+    default: border(intent),
+    hover: hover(border(intent))
+  } : undefined;
+
   return (
     <CustomButton
       bg={{
-        default: base.bg.accent,
-        hover: hover.bg.accent
+        default: bgCol,
+        hover: hover(bgCol)
       }}
       fg={{
-        default: base.fg.accent,
-        hover: hover.fg.accent
+        default: textCol,
+        hover: hover(textCol)
       }}
+      border={borderObj}
       {...props}
     />
   );
 }
 
-function AlertButton(props: SealedButtonProps) {
+function ButtonInvisIntentVariant({ intent, ...props }: SealedButtonProps & { intent: Intent }) {
+  const textCol = text(intent);
+
+  const [, bgColRaw] = splitTwColor(bg(intent));
+  const [, textColRaw] = splitTwColor(textCol);
+
+  const animatedStyle = props.animated ? {
+    '--gradient-color-1': `var(--color-${textColRaw})`,
+    '--gradient-color-2': `var(--color-${bgColRaw})`,
+  } as React.CSSProperties : undefined;
+
   return (
     <CustomButton
+      bg={{
+        default: bg(props.animated ? bgColRaw : 'transparent'),
+        hover: hover(bg(textColRaw))
+      }}
+      fg={{
+        default: textCol,
+        hover: hover(text(bgColRaw))
+      }}
       border={{
-        default: base.border.alert,
-        hover: hover.border.alert
+        default: border(textColRaw)
       }}
-      bg={{
-        default: base.bg.alert,
-        hover: hover.bg.alert
-      }}
-      fg={{
-        default: base.fg.alert,
-        hover: hover.fg.alert
-      }}
+      style={animatedStyle}
       {...props}
     />
   );
 }
 
-export { CustomButton, DefaultButton, AlertButton };
+function ButtonAccent(props: SealedButtonProps) {
+  return (<ButtonIntentVariant intent='accent' useBorder={false} {...props} />);
+}
+
+function ButtonAccentInvis(props: SealedButtonProps) {
+  return (<ButtonInvisIntentVariant intent='accent' {...props} />);
+}
+
+function ButtonAlert(props: SealedButtonProps) {
+  return (<ButtonIntentVariant intent='alert' useBorder={true} {...props} />);
+}
+
+function ButtonAlertInvis(props: SealedButtonProps) {
+  return (<ButtonInvisIntentVariant intent='alert' {...props} />);
+}
+
+export { CustomButton, ButtonAccent, ButtonAccentInvis, ButtonAlert, ButtonAlertInvis, };
+export type { ButtonColor };

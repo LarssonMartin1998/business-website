@@ -1,21 +1,71 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
+	"context"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"backend/blog"
+	"backend/config"
+	"backend/contact"
+	"backend/database"
+	"backend/router"
+	"backend/utils"
 )
 
 func main() {
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
+	cfg := utils.Must(config.Load())
+	db := utils.Must(database.NewSQLiteDB(cfg))
+	r := router.New(cfg)
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!"))
-	})
+	r.SetupRoutes(&router.RoutingContext{
+		Providers: []router.RouteProvider{
+			blog.NewModule(db),
+			contact.NewModule(cfg),
+		},
+	}, cfg)
 
-	log.Println("Server starting on :8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	port := ":" + cfg.Port
+	var buf bytes.Buffer
+	writer := bufio.NewWriter(&buf)
+	fmt.Fprintf(writer, "✅ Starting HTTP server on port %s\n", port)
+	r.WriteRoutes(writer)
+
+	r.ClearRouteTree()
+
+	writer.Flush()
+
+	server := &http.Server{
+		Addr:           port,
+		Handler:        r.GetHTTPHandler(),
+		ReadTimeout:    cfg.Server.ReadTimeout,
+		WriteTimeout:   cfg.Server.WriteTimeout,
+		IdleTimeout:    cfg.Server.IdleTimeout,
+		MaxHeaderBytes: 1 << 20, // 1 MB
+	}
+
+	go func() {
+		log.Println(buf.String())
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatal(err)
+		}
+	}()
+
+	// Wait for interrupt signal
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	log.Println("🛑 Shutting down server...")
+	ctx, cancel := context.WithTimeout(context.Background(), max(cfg.Server.ReadTimeout, cfg.Server.WriteTimeout))
+	defer cancel()
+
+	server.Shutdown(ctx)
+	db.Close()
 }
