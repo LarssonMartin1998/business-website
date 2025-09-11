@@ -36,7 +36,7 @@
           # Combined deployment package
           default = pkgs.stdenv.mkDerivation {
             pname = "business-website";
-            version = "1.0.4";
+            version = "1.0.5";
 
             unpackPhase = "true"; # No source to unpack
 
