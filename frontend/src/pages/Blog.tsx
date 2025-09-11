@@ -34,6 +34,39 @@ function StyledMarkdown({ markdownText }: { markdownText: string; }) {
     <div className={text('defaultCard')}>
       <Markdown
         components={{
+          p: ({ children }) => (
+            <p className="mb-4 leading-relaxed">{children}</p>
+          ),
+
+          h1: ({ children }) => (
+            <h1 className="text-2xl font-bold mb-4 first:mt-0 mt-6">{children}</h1>
+          ),
+          h2: ({ children }) => (
+            <h2 className="text-xl font-bold mb-3 first:mt-0 mt-5">{children}</h2>
+          ),
+          h3: ({ children }) => (
+            <h3 className="text-lg font-bold mb-3 first:mt-0 mt-4">{children}</h3>
+          ),
+          h4: ({ children }) => (
+            <h4 className="text-base font-bold mb-2 first:mt-0 mt-4">{children}</h4>
+          ),
+          h5: ({ children }) => (
+            <h5 className="text-sm font-bold mb-2 first:mt-0 mt-3">{children}</h5>
+          ),
+
+          a: ({ children, href }) => (
+            <a
+              href={href}
+              className={twMerge(
+                text(raw.emberBark),
+                'hover:underline font-medium'
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {children}
+            </a>
+          ),
           code: ({ children, className, ...props }) => {
             const match = /language-(\w+)/.exec(className || '');
             const isInline = !className?.includes('language-');
