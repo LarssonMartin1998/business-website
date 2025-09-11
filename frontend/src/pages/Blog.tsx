@@ -54,6 +54,16 @@ function StyledMarkdown({ markdownText }: { markdownText: string; }) {
             <h5 className="text-sm font-bold mb-2 first:mt-0 mt-3">{children}</h5>
           ),
 
+          ul: ({ children }) => (
+            <ul className="mb-4 pl-6 list-disc space-y-1">{children}</ul>
+          ),
+          ol: ({ children }) => (
+            <ol className="mb-4 pl-6 list-decimal space-y-1">{children}</ol>
+          ),
+          li: ({ children }) => (
+            <li className="leading-relaxed">{children}</li>
+          ),
+
           a: ({ children, href }) => (
             <a
               href={href}

@@ -26,7 +26,7 @@
       {
         packages.default = pkgs.buildNpmPackage {
           pname = "frontend";
-          version = "1.0.4";
+          version = "1.0.5";
           src = ./.;
 
           npmDepsHash = "sha256-cWVnHTsC8s6/jWx7E+Cuqa2hxZPmmDLBrTMj930gEqM=";

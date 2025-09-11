@@ -22,7 +22,7 @@
       {
         packages.default = pkgs.buildGoModule {
           pname = "backend";
-          version = "1.0.4";
+          version = "1.0.5";
           src = ./.;
 
           vendorHash = "sha256-1OoBfO2KqtyTVFNLr+ftE5KIS50MyR71rO8zB/FFjVQ=";
