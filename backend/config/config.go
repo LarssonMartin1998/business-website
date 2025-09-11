@@ -59,13 +59,14 @@ type MailAuth struct {
 }
 
 type MailConfig struct {
-	FormSender             string // used for forwarding form submissions to hello@
-	FormSenderAuth         MailAuth
-	NotificationSender     string // used for sending confirmations to the user if everything was successful (noreply)
-	NotificationSenderAuth MailAuth
-	NotificationSubject    string
-	NotificationBody       string
-	Receiver               string // used for receiving the emails from the sender that contains information from the form
+	FormSender               string // used for forwarding form submissions to hello@
+	FormSenderAuth           MailAuth
+	NotificationSender       string // used for sending confirmations to the user if everything was successful (noreply)
+	NotificationSenderAuth   MailAuth
+	NotificationSubject      string
+	NotificationBody         string
+	Receiver                 string // used for receiving the emails from the sender that contains information from the form
+	DisallowedEmailsFromForm []string
 }
 
 func Load() (*Config, error) {
@@ -113,9 +114,10 @@ func Load() (*Config, error) {
 				User: utils.Must(getEnvWithoutDefault("MAIL_NOTIFICATION_SENDER_USER")),
 				Pw:   utils.Must(getEnvWithoutDefault("MAIL_NOTIFICATION_SENDER_PW")),
 			},
-			NotificationSubject: utils.Must(getEnvWithoutDefault("MAIL_NOTIFICATION_SUBJECT")),
-			NotificationBody:    utils.Must(readFileFromEnvPath("MAIL_NOTIFICATION_BODY_FILE")),
-			Receiver:            utils.Must(getEnvWithoutDefault("MAIL_RECEIVER")),
+			NotificationSubject:      utils.Must(getEnvWithoutDefault("MAIL_NOTIFICATION_SUBJECT")),
+			NotificationBody:         utils.Must(readFileFromEnvPath("MAIL_NOTIFICATION_BODY_FILE")),
+			Receiver:                 utils.Must(getEnvWithoutDefault("MAIL_RECEIVER")),
+			DisallowedEmailsFromForm: getSliceEnv("DISALLOWED_EMAILS_FROM_FORM", []string{}),
 		},
 	}
 
