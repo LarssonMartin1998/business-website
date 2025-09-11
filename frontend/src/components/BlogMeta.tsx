@@ -88,7 +88,7 @@ function BlogMeta({ headerClasses, blogPost, applyUnderline, }: BlogMetaProps) {
       <div className='flex gap-x-2 items-center'>
         <h3 className={twMerge(
           groupHoverRaw(text(raw.firGreen)),
-          'font-bold decoration-dashed',
+          'font-bold decoration-dashed text-left text-sm min-[640px]:!text-base',
           applyUnderline && 'group-hover:underline',
           headerClasses)}
         >
