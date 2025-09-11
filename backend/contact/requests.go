@@ -3,6 +3,7 @@ package contact
 import (
 	"backend/utils"
 	"net/http"
+	"slices"
 	"strings"
 )
 
@@ -36,6 +37,10 @@ func (m *Module) handleSendMailRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !utils.IsStringValidEmail(req.Email) {
+		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid Email in Request")
+		return
+	}
+	if slices.Contains(m.cfg.Mail.DisallowedEmailsFromForm, req.Email) {
 		utils.RespondWithJSON(w, http.StatusBadRequest, false, nil, "Invalid Email in Request")
 		return
 	}
