@@ -1,14 +1,14 @@
 const hrefs = {
   home: '/',
   linkedIn: 'https://www.linkedin.com/in/larssonmartin1998/',
-  github: 'https://www.github.com/LarssonMartin1998',
+  github: 'https://git.just-a-shell.dev/larssonmartin1998',
   mastodon: 'https://social.just-a-shell.dev/@martin',
   resume: '/resume.pdf',
   rss: '/rss',
 
   dungeonsTwo: 'https://www.minecraft.net/en-us/about-dungeons-ii',
   fhs: 'https://www.king.com/game/farmheroes',
-  atlas: 'https://www.github.com/LarssonMartin1998/atlas',
+  atlas: 'https://git.just-a-shell.dev/larssonmartin1998/atlas.git',
   mannequin: 'https://fasttravelgames.com/games/mannequin',
   citiesVr: 'https://fasttravelgames.com/games/citiesvr',
   curiousTale: 'https://fasttravelgames.com/games/thecurioustaleofthestolenpets',
