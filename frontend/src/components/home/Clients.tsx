@@ -18,6 +18,7 @@ function Clients() {
     };
   };
   const clients: Client[] = [
+    { name: 'Minecraft Dungeons II', props: { href: hrefs.dungeonsTwo, 'aria-label': '', } },
     { name: 'Farm Heroes Saga', props: { href: hrefs.fhs, 'aria-label': '', } },
     { name: 'Atlas', props: { href: hrefs.atlas, 'aria-label': '', } },
     { name: 'Mannequin', props: { href: hrefs.mannequin, 'aria-label': '', } },
@@ -37,7 +38,7 @@ function Clients() {
         ))}
       </ul>
 
-      <div className={twMerge(font, 'hidden md:flex min-[1275px]:!hidden flex-col w-full gap-y-4 text-2xl')}>
+      <div className={twMerge(font, 'hidden md:flex min-[1450px]:!hidden flex-col w-full gap-y-4 text-2xl')}>
         <div className='grid grid-cols-2 grid-rows-2 gap-y-4'>
           {clients.slice(0, clients.length - 1).map(({ name, props }) => (
             <AnchorLink key={name} className='text-center hover:underline' {...props}>{name}</AnchorLink>
@@ -47,7 +48,7 @@ function Clients() {
         <AnchorLink className='text-center hover:underline' {...lastClient.props}>{lastClient.name}</AnchorLink>
       </div>
 
-      <ul className={twMerge(font, 'hidden min-[1275px]:flex items-center gap-x-14 text-xl min-[1500px]:text-2xl min-[1800px]:text-3xl')}>
+      <ul className={twMerge(font, 'hidden min-[1450px]:flex items-center gap-x-14 text-xl min-[1700px]:text-2xl min-[2000px]:text-3xl')}>
         {clients.map(({ name, props }) => (
           <li key={name}><AnchorLink className='hover:underline' {...props}>{name}</AnchorLink></li>
         ))}

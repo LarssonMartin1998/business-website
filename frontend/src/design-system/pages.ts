@@ -6,6 +6,7 @@ const hrefs = {
   resume: '/resume.pdf',
   rss: '/rss',
 
+  dungeonsTwo: 'https://www.minecraft.net/en-us/about-dungeons-ii',
   fhs: 'https://www.king.com/game/farmheroes',
   atlas: 'https://www.github.com/LarssonMartin1998/atlas',
   mannequin: 'https://fasttravelgames.com/games/mannequin',
