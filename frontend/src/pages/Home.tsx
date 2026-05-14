@@ -8,7 +8,7 @@ import Hero from 'components/home/Hero';
 import Clients from 'components/home/Clients';
 import Services from 'components/Services';
 import Posts from 'components/home/Posts';
-import Resume from 'components/home/Resume';
+import Highlights from 'components/home/Highlights';
 import Socials from 'components/home/Socials';
 import Main from 'components/Main';
 import { ButtonAccent, ButtonAccentInvis } from 'components/Button';
@@ -46,7 +46,7 @@ function Home() {
 
         <Posts />
 
-        <Resume />
+        <Highlights />
 
         <Socials />
       </Main >

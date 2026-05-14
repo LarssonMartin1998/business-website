@@ -4,6 +4,7 @@ const hrefs = {
   github: 'https://git.just-a-shell.dev/larssonmartin1998',
   mastodon: 'https://social.just-a-shell.dev/@martin',
   resume: '/resume.pdf',
+  podcast: 'https://shows.acast.com/anderspodcast/episodes/26-over-350-dagar-i-rad-martin-larsson-ar-disciplin',
   rss: '/rss',
 
   dungeonsTwo: 'https://www.minecraft.net/en-us/about-dungeons-ii',

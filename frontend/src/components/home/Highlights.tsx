@@ -4,7 +4,7 @@ import { ButtonAlertInvis } from 'components/Button';
 import { raw, from, to, border } from 'design-system/colors';
 import { hrefs } from 'design-system/pages';
 
-function Resume() {
+function Highlights() {
   const skewPos = twMerge(
     'skew-10 -top-10 rotate-10',
     'sm:skew-10 sm:-top-10 sm:rotate-10',
@@ -15,9 +15,12 @@ function Resume() {
   return (
     <section className={twMerge(from(raw.rustOrange), to(raw.rustOrangeLight), border('alert'), 'relative bg-gradient-to-b border-t-2 min-h-30 flex flex-col items-center justify-center overflow-hidden')}>
       <div className={twMerge(from(raw.rustOrangeLight), to(raw.rustOrange), 'bg-gradient-to-b absolute w-2/1 h-110', skewPos)}></div>
-      <ButtonAlertInvis aria-label='Download my resume' buttonLink={hrefs.resume} size='xl' className='border-3 font-bold uppercase z-1'>Download Resume</ButtonAlertInvis>
+      <div className='flex flex-col min-[600px]:flex-row items-center justify-center gap-4 py-4 min-[600px]:py-0 z-1'>
+        <ButtonAlertInvis aria-label='Download my resume' buttonLink={hrefs.resume} size='xl' className='border-3 font-bold uppercase'>Download Resume</ButtonAlertInvis>
+        <ButtonAlertInvis aria-label='Listen to podcast episode (in Swedish)' buttonLink={hrefs.podcast} size='xl' className='border-3 font-bold uppercase'>Pod Episode (SWE)</ButtonAlertInvis>
+      </div>
     </section>
   );
 }
 
-export default Resume;
+export default Highlights;
